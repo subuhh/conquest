@@ -1,0 +1,116 @@
+import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
+import 'package:conquest/features/screens/HomePage/homepageSearchbar.dart';
+import 'package:conquest/features/utils/constants/sizes.dart';
+import 'package:conquest/features/utils/helpers/helper_functions.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:iconsax/iconsax.dart';
+
+class Homepage extends StatelessWidget {
+  const Homepage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      /// AppBar
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.menu,
+            size: TSizes.iconLg,
+          ),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/logos/conquest-icon.png',
+              height: TSizes.iconLg + 25,
+            ),
+            Image.asset(
+              'assets/logos/conquest-string.png',
+              height: TSizes.imageThumbSize + 10,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Iconsax.notification)),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            /// Search Bar
+            const Homepagesearchbar(),
+
+            /// Homepage Content
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: TSizes.imageCarouselHeight,
+                      child: CarouselView(
+                        itemExtent: THelperFunctions.screenWidth(context) - 35,
+                        children: List.generate(10, (int index) {
+                          return Container(
+                            color: Colors.grey,
+                            child: Image.network(
+                              'https://picsum.photos/400?random=$index',
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Iconbuttonwithlabel(
+                          labelText: 'Workouts',
+                          imagePath: 'assets/icons/appicons/cardiogram.svg',
+                        ),
+                        Iconbuttonwithlabel(
+                          labelText: 'Nutrition',
+                          imagePath: 'assets/icons/appicons/nutrition-outline.svg',
+                        ),
+                        Iconbuttonwithlabel(
+                          labelText: 'Schedule',
+                          imagePath: 'assets/icons/appicons/calendar.svg',
+                        ),
+                        Iconbuttonwithlabel(
+                          labelText: 'Profile',
+                          imagePath: 'assets/icons/appicons/person.svg',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+
+                    // Cards
+                    Column(
+                      children: List.generate(4, (index) {
+                        return SizedBox(
+                          height: 200,
+                          width: THelperFunctions.screenWidth(context),
+                          child: Card(color: Colors.grey[350],
+                          child: const Center(child: Text('More Widgets can be added here'),),
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
