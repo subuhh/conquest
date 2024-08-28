@@ -1,13 +1,14 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../screens/HomePage/homepage.dart';
 import '../utils/constants/sizes.dart';
 
 class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({super.key});
+
   @override
-  _BottomNavBarState createState() => _BottomNavBarState();
+  State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
@@ -21,10 +22,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
   ];
 
   final List<Widget> _screens = [
-    Homepage(),
-    Center(child: Text('Screen 2')),
-    Center(child: Text('Screen 3')),
-    Center(child: Text('Screen 4')),
+    const Homepage(),
+    const Center(child: Text('Screen 2')),
+    const Center(child: Text('Screen 3')),
+    const Center(child: Text('Screen 4')),
   ];
 
   @override
@@ -32,9 +33,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return Scaffold(
       body: _screens[_bottomNavIndex], // Displays the selected screen
       floatingActionButton: Container(
-        height: TSizes.imageThumbSize-20,
-        child: Image.asset('assets/logos/conquest-icon.png'),
+        height: TSizes.imageThumbSize - 20,
         color: Colors.transparent,
+        child: Image.asset('assets/logos/conquest-icon.png'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
@@ -45,8 +46,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               iconList[index],
-              color: color,
-              height: 10, // Specify the size for each icon
+              height: 10,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
           );
         },
@@ -55,7 +56,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
         notchSmoothness: NotchSmoothness.verySmoothEdge,
         leftCornerRadius: 32,
         rightCornerRadius: 32,
-        onTap: (index) => setState(() => _bottomNavIndex = index),
+        onTap: (index) => setState(
+          () => _bottomNavIndex = index,
+        ),
       ),
     );
   }

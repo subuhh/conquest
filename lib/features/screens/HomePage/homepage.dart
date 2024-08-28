@@ -1,9 +1,8 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
-import 'package:conquest/features/screens/HomePage/homepageSearchbar.dart';
+import 'package:conquest/features/screens/HomePage/homepage_searchbar.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 
 class Homepage extends StatelessWidget {
@@ -15,12 +14,15 @@ class Homepage extends StatelessWidget {
       /// AppBar
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/drawer');
+          },
           icon: const Icon(
             Icons.menu,
             size: TSizes.iconLg,
           ),
         ),
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -44,7 +46,7 @@ class Homepage extends StatelessWidget {
         child: Column(
           children: [
             /// Search Bar
-            const Homepagesearchbar(),
+            const HomepageSearchbar(),
 
             /// Homepage Content
             Expanded(

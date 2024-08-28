@@ -3,20 +3,20 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../utils/constants/sizes.dart';
 
-class Homepagesearchbar extends StatelessWidget {
-  const Homepagesearchbar({super.key});
+class HomepageSearchbar extends StatelessWidget {
+  const HomepageSearchbar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding: EdgeInsets.symmetric(vertical: TSizes.spaceBtwInputFields,horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwInputFields,horizontal: 10),
       child: Container(
         height: 50.0, // Adjust the height as needed
         decoration: BoxDecoration(
           color: Colors.grey[200], // Light grey background
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: TextField(
+        child: const TextField(
           decoration: InputDecoration(
             hintText: 'Search',
             hintStyle: TextStyle(

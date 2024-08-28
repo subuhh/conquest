@@ -1,16 +1,11 @@
-import 'package:conquest/features/screens/SplashScreen/SplashScreen.dart';
+import 'package:conquest/features/screens/Drawer/drawer_screen.dart';
+import 'package:conquest/features/screens/HomePage/homepage.dart';
+import 'package:conquest/features/screens/SplashScreen/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'features/BottomNavBar/BottomNavBar.dart';
 import 'features/utils/theme/theme.dart';
 
 void main() {
-  //Todo: Add Widget BINDING
-  //Todo: init local Storage
-  //Todo: Await Native Splash
-  //Todo: Initialize Firebase
-  //Todo: Initialize Authentication
-  runApp(
-      MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,11 +14,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      home:  SplashScreen(),
+      home:  const SplashScreen(),
+      initialRoute: '/',
+      routes: {
+        '/homepage': (context) => const Homepage(),
+        '/drawer': (context) => const DrawerScreen(),
+      },
     );
   }
 }
