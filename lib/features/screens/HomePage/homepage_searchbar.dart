@@ -14,7 +14,7 @@ class HomepageSearchbar extends StatelessWidget {
         height: 50.0, // Adjust the height as needed
         decoration: BoxDecoration(
           color: Colors.grey[200], // Light grey background
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
         child: const TextField(
           decoration: InputDecoration(
@@ -27,7 +27,10 @@ class HomepageSearchbar extends StatelessWidget {
               Iconsax.search_normal,
               color: Colors.grey, // Grey icon color
             ),
-            border: InputBorder.none,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide.none, // Customize focused border
+
+            ),
             contentPadding: EdgeInsets.only(top: 15.0), // Align the text vertically
           ),
         ),

@@ -16,82 +16,85 @@ class CustomListTileGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 1,
+      elevation: 1.5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (header != null)
-            Container(
-              padding: const EdgeInsets.only(
-                  top: 14.0, bottom: 10, left: 16, right: 16.0),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10.0),
-                  topRight: Radius.circular(10.0),
-                ),
-                color: TColors.primaryBackground,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 20,
-                    color: Colors.black,
+      child: Container(
+        color: Colors.grey[50],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (header != null)
+              Container(
+                padding: const EdgeInsets.only(
+                    top: 14.0, bottom: 10, left: 16, right: 16.0),
+                decoration:  BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    header!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  color: Colors.grey[50],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 3,
+                      height: 20,
+                      color: Colors.red,
                     ),
+                    const SizedBox(width: 8),
+                    Text(
+                      header!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            // List of Tiles
+            ClipRRect(
+              // Apply rounded corners to the ListTile group
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10.0),
+                bottomRight: Radius.circular(10.0),
+              ),
+              child: Column(
+                children: tiles
+                    .map((tile) => Theme(
+                  // Apply this theme to each ListTile
+                  data: Theme.of(context).copyWith(
+                    dividerColor:
+                    Colors.transparent, // Remove default divider
                   ),
-                ],
+                  child: ListTile(
+                    // tileColor: whiteColor,
+                    tileColor: TColors.primaryBackground,
+                    shape: RoundedRectangleBorder(
+                      // Round the corners of individual tiles
+                      borderRadius: BorderRadius.vertical(
+                        bottom: tile == tiles.last
+                            ? const Radius.circular(10.0)
+                            : Radius
+                            .zero, // Only round bottom corners of the last tile
+                      ),
+                    ),
+
+                    leading: tile.leading,
+                    onTap: tile.onTap,
+                    trailing: tile.trailing,
+                    title: tile.title,
+                    // ... (rest of your ListTile code)'
+                  ),
+                ))
+                    .toList(),
               ),
             ),
-
-          // List of Tiles
-          ClipRRect(
-            // Apply rounded corners to the ListTile group
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(10.0),
-              bottomRight: Radius.circular(10.0),
-            ),
-            child: Column(
-              children: tiles
-                  .map((tile) => Theme(
-                // Apply this theme to each ListTile
-                data: Theme.of(context).copyWith(
-                  dividerColor:
-                  Colors.transparent, // Remove default divider
-                ),
-                child: ListTile(
-                  // tileColor: whiteColor,
-                  tileColor: TColors.primaryBackground,
-                  shape: RoundedRectangleBorder(
-                    // Round the corners of individual tiles
-                    borderRadius: BorderRadius.vertical(
-                      bottom: tile == tiles.last
-                          ? const Radius.circular(10.0)
-                          : Radius
-                          .zero, // Only round bottom corners of the last tile
-                    ),
-                  ),
-
-                  leading: tile.leading,
-                  onTap: tile.onTap,
-                  trailing: tile.trailing,
-                  title: tile.title,
-                  // ... (rest of your ListTile code)'
-                ),
-              ))
-                  .toList(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -118,6 +121,6 @@ ListTile menuListTile(
         ColorFilter.mode(Colors.red.withOpacity(0.7), BlendMode.srcIn),
       ),
     ),
-    trailing: isTrailing ? const Icon(Icons.arrow_forward_ios) : null,
+    trailing: isTrailing ? const Icon(Icons.arrow_forward_ios,color: Colors.grey,) : null,
   );
 }

@@ -31,7 +31,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_bottomNavIndex], // Displays the selected screen
+      body: _screens[_bottomNavIndex],
       floatingActionButton: Container(
         height: TSizes.imageThumbSize - 20,
         color: Colors.transparent,
@@ -43,7 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         tabBuilder: (int index, bool isActive) {
           final color = isActive ? Colors.black : Colors.grey;
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(12),
             child: SvgPicture.asset(
               iconList[index],
               height: 10,

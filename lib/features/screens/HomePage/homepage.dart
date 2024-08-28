@@ -38,7 +38,7 @@ class Homepage extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Iconsax.notification)),
+          IconButton(onPressed: () {}, icon: const Icon(Iconsax.notification,size: TSizes.iconLg,)),
         ],
       ),
       body: Padding(
@@ -57,6 +57,7 @@ class Homepage extends StatelessWidget {
                     SizedBox(
                       height: TSizes.imageCarouselHeight,
                       child: CarouselView(
+                        itemSnapping: true,
                         itemExtent: THelperFunctions.screenWidth(context) - 35,
                         children: List.generate(10, (int index) {
                           return Container(
