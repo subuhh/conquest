@@ -40,10 +40,10 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 200,
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: MediaQuery.of(context).size.height * 0.16,
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.06,
+              height: MediaQuery.of(context).size.height * 0.05,
               child: const LoadingIndicator(
                 indicatorType: Indicator.ballRotateChase,
                 colors: [Colors.red, Colors.redAccent],

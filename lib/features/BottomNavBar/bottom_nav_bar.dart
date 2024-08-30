@@ -2,6 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../screens/HomePage/homepage.dart';
+import '../screens/MarketPlace/market_place_screen.dart';
 import '../utils/constants/sizes.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -23,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   final List<Widget> _screens = [
     const Homepage(),
-    const Center(child: Text('Screen 2')),
+    const MarketplaceScreen(),
     const Center(child: Text('Screen 3')),
     const Center(child: Text('Screen 4')),
   ];

@@ -16,7 +16,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
     const double uniformPadding = 8.0;
-
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
@@ -59,33 +58,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         // if (_auth.currentUser != null) ...[
                         menuListTile(
                           'Your Profile',
-                          () {
-                            Navigator.pushNamed(context, '/yourprofile');
-                          },
+                          () {},
                           'assets/icons/drawerIcons/profile.svg',
                           context,
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
+                    // My Orders Group
                     CustomListTileGroup(
                       tiles: [
                         menuListTile(
-                          'Rate Us',
-                          () async {
-                            if (Platform.isAndroid) {
-                              // await launchUrl(
-                              //   Uri.parse(
-                              //       "https://play.google.com/store/apps/details?id=com.yourapp.id"),
-                              // );
-                            } else if (Platform.isIOS) {
-                              // await launchUrl(
-                              //   Uri.parse(
-                              //       "https://apps.apple.com/app/idYOUR_APP_ID"),
-                              // );
-                            }
-                          },
-                          'assets/icons/drawerIcons/rate_us.svg',
+                          'My Orders',
+                          () {},
+                          'assets/icons/drawerIcons/my_order.svg',
                           context,
                         ),
                       ],
@@ -96,8 +82,51 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       tiles: [
                         menuListTile(
                           'Home',
-                          () => Navigator.of(context).pushNamed('/home'),
+                          () => Navigator.of(context).pushNamed('/btmnav'),
                           'assets/icons/drawerIcons/home.svg',
+                          context,
+                        ),
+                        menuListTile(
+                          'Workout Plan',
+                          () {},
+                          'assets/icons/drawerIcons/workout.svg',
+                          context,
+                        ),
+                        menuListTile(
+                          'Nutrition Guide',
+                          () {},
+                          'assets/icons/drawerIcons/nutrition.svg',
+                          context,
+                        ),
+                      ],
+                    ),
+                    // Community Group
+                    const SizedBox(height: 20),
+                    CustomListTileGroup(
+                      header: 'Community', // Optional header
+                      tiles: [
+                        menuListTile(
+                          'Nakama Community',
+                          () {},
+                          'assets/icons/drawerIcons/community.svg',
+                          context,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    CustomListTileGroup(
+                      header: 'Engage & Compete',
+                      tiles: [
+                        menuListTile(
+                          'Daily Challenges',
+                          () {},
+                          'assets/icons/drawerIcons/daily_challenges.svg',
+                          context,
+                        ),
+                        menuListTile(
+                          'Leaderboards',
+                          () {},
+                          'assets/icons/drawerIcons/leaderboard.svg',
                           context,
                         ),
                       ],
@@ -108,13 +137,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       tiles: [
                         menuListTile(
                           'Feedback',
-                          () => Navigator.of(context).pushNamed('/feedback'),
+                          () {},
                           'assets/icons/drawerIcons/feedback.svg',
                           context,
                         ),
                         menuListTile(
                           'FAQ',
-                          () => Navigator.of(context).pushNamed('/faq'),
+                          () {},
                           'assets/icons/drawerIcons/faq.svg',
                           context,
                         ),
@@ -126,13 +155,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       tiles: [
                         menuListTile(
                           'About',
-                          () => Navigator.of(context).pushNamed('/aboutus'),
+                          () {},
                           'assets/icons/drawerIcons/about_us.svg',
                           context,
                         ),
                         menuListTile(
                           'Privacy & Policy',
-                          () => Navigator.of(context).pushNamed('/privacy'),
+                          () {},
                           'assets/icons/drawerIcons/privacy_policy.svg',
                           context,
                         ),
@@ -144,14 +173,32 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         tiles: [
                           menuListTile(
                             'Settings',
-                            () => Navigator.of(context).pushNamed('/settings'),
+                            () {},
                             'assets/icons/drawerIcons/settings.svg',
                             context,
                           ),
                           menuListTile(
                             'Invite Friends',
-                            () => Navigator.of(context).pushNamed('/invite'),
+                            () {},
                             'assets/icons/drawerIcons/invite.svg',
+                            context,
+                          ),
+                          menuListTile(
+                            'Rate Us',
+                            () async {
+                              if (Platform.isAndroid) {
+                                // await launchUrl(
+                                //   Uri.parse(
+                                //       "https://play.google.com/store/apps/details?id=com.yourapp.id"),
+                                // );
+                              } else if (Platform.isIOS) {
+                                // await launchUrl(
+                                //   Uri.parse(
+                                //       "https://apps.apple.com/app/idYOUR_APP_ID"),
+                                // );
+                              }
+                            },
+                            'assets/icons/drawerIcons/rate_us.svg',
                             context,
                           ),
                           // if (_auth.currentUser != null) ...[

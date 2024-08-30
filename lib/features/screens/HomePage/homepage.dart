@@ -28,7 +28,7 @@ class Homepage extends StatelessWidget {
           children: [
             Image.asset(
               'assets/logos/conquest-icon.png',
-              height: TSizes.iconLg + 25,
+              height: TSizes.iconLg + 15,
             ),
             Image.asset(
               'assets/logos/conquest-string.png',
@@ -38,7 +38,12 @@ class Homepage extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Iconsax.notification,size: TSizes.iconLg,)),
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Iconsax.notification,
+                size: TSizes.iconLg,
+              )),
         ],
       ),
       body: Padding(
@@ -59,18 +64,20 @@ class Homepage extends StatelessWidget {
                       child: CarouselView(
                         itemSnapping: true,
                         itemExtent: THelperFunctions.screenWidth(context) - 35,
-                        children: List.generate(10, (int index) {
-                          return Container(
-                            color: Colors.grey,
-                            child: Image.network(
-                              'https://picsum.photos/400?random=$index',
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        }),
+                        children: List.generate(
+                          10,
+                          (int index) {
+                            return Container(
+                              color: Colors.grey,
+                              child: Image.network(
+                                'https://picsum.photos/400?random=$index',
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
-
                     const SizedBox(height: TSizes.spaceBtwItems),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -81,7 +88,8 @@ class Homepage extends StatelessWidget {
                         ),
                         Iconbuttonwithlabel(
                           labelText: 'Nutrition',
-                          imagePath: 'assets/icons/appicons/nutrition-outline.svg',
+                          imagePath:
+                              'assets/icons/appicons/nutrition-outline.svg',
                         ),
                         Iconbuttonwithlabel(
                           labelText: 'Schedule',
@@ -101,8 +109,11 @@ class Homepage extends StatelessWidget {
                         return SizedBox(
                           height: 200,
                           width: THelperFunctions.screenWidth(context),
-                          child: Card(color: Colors.grey[350],
-                          child: const Center(child: Text('More Widgets can be added here'),),
+                          child: Card(
+                            color: Colors.grey[350],
+                            child: const Center(
+                              child: Text('More Widgets can be added here'),
+                            ),
                           ),
                         );
                       }),

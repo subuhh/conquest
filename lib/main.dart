@@ -2,6 +2,7 @@ import 'package:conquest/features/screens/Drawer/drawer_screen.dart';
 import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:conquest/features/screens/SplashScreen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'features/BottomNavBar/bottom_nav_bar.dart';
 import 'features/utils/theme/theme.dart';
 
 void main() {
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/homepage': (context) => const Homepage(),
         '/drawer': (context) => const DrawerScreen(),
+        '/btmnav': (context) => const BottomNavBar(),
       },
     );
   }

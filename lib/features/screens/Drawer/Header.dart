@@ -22,10 +22,10 @@ Widget buildLoggedInHeader(BuildContext context) {
     child: Row(
       children: [
         // if (_userModel != null) ...[
-        const CircleAvatar(
+        CircleAvatar(
           radius: 35,
-          backgroundColor: TColors.grey,
-          child: Text(
+          backgroundColor: TColors.primary.withOpacity(0.9),
+          child: const Text(
             'C',
             style: TextStyle(fontSize: 32, color: Colors.white),
           ),
