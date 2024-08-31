@@ -244,14 +244,13 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.62,
         ),
         itemBuilder: (context, index) {
           final product = products[index];
 
           // Ensure all fields have default values if null
           final imageUrl = product['image'] ?? '';
-          final title = product['title'] ?? 'Product';
           //return buildProductCard(imageUrl, title);
           return ProductCard(
             imageUrl: imageUrl,

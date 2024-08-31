@@ -24,56 +24,64 @@ class ProductCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Stack(
-        children: [
-          Column(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildProductImage(),
-              _buildProductDetails(context),
+              Stack(
+                children: [
+                  _buildProductImage(constraints.maxWidth),
+                  _buildDiscountRibbon(),
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: _buildWhishlistbutton(),
+                  )
+                ],
+              ),
+              _buildProductDetails(context, constraints.maxHeight - 150),
             ],
-          ),
-          _buildDiscountRibbon(),
-          Positioned(
-            right: 5,
-            top: 5,
-            child: _buildWhishlistbutton(),
-          )
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildProductImage() {
+  Widget _buildProductImage(double maxWidth) {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
       child: Image.network(
         imageUrl,
         height: 150,
-        width: double.infinity,
+        width: maxWidth,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
       ),
     );
   }
 
-  Widget _buildProductDetails(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildProductTitle(context),
-          const SizedBox(height: 6),
-          _buildPriceRow(context),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildAddToCartButton(context),
-            ],
-          ),
-        ],
+  Widget _buildProductDetails(BuildContext context, double maxHeight) {
+    return SizedBox(
+      height: maxHeight,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProductTitle(context),
+            const SizedBox(height: 6),
+            _buildPriceRow(context),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildAddToCartButton(context),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
