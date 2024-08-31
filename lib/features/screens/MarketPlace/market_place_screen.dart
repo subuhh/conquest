@@ -5,6 +5,7 @@ import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:iconsax/iconsax.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -20,8 +21,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     'https://via.placeholder.com/600x300?text=Supplements+Sale',
   ];
 
-  
-
   final List<Map<String, String>> trendingItems = [
     {'title': 'Dumbbells Set', 'image': 'https://picsum.photos/400?random=2'},
     {'title': 'Anime Hoodie', 'image': 'https://picsum.photos/400?random=5'},
@@ -33,13 +32,19 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   ];
 
   final List<Map<String, String>> Categories = [
-    {'title': 'Supplements', 'image': 'assets/icons/appicons/supplimenticon.svg'},
-    {'title': 'Merchandise', 'image': 'assets/icons/appicons/merchandiseIcon.svg'},
-    {'title': 'Healthy\n Snacks', 'image': 'assets/icons/appicons/healthySnacksIcon.svg'},
     {
-      'title': 'Equipments',
-      'image': 'assets/icons/appicons/gymEquipments.svg'
+      'title': 'Supplements',
+      'image': 'assets/icons/appicons/supplimenticon.svg'
     },
+    {
+      'title': 'Merchandise',
+      'image': 'assets/icons/appicons/merchandiseIcon.svg'
+    },
+    {
+      'title': 'Healthy\n Snacks',
+      'image': 'assets/icons/appicons/healthySnacksIcon.svg'
+    },
+    {'title': 'Equipments', 'image': 'assets/icons/appicons/gymEquipments.svg'},
   ];
 
   final List<Map<String, String>> bestsellers = [
@@ -59,12 +64,47 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/drawer');
+          },
+          icon: const Icon(
+            Icons.menu,
+            size: TSizes.iconLg,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/logos/conquest-icon.png',
+              height: TSizes.iconLg + 15,
+            ),
+            Image.asset(
+              'assets/logos/conquest-string.png',
+              height: TSizes.imageThumbSize + 10,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Iconsax.shopping_cart,
+              size: TSizes.iconLg,
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Searchbar(),
+              const Searchbar(),
               // Carousel Slider
               CarouselSlider(
                 options: CarouselOptions(
@@ -123,14 +163,16 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                                   padding: const EdgeInsets.all(15.0),
                                   child: SvgPicture.asset(
                                     category['image']!,
-                                    fit: BoxFit.contain, // Ensures the image fits within the container
+                                    fit: BoxFit
+                                        .contain, // Ensures the image fits within the container
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(height: TSizes.sm),
                             Container(
-                              width: 80, // Set a fixed width for the text to ensure alignment
+                              width:
+                                  80, // Set a fixed width for the text to ensure alignment
                               child: Text(
                                 category['title']!,
                                 style: Theme.of(context).textTheme.bodySmall,
@@ -144,15 +186,15 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                   ),
                 ),
               ),
-        
+
               // Trending Section
               buildSectionTitle(context, 'Trending Now'),
               buildProductGridView(trendingItems),
-        
+
               // Bestseller Section
               buildSectionTitle(context, 'Bestsellers'),
               buildProductGridView(bestsellers),
-        
+
               // Top Picks Section
               buildSectionTitle(context, 'Top Picks'),
               buildProductGridView(topPicks),
@@ -196,7 +238,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.6,
         ),
         itemBuilder: (context, index) {
           final product = products[index];
@@ -205,128 +247,13 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           final imageUrl = product['image'] ?? '';
           final title = product['title'] ?? 'Product';
           //return buildProductCard(imageUrl, title);
-          return ProductCard(imageUrl: imageUrl, title: 'Product name', oldPrice: '500', newPrice: '300',);
+          return ProductCard(
+            imageUrl: imageUrl,
+            title: 'Product name',
+            oldPrice: '500',
+            newPrice: '300',
+          );
         },
-      ),
-    );
-  }
-
-  Widget buildProductCard(
-    String imageUrl,
-    String title,
-  ) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product Image
-              ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(15)),
-                child: Image.network(
-                  imageUrl,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error), // Handle image load errors
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Product Title
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Price Row
-                    const Row(
-                      children: [
-                        // if (oldPrice != null && oldPrice.isNotEmpty)
-                        Text(
-                          '₹500',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          '₹349',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Add to Cart Button
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 20),
-                      ),
-                      onPressed: () {
-                        // Add to cart logic here
-                      },
-                      child: const Text(
-                        'Add to Cart',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          // Discount Ribbon
-          Positioned(
-            top: 10,
-            left: 10,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Text(
-                '20% OFF',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

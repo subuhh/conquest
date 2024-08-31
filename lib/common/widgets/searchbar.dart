@@ -8,8 +8,9 @@ class Searchbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Padding(
-      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwInputFields,horizontal: 10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: TSizes.spaceBtwInputFields, horizontal: 10),
       child: Container(
         height: 50.0, // Adjust the height as needed
         decoration: BoxDecoration(
@@ -29,9 +30,10 @@ class Searchbar extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide.none, // Customize focused border
-
             ),
-            contentPadding: EdgeInsets.only(top: 15.0), // Align the text vertically
+            border: InputBorder.none,
+            contentPadding:
+                EdgeInsets.only(top: 15.0), // Align the text vertically
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:conquest/features/utils/constants/colors.dart';
+import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -12,9 +13,8 @@ class ProductCard extends StatelessWidget {
     required this.title,
     required this.oldPrice,
     required this.newPrice,
-    Key? key,
-  }) : super(key: key);
-
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,10 @@ class ProductCard extends StatelessWidget {
           ),
           _buildDiscountRibbon(),
           Positioned(
-              right: 5,
-              top: 5,
-              child: _buildWhishlistbutton())
+            right: 5,
+            top: 5,
+            child: _buildWhishlistbutton(),
+          )
         ],
       ),
     );
@@ -68,8 +69,10 @@ class ProductCard extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-              children:[
-            _buildAddToCartButton(context)] ),
+            children: [
+              _buildAddToCartButton(context),
+            ],
+          ),
         ],
       ),
     );
@@ -78,23 +81,66 @@ class ProductCard extends StatelessWidget {
   Widget _buildProductTitle(context) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.headlineSmall,
-      maxLines: 2,
+      style: TTextTheme.lightTextTheme.headlineMedium,
+      maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
   Widget _buildPriceRow(context) {
-    return Row(
+    final discountAmount = double.parse(newPrice) * 0.05;
+    final premiumPrice =
+        (double.parse(newPrice) - discountAmount).toStringAsFixed(2);
+    return Column(
       children: [
-        Text(
-          '₹${oldPrice}',
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(decoration: TextDecoration.lineThrough,color: Colors.grey),
+        Row(
+          children: [
+            RichText(
+              text: TextSpan(
+                text: '₹$newPrice  ',
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Colors.black,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w700,
+                    ),
+                children: [
+                  TextSpan(
+                    text: '₹$oldPrice',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.grey,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 10),
-        Text(
-          '₹${newPrice}',
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.green),
+        Row(
+          children: [
+            RichText(
+              text: TextSpan(
+                text: '₹$premiumPrice ',
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Colors.black,
+                      fontSize: 19,
+                      fontWeight: FontWeight.w700,
+                    ),
+                children: [
+                  TextSpan(
+                    text: 'With Pro',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: TColors.primary,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -102,23 +148,22 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildAddToCartButton(BuildContext context) {
     return ElevatedButton(
-      style:
-      ElevatedButton.styleFrom(
+      style: ElevatedButton.styleFrom(
         backgroundColor: TColors.primary,
-        foregroundColor: TColors.primary,
-
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.transparent, width: 0),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       ),
       onPressed: () {
         // Add to cart logic here
       },
       child: const Text(
         'Add to Cart',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -146,15 +191,15 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-Widget _buildWhishlistbutton(){
+Widget _buildWhishlistbutton() {
   bool itemInWhisList = false;
-   return Container(
+  return Container(
     height: 40,
     decoration: BoxDecoration(
       color: Colors.white,
       shape: BoxShape.circle,
       border: Border.all(
-        color: Colors.grey.shade300,
+        color: Colors.grey.shade400,
       ),
     ),
     child: Center(

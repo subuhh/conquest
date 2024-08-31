@@ -41,7 +41,7 @@ class Homepage extends StatelessWidget {
           IconButton(
               onPressed: () {},
               icon: const Icon(
-                Iconsax.notification,
+                Iconsax.shopping_cart,
                 size: TSizes.iconLg,
               )),
         ],
