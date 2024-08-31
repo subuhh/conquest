@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "620414975341",
+    "project_id": "conquest-22c2a",
+    "storage_bucket": "conquest-22c2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620414975341:android:261f66e30b62a3cbf6ee64",
+        "android_client_info": {
+          "package_name": "com.conquest.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3wylz4ZLdygtH4gC921K7a-8J-fSKC14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

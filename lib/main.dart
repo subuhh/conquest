@@ -1,11 +1,15 @@
 import 'package:conquest/features/screens/Drawer/drawer_screen.dart';
 import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:conquest/features/screens/SplashScreen/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'features/BottomNavBar/bottom_nav_bar.dart';
 import 'features/utils/theme/theme.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
