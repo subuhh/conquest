@@ -1,5 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:conquest/common/widgets/searchbar.dart';
+import 'package:conquest/features/screens/MarketPlace/productCard.dart';
+import 'package:conquest/features/utils/constants/colors.dart';
+import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -15,14 +20,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     'https://via.placeholder.com/600x300?text=Supplements+Sale',
   ];
 
-  final List<Map<String, String>> categories = [
-    {'title': 'Protein', 'icon': '💪'},
-    {'title': 'Clothing', 'icon': '👕'},
-    {'title': 'Supplements', 'icon': '🍶'},
-    {'title': 'Equipment', 'icon': '🏋️'},
-    {'title': 'Accessories', 'icon': '🎒'},
-    {'title': 'New Arrivals', 'icon': '🆕'},
-  ];
+  
 
   final List<Map<String, String>> trendingItems = [
     {'title': 'Dumbbells Set', 'image': 'https://picsum.photos/400?random=2'},
@@ -31,6 +29,16 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     {
       'title': 'Resistance Bands',
       'image': 'https://picsum.photos/400?random=7'
+    },
+  ];
+
+  final List<Map<String, String>> Categories = [
+    {'title': 'Supplements', 'image': 'assets/icons/appicons/supplimenticon.svg'},
+    {'title': 'Merchandise', 'image': 'assets/icons/appicons/merchandiseIcon.svg'},
+    {'title': 'Healthy\n Snacks', 'image': 'assets/icons/appicons/healthySnacksIcon.svg'},
+    {
+      'title': 'Equipments',
+      'image': 'assets/icons/appicons/gymEquipments.svg'
     },
   ];
 
@@ -51,91 +59,105 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Marketplace'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Carousel Slider
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 200.0,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 1.0,
-                enableInfiniteScroll: true,
-              ),
-              items: List.generate(10, (index) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Image.network(
-                          'https://picsum.photos/400?random=$index',
-                          fit: BoxFit.cover,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Searchbar(),
+              // Carousel Slider
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 200.0,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: true,
+                ),
+                items: List.generate(10, (index) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 10),
-            // Category Buttons
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: categories.map((category) {
-                  return Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Colors.orangeAccent,
-                        child: Text(
-                          category['icon']!,
-                          style: const TextStyle(fontSize: 24),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                            'https://picsum.photos/400?random=$index',
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(category['title']!,
-                          style: const TextStyle(fontSize: 12)),
-                    ],
+                      );
+                    },
                   );
                 }).toList(),
               ),
-            ),
-
-            // Trending Section
-            buildSectionTitle(context, 'Trending Now'),
-            buildProductGridView(trendingItems),
-
-            // Bestseller Section
-            buildSectionTitle(context, 'Bestsellers'),
-            buildProductGridView(bestsellers),
-
-            // Top Picks Section
-            buildSectionTitle(context, 'Top Picks'),
-            buildProductGridView(topPicks),
-          ],
+              const SizedBox(height: 10),
+              // Category Buttons
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: Categories.map((category) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: TColors.grey,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: SvgPicture.asset(
+                                    category['image']!,
+                                    fit: BoxFit.contain, // Ensures the image fits within the container
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: TSizes.sm),
+                            Container(
+                              width: 80, // Set a fixed width for the text to ensure alignment
+                              child: Text(
+                                category['title']!,
+                                style: Theme.of(context).textTheme.bodySmall,
+                                textAlign: TextAlign.center, // Center the text
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+        
+              // Trending Section
+              buildSectionTitle(context, 'Trending Now'),
+              buildProductGridView(trendingItems),
+        
+              // Bestseller Section
+              buildSectionTitle(context, 'Bestsellers'),
+              buildProductGridView(bestsellers),
+        
+              // Top Picks Section
+              buildSectionTitle(context, 'Top Picks'),
+              buildProductGridView(topPicks),
+            ],
+          ),
         ),
       ),
     );
@@ -182,8 +204,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           // Ensure all fields have default values if null
           final imageUrl = product['image'] ?? '';
           final title = product['title'] ?? 'Product';
-
-          return buildProductCard(imageUrl, title);
+          //return buildProductCard(imageUrl, title);
+          return ProductCard(imageUrl: imageUrl, title: 'Product name', oldPrice: '500', newPrice: '300',);
         },
       ),
     );
@@ -195,7 +217,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   ) {
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
@@ -218,7 +240,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

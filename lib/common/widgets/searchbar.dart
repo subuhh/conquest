@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../utils/constants/sizes.dart';
+import '../../features/utils/constants/sizes.dart';
 
-class HomepageSearchbar extends StatelessWidget {
-  const HomepageSearchbar({super.key});
+class Searchbar extends StatelessWidget {
+  const Searchbar({super.key});
 
   @override
   Widget build(BuildContext context) {

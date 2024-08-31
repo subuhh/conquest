@@ -1,5 +1,5 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
-import 'package:conquest/features/screens/HomePage/homepage_searchbar.dart';
+import 'package:conquest/common/widgets/searchbar.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class Homepage extends StatelessWidget {
         child: Column(
           children: [
             /// Search Bar
-            const HomepageSearchbar(),
+            const Searchbar(),
 
             /// Homepage Content
             Expanded(
