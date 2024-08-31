@@ -66,7 +66,7 @@ class ProductCard extends StatelessWidget {
           _buildProductTitle(context),
           const SizedBox(height: 6),
           _buildPriceRow(context),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -79,11 +79,14 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildProductTitle(context) {
-    return Text(
-      title,
-      style: TTextTheme.lightTextTheme.headlineMedium,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        title,
+        style: TTextTheme.lightTextTheme.headlineSmall,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 
@@ -98,44 +101,37 @@ class ProductCard extends StatelessWidget {
             RichText(
               text: TextSpan(
                 text: '₹$newPrice  ',
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Colors.black,
-                      fontSize: 21,
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: TTextTheme.lightTextTheme.headlineSmall!.copyWith(
+                  color: Colors.black,
+                ),
                 children: [
                   TextSpan(
                     text: '₹$oldPrice',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey,
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
-                        ),
+                    style: TTextTheme.lightTextTheme.titleMedium!.copyWith(
+                      decoration: TextDecoration.lineThrough,
+                      color: Colors.grey,
+                    ),
                   ),
                 ],
               ),
             ),
           ],
         ),
+        const SizedBox(height: 4),
         Row(
           children: [
             RichText(
               text: TextSpan(
                 text: '₹$premiumPrice ',
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Colors.black,
-                      fontSize: 19,
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: TTextTheme.lightTextTheme.headlineSmall!.copyWith(
+                  color: Colors.black,
+                ),
                 children: [
                   TextSpan(
                     text: 'With Pro',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: TColors.primary,
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
-                        ),
+                    style: TTextTheme.lightTextTheme.titleLarge!.copyWith(
+                      color: TColors.primary,
+                    ),
                   ),
                 ],
               ),
@@ -161,7 +157,7 @@ class ProductCard extends StatelessWidget {
         'Add to Cart',
         style: TextStyle(
           color: Colors.white,
-          fontSize: 17,
+          fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),

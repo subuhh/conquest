@@ -99,108 +99,114 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Searchbar(),
-              // Carousel Slider
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 200.0,
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  viewportFraction: 1.0,
-                  enableInfiniteScroll: true,
-                ),
-                items: List.generate(10, (index) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Image.network(
-                            'https://picsum.photos/400?random=$index',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 10),
-              // Category Buttons
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: Categories.map((category) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: TColors.grey,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: SvgPicture.asset(
-                                    category['image']!,
-                                    fit: BoxFit
-                                        .contain, // Ensures the image fits within the container
-                                  ),
-                                ),
+      body: Column(
+        children: [
+          const Searchbar(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Carousel Slider
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: 200.0,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      viewportFraction: 1.0,
+                      enableInfiniteScroll: true,
+                    ),
+                    items: List.generate(10, (index) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Image.network(
+                                'https://picsum.photos/400?random=$index',
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(height: TSizes.sm),
-                            Container(
-                              width:
-                                  80, // Set a fixed width for the text to ensure alignment
-                              child: Text(
-                                category['title']!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                                textAlign: TextAlign.center, // Center the text
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       );
                     }).toList(),
                   ),
-                ),
+                  const SizedBox(height: 10),
+                  // Category Buttons
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: Categories.map((category) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: TColors.grey,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 35,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: SvgPicture.asset(
+                                        category['image']!,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: TSizes.sm),
+                                SizedBox(
+                                  width: 85,
+                                  child: Text(
+                                    category['title']!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(fontSize: 13),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+
+                  // Trending Section
+                  buildSectionTitle(context, 'Trending Now'),
+                  buildProductGridView(trendingItems),
+
+                  // Bestseller Section
+                  buildSectionTitle(context, 'Bestsellers'),
+                  buildProductGridView(bestsellers),
+
+                  // Top Picks Section
+                  buildSectionTitle(context, 'Top Picks'),
+                  buildProductGridView(topPicks),
+                ],
               ),
-
-              // Trending Section
-              buildSectionTitle(context, 'Trending Now'),
-              buildProductGridView(trendingItems),
-
-              // Bestseller Section
-              buildSectionTitle(context, 'Bestsellers'),
-              buildProductGridView(bestsellers),
-
-              // Top Picks Section
-              buildSectionTitle(context, 'Top Picks'),
-              buildProductGridView(topPicks),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -238,7 +244,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: 0.6,
+          childAspectRatio: 0.65,
         ),
         itemBuilder: (context, index) {
           final product = products[index];
