@@ -1,4 +1,4 @@
-package com.example.conquest
+package com.conquest.app
 
 import io.flutter.embedding.android.FlutterActivity
 

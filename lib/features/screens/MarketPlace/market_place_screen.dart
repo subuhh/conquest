@@ -147,7 +147,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                         children: Categories.map((category) {
                           return Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [

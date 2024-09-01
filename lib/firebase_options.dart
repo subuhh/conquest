@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '620414975341',
     projectId: 'conquest-22c2a',
     storageBucket: 'conquest-22c2a.appspot.com',
-    iosBundleId: 'com.example.conquest',
+    iosBundleId: 'com.conquest.app',
   );
 }

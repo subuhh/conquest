@@ -36,7 +36,7 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     right: 5,
                     top: 5,
-                    child: _buildWhishlistbutton(),
+                    child: _buildWishlistButton(),
                   )
                 ],
               ),
@@ -195,8 +195,8 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-Widget _buildWhishlistbutton() {
-  bool itemInWhisList = false;
+Widget _buildWishlistButton() {
+  bool itemInWishList = false;
   return Container(
     height: 40,
     decoration: BoxDecoration(
@@ -209,8 +209,8 @@ Widget _buildWhishlistbutton() {
     child: Center(
       child: IconButton(
         icon: Icon(
-          itemInWhisList ? Icons.favorite : Icons.favorite_border,
-          color: itemInWhisList ? Colors.redAccent : Colors.black,
+          itemInWishList ? Icons.favorite : Icons.favorite_border,
+          color: itemInWishList ? Colors.redAccent : Colors.black,
         ),
         onPressed: () {},
       ),
