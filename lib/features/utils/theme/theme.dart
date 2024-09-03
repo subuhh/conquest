@@ -23,11 +23,11 @@ class TAppTheme {
     chipTheme: TChipTheme.lightChipTheme,
     scaffoldBackgroundColor: TColors.white,
     appBarTheme: TAppBarTheme.lightAppBarTheme,
-    // checkboxTheme: TCheckboxTheme.lightCheckboxTheme,
-    // bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
-    // elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
-    // outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
-    // inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
+    checkboxTheme: TCheckboxTheme.lightCheckboxTheme,
+    bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
+    elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
+    outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
+     inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
   );
 
   static ThemeData darkTheme = ThemeData(

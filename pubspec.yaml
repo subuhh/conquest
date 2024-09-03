@@ -53,6 +53,7 @@ flutter:
     - assets/icons/drawerIcons/
 
 
+
 #-------------------LOCAL FONTS---------------#
 fonts:
   - family: Poppins

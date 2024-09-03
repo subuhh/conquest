@@ -80,11 +80,11 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           children: [
             Image.asset(
               'assets/logos/conquest-icon.png',
-              height: TSizes.iconLg + 15,
+              height: TSizes.iconLg + 10,
             ),
             Image.asset(
               'assets/logos/conquest-string.png',
-              height: TSizes.imageThumbSize + 10,
+              height: TSizes.imageThumbSize + 8,
             ),
           ],
         ),
@@ -236,29 +236,53 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   Widget buildProductGridView(List<Map<String, String>> products) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: products.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 0.62,
-        ),
-        itemBuilder: (context, index) {
-          final product = products[index];
+      // child: GridView.builder(
+      //   shrinkWrap: true,
+      //   physics: const NeverScrollableScrollPhysics(),
+      //   itemCount: products.length,
+      //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      //     crossAxisCount: 2,
+      //     crossAxisSpacing: 10,
+      //     mainAxisSpacing: 10,
+      //     childAspectRatio: 0.62,
+      //   ),
+      //   itemBuilder: (context, index) {
+      //     final product = products[index];
+      //
+      //     // Ensure all fields have default values if null
+      //     final imageUrl = product['image'] ?? '';
+      //     //return buildProductCard(imageUrl, title);
+      //     return ProductCard(
+      //       imageUrl: imageUrl,
+      //       title: 'Product name',
+      //       oldPrice: '500',
+      //       newPrice: '300',
+      //     );
+      //   },
+      // ),
+      child: SizedBox(
+        height: 300, // Adjust this height based on the item size
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal, // Make the ListView scroll horizontally
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
 
-          // Ensure all fields have default values if null
-          final imageUrl = product['image'] ?? '';
-          //return buildProductCard(imageUrl, title);
-          return ProductCard(
-            imageUrl: imageUrl,
-            title: 'Product name',
-            oldPrice: '500',
-            newPrice: '300',
-          );
-        },
+            // Ensure all fields have default values if null
+            final imageUrl = product['image'] ?? '';
+
+            return Container(
+              width: MediaQuery.of(context).size.width * 0.475, // Adjust width based on your requirement
+              //margin: EdgeInsets.symmetric(horizontal: 10.0), // Add some spacing between items
+              child: ProductCard(
+                imageUrl: imageUrl,
+                title: 'Product name',
+                oldPrice: '500',
+                newPrice: '300',
+              ),
+            );
+          },
+        ),
       ),
     );
   }
