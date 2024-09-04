@@ -1,7 +1,5 @@
 import 'dart:developer';
-
 import 'package:conquest/core/services/firestore_service.dart';
-import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/constants/text_strings.dart';
@@ -201,12 +199,12 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
           await FirestoreService().createUserDocument(userModel);
 
           // Navigate to homepage
-          Navigator.pushReplacement(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-            MaterialPageRoute(
-              builder: (context) => const Homepage(),
-            ), // Replace with your homepage screen
+            '/btmnav',
+            (route) => false,
           );
+
         } else {
           // Show a message if username is not available
           showSnackBar(

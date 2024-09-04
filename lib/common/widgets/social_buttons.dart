@@ -1,5 +1,4 @@
 import 'package:conquest/features/Authentication/first_time_login_by_google.dart';
-import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -70,12 +69,8 @@ class _SocialButtonState extends State<SocialButton> {
       if (user != null) {
         if (isDocumentExist != null && isDocumentExist) {
           // User document exists, navigate to the homepage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Homepage(),
-            ), // Replace with your homepage
-          );
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/btmnav', (route) => false);
         } else {
           // User document does not exist, navigate to the info entry screen
           Navigator.pushReplacement(

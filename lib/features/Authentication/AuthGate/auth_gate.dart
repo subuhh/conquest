@@ -1,4 +1,4 @@
-import 'package:conquest/features/screens/HomePage/homepage.dart';
+import 'package:conquest/features/BottomNavBar/bottom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ class AuthGateScreen extends StatelessWidget {
 
             if (snapshot.hasData) {
               // User is authenticated
-              return const Homepage();
+              return const BottomNavBar();
             } else {
               // User is not authenticated
               return const LoginScreen();

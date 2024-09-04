@@ -1,5 +1,4 @@
 import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
-import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/widgets/custom_snackbar.dart';
@@ -158,10 +157,8 @@ class _LoginFormState extends State<LoginForm> {
           context,
         );
         if (userCredential != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const Homepage()),
-          );
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/btmnav', (route) => false);
         }
       }
     } catch (e) {
