@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:conquest/core/services/auth_service.dart';
+import 'package:conquest/features/Authentication/login/login.dart';
 import 'package:conquest/features/screens/Drawer/Header.dart';
 import 'package:flutter/material.dart';
 import '../../../common/widgets/custom_list_tile_group.dart';
@@ -13,6 +15,8 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
+  final _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     const double uniformPadding = 8.0;
@@ -204,7 +208,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           // if (_auth.currentUser != null) ...[
                           menuListTile(
                             'Log Out',
-                            () {},
+                            () {
+                              _auth.signOut();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                                (route) => false,
+                              );
+                            },
                             'assets/icons/drawerIcons/logout.svg',
                             context,
                           ),

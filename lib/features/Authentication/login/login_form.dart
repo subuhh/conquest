@@ -1,89 +1,176 @@
-import 'package:conquest/features/Authentication/SignUp/SignUp.dart';
+import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
+import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../common/widgets/custom_snackbar.dart';
+import '../../../core/services/auth_service.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/constants/text_strings.dart';
 
-
-class loginForm extends StatelessWidget {
-  const loginForm({
+class LoginForm extends StatefulWidget {
+  const LoginForm({
     super.key,
   });
 
   @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _obscureText = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Form(
+        key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              vertical: TSizes.spaceBtwSections),
+            vertical: TSizes.spaceBtwSections,
+          ),
           child: Column(
             children: [
               /// Email
               TextFormField(
-                decoration: InputDecoration(
+                controller: _emailController,
+                decoration: const InputDecoration(
                     prefixIcon: Icon(Iconsax.direct_right),
                     labelText: TTexts.email),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your Email';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: TSizes.spaceBtwInputFields,
-              ),
+              const SizedBox(height: TSizes.spaceBtwInputFields),
 
-              /// Pasword
+              /// Password
               TextFormField(
+                controller: _passwordController,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Iconsax.password_check),
+                  prefixIcon: const Icon(Iconsax.password_check),
                   labelText: TTexts.password,
-                  suffixIcon: Icon(Iconsax.eye_slash),
+                  suffixIcon: IconButton(
+                    icon: _obscureText
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  ),
                 ),
+                obscureText: _obscureText,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your Password';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: TSizes.spaceBtwInputFields / 2,
-              ),
+              const SizedBox(height: TSizes.spaceBtwInputFields / 2),
 
               /// Remember Me & Forget Password
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ///Remember me
-                  Row(
-                    children: [
-                      Checkbox(value: true, onChanged: (value) {}),
-                      const Text(TTexts.rememberMe),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Checkbox(
+                  //       value: true,
+                  //       onChanged: (value) {},
+                  //     ),
+                  //     const Text(TTexts.rememberMe),
+                  //   ],
+                  // ),
 
                   ///ForgetPassword
                   TextButton(
-                      onPressed: null, child: Text(TTexts.forgetPassword))
+                    onPressed: null,
+                    child: Text(TTexts.forgetPassword),
+                  )
                 ],
               ),
-              const SizedBox(
-                height: TSizes.spaceBtwSections,
-              ),
+              const SizedBox(height: TSizes.spaceBtwSections),
 
               /// Sized Box
               SizedBox(
-                  width: double.maxFinite,
-                  child: ElevatedButton(
-                      onPressed: () {}, child: Text(TTexts.signIn))),
-              const SizedBox(
-                height: TSizes.spaceBtwItems,
+                width: double.maxFinite,
+                child: ElevatedButton(
+                  onPressed: _logIn,
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          TTexts.signIn,
+                        ),
+                ),
               ),
+              const SizedBox(height: TSizes.spaceBtwItems),
 
               ///Create Account Button
-
               SizedBox(
-                  width: double.maxFinite,
-                  child: OutlinedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
-                    },
-                     // onPressed: ()=> Get.to(()=>const SignUpScreen()),
-                      child: Text(TTexts.createAccount)))
+                width: double.maxFinite,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignUpScreen(),
+                      ),
+                    );
+                  },
+                  // onPressed: ()=> Get.to(()=>const SignUpScreen()),
+                  child: const Text(
+                    TTexts.createAccount,
+                  ),
+                ),
+              )
             ],
           ),
         ));
   }
+
+  Future<void> _logIn() async {
+    setState(() => _isLoading = true);
+    try {
+      if (_formKey.currentState!.validate()) {
+        final userCredential = await _auth.loginWithEmailAndPassword(
+          _emailController.text,
+          _passwordController.text,
+          context,
+        );
+        if (userCredential != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Homepage()),
+          );
+        }
+      }
+    } catch (e) {
+      showSnackBar(context, 'Something error occurred. Please try again',
+          isError: true);
+      setState(() => _isLoading = false);
+    } finally {
+      setState(() => _isLoading = false);
+    }
+    setState(() => _isLoading = false);
+  }
 }
-
-

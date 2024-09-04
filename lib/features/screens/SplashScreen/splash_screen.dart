@@ -1,8 +1,7 @@
+import 'package:conquest/features/Authentication/AuthGate/auth_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../../Authentication/login/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         PageTransition(
           type: PageTransitionType.fade,
-          child: const LoginScreen(),
+          child: const AuthGateScreen(),
         ),
         (route) => false,
       );

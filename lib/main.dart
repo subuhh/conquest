@@ -3,6 +3,8 @@ import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:conquest/features/screens/SplashScreen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'core/services/auth_service.dart';
 import 'features/BottomNavBar/bottom_nav_bar.dart';
 import 'features/utils/theme/theme.dart';
 import 'firebase_options.dart';
@@ -10,7 +12,14 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthService()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      home:  const SplashScreen(),
+      home: const SplashScreen(),
       initialRoute: '/',
       routes: {
         '/homepage': (context) => const Homepage(),

@@ -24,14 +24,16 @@ class LoginScreen extends StatelessWidget {
               loginHeader(dark: dark),
 
               /// Form
-              const loginForm(),
+              const LoginForm(),
 
               /// Divider
-              const FormDivider(divierText: TTexts.orSignInWith,),
+              const FormDivider(
+                divierText: TTexts.orSignInWith,
+              ),
               const SizedBox(height: TSizes.spaceBtwSections),
 
               /// Footer
-              const socialButton()
+              const SocialButton()
             ],
           ),
         ),
@@ -39,4 +41,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
