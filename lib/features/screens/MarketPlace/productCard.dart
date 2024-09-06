@@ -1,3 +1,4 @@
+import 'package:conquest/features/shop/screens/product-details/product_detail.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (ctx)=>ProductDetail()));
       },
       child: Card(
         elevation: 4,
@@ -165,23 +166,26 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildAddToCartButton(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-
-        backgroundColor: TColors.primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      height: 50,
+      width: 120,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: TColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
-      ),
-      onPressed: () {
-        // Add to cart logic here
-      },
-      child: const Text(
-        'Add to Cart',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
+        onPressed: () {
+
+        },
+        child: const Text(
+          'Add to Cart',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

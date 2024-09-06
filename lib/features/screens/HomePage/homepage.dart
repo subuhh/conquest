@@ -5,8 +5,8 @@ import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-class Homepage extends StatelessWidget {
-  const Homepage({super.key});
+class homepage extends StatelessWidget {
+  const homepage({super.key});
 
   @override
   Widget build(BuildContext context) {

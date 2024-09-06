@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/services/auth_service.dart';
+
 import '../login/login.dart';
 
 class AuthGateScreen extends StatelessWidget {
@@ -25,7 +26,7 @@ class AuthGateScreen extends StatelessWidget {
 
             if (snapshot.hasData) {
               // User is authenticated
-              return const BottomNavBar();
+              return BottomNavBar();
             } else {
               // User is not authenticated
               return const LoginScreen();
