@@ -5,13 +5,13 @@ class UserModel {
   final String name;
   final String phoneNumber;
   final String? profileImageUrl;
+  final String? bio;
   final int? age;
   final String? gender;
   final double? height;
   final double? weight;
   final String? fitnessGoal;
   final List<String>? workoutHistory;
-  final Map<String, dynamic>? preferences;
 
   UserModel({
     required this.id,
@@ -20,13 +20,13 @@ class UserModel {
     required this.name,
     required this.phoneNumber,
     this.profileImageUrl,
+    this.bio,
     this.age,
     this.gender,
     this.height,
     this.weight,
     this.fitnessGoal,
     this.workoutHistory,
-    this.preferences,
   });
 
   // Factory constructor to create a UserModel instance from Firestore document
@@ -38,13 +38,13 @@ class UserModel {
       name: data['name'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
       profileImageUrl: data['profileImageUrl'] ?? '',
+      bio: data['bio'] ?? '',
       age: data['age'] ?? 0,
       gender: data['gender'] ?? '',
       height: data['height']?.toDouble() ?? 0.0,
       weight: data['weight']?.toDouble() ?? 0.0,
       fitnessGoal: data['fitnessGoal'] ?? '',
       workoutHistory: List<String>.from(data['workoutHistory'] ?? []),
-      preferences: data['preferences'] ?? {},
     );
   }
 
@@ -56,13 +56,13 @@ class UserModel {
       'name': name,
       'phoneNumber': phoneNumber,
       'profileImageUrl': profileImageUrl,
+      'bio': bio,
       'age': age,
       'gender': gender,
       'height': height,
       'weight': weight,
       'fitnessGoal': fitnessGoal,
       'workoutHistory': workoutHistory,
-      'preferences': preferences,
     };
   }
 }

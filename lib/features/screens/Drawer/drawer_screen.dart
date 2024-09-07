@@ -233,7 +233,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         // if (_auth.currentUser != null) ...[
                         menuListTile(
                           'Your Profile',
-                          () {},
+                          () =>
+                              Navigator.of(context).pushNamed('/profileScreen'),
                           'assets/icons/drawerIcons/profile.svg',
                           context,
                         ),
