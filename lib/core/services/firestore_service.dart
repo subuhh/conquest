@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../model/banner.dart';
 import '../model/user.dart';
 
 class FirestoreService {
@@ -72,6 +73,45 @@ class FirestoreService {
       log('Error checking username availability: $e');
       // Handle any errors (e.g., network issues)
       return false;
+    }
+  }
+
+  // --- Category ---
+
+  // Fetch all Categories from database
+  Future<List<Map<String, dynamic>>> fetchCategories() async {
+    try {
+      final snapshot = await _firestore.collection('category').get();
+      final List<Map<String, dynamic>> categories = snapshot.docs.map((doc) {
+        return {
+          'id': doc.id,
+          'name': doc['name'],
+          'image': doc['image'],
+        };
+      }).toList();
+      return categories;
+    } catch (e) {
+      // Handle the error (e.g., throw an exception or return an empty list)
+      log('Error fetching categories: $e');
+      return [];
+    }
+  }
+
+  // Banners
+  Future<List<BannerModel>> fetchBanners({required String targetScreen}) async {
+    try {
+      final snapshot = await _firestore
+          .collection('banner')
+          .where('targetScreen', isEqualTo: targetScreen)
+          .where('active', isEqualTo: true)
+          .get();
+      List<BannerModel> banners = snapshot.docs.map((doc) {
+        return BannerModel.fromFirestore(doc.data(), doc.id);
+      }).toList();
+      return banners;
+    } catch (e) {
+      log('Error fetching banners: $e');
+      return [];
     }
   }
 }

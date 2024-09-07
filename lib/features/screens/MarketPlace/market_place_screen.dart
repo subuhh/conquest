@@ -1,11 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
+import 'package:conquest/core/model/banner.dart';
+import 'package:conquest/core/services/firestore_service.dart';
 import 'package:conquest/features/screens/MarketPlace/productCard.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -15,11 +18,29 @@ class MarketplaceScreen extends StatefulWidget {
 }
 
 class _MarketplaceScreenState extends State<MarketplaceScreen> {
-  final List<String> carouselImages = [
-    'https://via.placeholder.com/600x300?text=Fitness+Gear',
-    'https://via.placeholder.com/600x300?text=Anime+Merch',
-    'https://via.placeholder.com/600x300?text=Supplements+Sale',
-  ];
+  final _firestoreService = FirestoreService();
+  List<Map<String, dynamic>> _categories = [];
+  List<BannerModel> _banners = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCategories();
+    loadBanners();
+  }
+
+  Future<void> loadCategories() async {
+    _categories = await _firestoreService.fetchCategories();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> loadBanners() async {
+    _banners =
+        await _firestoreService.fetchBanners(targetScreen: 'marketplace');
+  }
 
   final List<Map<String, String>> trendingItems = [
     {'title': 'Dumbbells Set', 'image': 'https://picsum.photos/400?random=2'},
@@ -29,22 +50,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       'title': 'Resistance Bands',
       'image': 'https://picsum.photos/400?random=7'
     },
-  ];
-
-  final List<Map<String, String>> Categories = [
-    {
-      'title': 'Supplements',
-      'image': 'assets/icons/appicons/supplimenticon.svg'
-    },
-    {
-      'title': 'Merchandise',
-      'image': 'assets/icons/appicons/merchandiseIcon.svg'
-    },
-    {
-      'title': 'Healthy\n Snacks',
-      'image': 'assets/icons/appicons/healthySnacksIcon.svg'
-    },
-    {'title': 'Equipments', 'image': 'assets/icons/appicons/gymEquipments.svg'},
   ];
 
   final List<Map<String, String>> bestsellers = [
@@ -116,20 +121,28 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                       viewportFraction: 1.0,
                       enableInfiniteScroll: true,
                     ),
-                    items: List.generate(10, (index) {
+                    items: List.generate(_banners.length, (index) {
+                      final banner = _banners[index];
                       return Builder(
                         builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
+                          return GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              banner.onTapScreen,
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                'https://picsum.photos/400?random=$index',
-                                fit: BoxFit.cover,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  banner.imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           );
@@ -139,57 +152,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                   ),
                   const SizedBox(height: 10),
                   // Category Buttons
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: Categories.map((category) {
-                          return Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: TColors.grey,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 35,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: SvgPicture.asset(
-                                        category['image']!,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: TSizes.sm),
-                                SizedBox(
-                                  width: 85,
-                                  child: Text(
-                                    category['title']!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .copyWith(fontSize: 13),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
+                  buildCategories(),
 
                   // Trending Section
                   buildSectionTitle(context, 'Trending Now'),
@@ -209,6 +172,64 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
         ],
       ),
     );
+  }
+
+  Widget buildCategories() {
+    return _isLoading
+        ? buildShimmerCategories()
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: _categories.map((category) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: TColors.grey,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 35,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: SvgPicture.asset(
+                                getSvgAssetForCategory(category['name']),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: TSizes.sm),
+                        SizedBox(
+                          width: 85,
+                          child: Text(
+                            category['name']!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(fontSize: 13),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          );
   }
 
   Widget buildSectionTitle(BuildContext context, String title) {
@@ -263,7 +284,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       child: SizedBox(
         height: 300, // Adjust this height based on the item size
         child: ListView.builder(
-          scrollDirection: Axis.horizontal, // Make the ListView scroll horizontally
+          scrollDirection:
+              Axis.horizontal, // Make the ListView scroll horizontally
           itemCount: products.length,
           itemBuilder: (context, index) {
             final product = products[index];
@@ -271,8 +293,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             // Ensure all fields have default values if null
             final imageUrl = product['image'] ?? '';
 
-            return Container(
-              width: MediaQuery.of(context).size.width * 0.475, // Adjust width based on your requirement
+            return SizedBox(
+              width: MediaQuery.of(context).size.width *
+                  0.475, // Adjust width based on your requirement
               //margin: EdgeInsets.symmetric(horizontal: 10.0), // Add some spacing between items
               child: ProductCard(
                 imageUrl: imageUrl,
@@ -285,5 +308,52 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
         ),
       ),
     );
+  }
+
+  Widget buildShimmerCategories() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children:
+              List.generate(_categories.length, (index) => shimmerCircle())
+                  .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget shimmerCircle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          width: 70,
+          height: 70,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String getSvgAssetForCategory(String name) {
+    switch (name.toLowerCase()) {
+      case 'supplements':
+        return 'assets/icons/appicons/supplimenticon.svg';
+      case 'merchandise':
+        return 'assets/icons/appicons/merchandiseIcon.svg';
+      case 'healthy snacks':
+        return 'assets/icons/appicons/healthySnacksIcon.svg';
+      case 'equipments':
+        return 'assets/icons/appicons/gymEquipments.svg';
+      default:
+        return 'assets/icons/appicons/supplimenticon.svg'; // Fallback icon if no match
+    }
   }
 }
