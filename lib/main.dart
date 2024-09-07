@@ -1,6 +1,8 @@
 import 'package:conquest/features/screens/Drawer/drawer_screen.dart';
+import 'package:conquest/features/screens/Drawer/drawer_section_screen/profile/profile_screen.dart';
 import 'package:conquest/features/screens/HomePage/homepage.dart';
 import 'package:conquest/features/screens/SplashScreen/splash_screen.dart';
+import 'package:conquest/features/shop/screens/product-details/product_detail.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +39,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/homepage': (context) => const homepage(),
         '/drawer': (context) => const DrawerScreen(),
-        '/btmnav': (context) => BottomNavBar(),
+        '/btmnav': (context) => const BottomNavBar(),
+        '/productDetails': (context) => const ProductDetail(),
+        '/profileScreen': (context) => const ProfilePage(),
       },
     );
   }
