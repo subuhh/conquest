@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/banner.dart';
+import '../model/product.dart';
 import '../model/user.dart';
 
 class FirestoreService {
@@ -97,7 +98,9 @@ class FirestoreService {
     }
   }
 
-  // Banners
+  // --- Banners ---
+
+  // Fetching targeted Banners
   Future<List<BannerModel>> fetchBanners({required String targetScreen}) async {
     try {
       final snapshot = await _firestore
@@ -112,6 +115,22 @@ class FirestoreService {
     } catch (e) {
       log('Error fetching banners: $e');
       return [];
+    }
+  }
+
+  // --- Products ---
+
+  // Fetching all Products
+  Future<List<ProductModel>> fetchAllProducts() async {
+    try {
+      final snapshot = await _firestore.collection('products').get();
+      log('Products snapshot size: ${snapshot.size}');
+      return snapshot.docs
+          .map((doc) => ProductModel.fromFirestore(doc.data()))
+          .toList();
+    } catch (e) {
+      log('Error fetching the products: $e');
+      rethrow;
     }
   }
 }

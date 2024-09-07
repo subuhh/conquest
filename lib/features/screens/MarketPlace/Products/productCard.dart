@@ -1,10 +1,7 @@
-import 'package:conquest/features/shop/screens/product-details/product_detail.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'ProductPage/ProductPage.dart';
 
 class ProductCard extends StatelessWidget {
   final String imageUrl;
@@ -23,7 +20,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.pushNamed(
           context,
           '/productDetails',
@@ -68,7 +65,7 @@ class ProductCard extends StatelessWidget {
         imageUrl,
         height: 150,
         width: maxWidth,
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
       ),
     );
@@ -115,7 +112,7 @@ class ProductCard extends StatelessWidget {
   Widget _buildPriceRow(context) {
     final discountAmount = double.parse(newPrice) * 0.05;
     final premiumPrice =
-    (double.parse(newPrice) - discountAmount).toStringAsFixed(2);
+        (double.parse(newPrice) - discountAmount).toStringAsFixed(2);
     return Column(
       children: [
         Row(
@@ -143,7 +140,6 @@ class ProductCard extends StatelessWidget {
         //const SizedBox(height: 4),
         Row(
           children: [
-
             Text(
               '₹$premiumPrice ',
               style: TTextTheme.lightTextTheme.labelLarge!.copyWith(
@@ -157,11 +153,11 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             SvgPicture.asset(
-              'assets/icons/appicons/premiumicon.svg', height: 20,
-              color: TColors.primary,
+              'assets/icons/appicons/premiumicon.svg',
+              height: 20,
+              colorFilter:
+                  const ColorFilter.mode(TColors.primary, BlendMode.srcIn),
             )
-
-
           ],
         ),
       ],
@@ -179,9 +175,7 @@ class ProductCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        onPressed: () {
-
-        },
+        onPressed: () {},
         child: const Text(
           'Add to Cart',
           style: TextStyle(
