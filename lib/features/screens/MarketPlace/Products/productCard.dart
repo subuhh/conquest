@@ -166,11 +166,12 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildAddToCartButton(BuildContext context) {
     return SizedBox(
-      height: 50,
+      height: 40,
       width: 120,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: TColors.primary,
+          padding: const EdgeInsets.symmetric(vertical: 0),
+          //backgroundColor: TColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

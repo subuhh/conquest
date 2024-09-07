@@ -1,0 +1,41 @@
+import 'package:conquest/common/widgets/customShapes/circcularContainer.dart';
+import 'package:conquest/features/utils/helpers/helper_functions.dart';
+import 'package:flutter/material.dart';
+
+import '../../../features/utils/constants/colors.dart';
+
+class TChoiceChip extends StatelessWidget {
+  const TChoiceChip({
+    super.key,
+    required this.text,
+    required this.selected,
+    this.onSelected,
+  });
+
+  final String text;
+  final bool selected;
+  final void Function(bool)? onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final isColor = THelperFunctions.getColor(text)!=null;
+    return ChoiceChip(
+      label:isColor ? const SizedBox() : Text(text),
+      selected: selected,
+      onSelected: onSelected,
+      labelStyle: TextStyle(color: selected ? TColors.white : null),
+      avatar: isColor
+          ? CircularContainer(
+              height: 50,
+              width: 50,
+              backgorundColor:THelperFunctions.getColor(text)!,
+            )
+          : null,
+      shape: isColor?CircleBorder():null,
+      labelPadding:isColor? EdgeInsets.all(0):null,
+      padding: isColor?EdgeInsets.all(0):null,
+      selectedColor: isColor?Colors.green:null,
+      backgroundColor: isColor ?Colors.green:null,
+    );
+  }
+}

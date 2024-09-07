@@ -62,11 +62,12 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           children: [
             Image.asset(
               'assets/logos/conquest-icon.png',
-              height: TSizes.iconLg + 10,
+              height: TSizes.iconLg + 15,
             ),
+            const SizedBox(width: 5,),
             Image.asset(
               'assets/logos/conquest-string.png',
-              height: TSizes.imageThumbSize + 8,
+              height: TSizes.iconLg+80,
             ),
           ],
         ),

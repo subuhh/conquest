@@ -12,7 +12,8 @@ class homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       /// AppBar
-      appBar: AppBar(
+      appBar:
+      AppBar(
         leading: IconButton(
           onPressed: () {
             Navigator.pushNamed(context, '/drawer');
@@ -30,9 +31,10 @@ class homepage extends StatelessWidget {
               'assets/logos/conquest-icon.png',
               height: TSizes.iconLg + 15,
             ),
+            const SizedBox(width: 5,),
             Image.asset(
               'assets/logos/conquest-string.png',
-              height: TSizes.imageThumbSize + 10,
+              height: TSizes.iconLg+80,
             ),
           ],
         ),
@@ -41,7 +43,7 @@ class homepage extends StatelessWidget {
           IconButton(
               onPressed: () {},
               icon: const Icon(
-                Iconsax.shopping_cart,
+                Iconsax.notification,
                 size: TSizes.iconLg,
               )),
         ],
