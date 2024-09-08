@@ -1,4 +1,4 @@
-import 'package:conquest/features/shop/screens/product-details/widgets/rating_share_widget.dart';
+import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/rating_share_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../common/widgets/ProductPriceText.dart';

@@ -4,7 +4,7 @@ import 'package:conquest/core/model/product.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 import 'package:conquest/features/screens/MarketPlace/Carousel/carousel_section.dart';
 import 'package:conquest/features/screens/MarketPlace/Category/category_section.dart';
-import 'package:conquest/features/screens/MarketPlace/Products/products_section.dart';
+import 'package:conquest/features/screens/MarketPlace/Products/Products_screen/products_section.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
