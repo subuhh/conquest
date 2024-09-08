@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProductModel {
   final String name;
   final String description;
-  final double price;
+  final int originalPrice;
+  final int discountedPrice;
   final String productType;
-  final List<String>? images;
+  final List<String> images;
   final Map<String, dynamic>? clothingAttributes;
   final Map<String, dynamic>? supplementAttributes;
   final DateTime? createdAt;
@@ -14,9 +15,10 @@ class ProductModel {
   ProductModel({
     required this.name,
     required this.description,
-    required this.price,
+    required this.originalPrice,
+    required this.discountedPrice,
     required this.productType,
-    this.images,
+    required this.images,
     this.clothingAttributes,
     this.supplementAttributes,
     this.createdAt,
@@ -28,7 +30,8 @@ class ProductModel {
     return {
       'name': name,
       'description': description,
-      'price': price,
+      'originalPrice': originalPrice,
+      'discountedPrice': discountedPrice,
       'images': images,
       'type': productType,
       if (clothingAttributes != null) 'clothing': clothingAttributes,
@@ -43,7 +46,8 @@ class ProductModel {
     return ProductModel(
       name: data['name'],
       description: data['description'],
-      price: data['price'],
+      originalPrice: data['originalPrice'],
+      discountedPrice: data['discountedPrice'],
       productType: data['type'],
       images: List<String>.from(data['images'] ?? []),
       clothingAttributes: data['clothing'],

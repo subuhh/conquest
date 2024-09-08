@@ -67,7 +67,7 @@ class _ProductsSectionState extends State<ProductsSection> {
                     itemCount: widget.products.length,
                     itemBuilder: (context, index) {
                       final product = widget.products[index];
-                      final imageUrl = product.images![0];
+                      final imageUrl = product.images[0];
                       return SizedBox(
                         width: MediaQuery.of(context).size.width *
                             0.475, // Adjust width based on your requirement
@@ -75,8 +75,8 @@ class _ProductsSectionState extends State<ProductsSection> {
                         child: ProductCard(
                           imageUrl: imageUrl,
                           title: product.name,
-                          oldPrice: '500',
-                          newPrice: '${product.price}',
+                          oldPrice: '${product.originalPrice}',
+                          newPrice: '${product.discountedPrice}',
                         ),
                       );
                     },
