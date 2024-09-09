@@ -1,3 +1,5 @@
+import 'package:conquest/core/model/product.dart';
+import 'package:conquest/features/screens/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ class ProductCard extends StatelessWidget {
   final String title;
   final String oldPrice;
   final String newPrice;
+  final ProductModel productModel;
 
   const ProductCard({
     required this.imageUrl,
@@ -15,15 +18,20 @@ class ProductCard extends StatelessWidget {
     required this.oldPrice,
     required this.newPrice,
     super.key,
+    required this.productModel,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
+        Navigator.push(
           context,
-          '/productDetails',
+          MaterialPageRoute(
+            builder: (context) => ProductDetail(
+              productModel: productModel,
+            ),
+          ),
         );
       },
       child: Card(

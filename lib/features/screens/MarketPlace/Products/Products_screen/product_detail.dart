@@ -1,9 +1,10 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
+import 'package:conquest/core/model/product.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_meta_data.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/bottom_add_to_cart_widget.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_attributes.dart';
-import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_detail_image-slider.dart';
 import 'package:conquest/common/widgets/section_divider.dart';
+import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_detail_image_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
@@ -11,8 +12,16 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../Product_reviews/product_reviews_screen.dart';
 
-class ProductDetail extends StatelessWidget {
-  const ProductDetail({super.key});
+class ProductDetail extends StatefulWidget {
+  final ProductModel? productModel;
+  const ProductDetail({super.key, this.productModel});
+
+  @override
+  State<ProductDetail> createState() => _ProductDetailState();
+}
+
+class _ProductDetailState extends State<ProductDetail> {
+  int selectedQuantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,7 @@ class ProductDetail extends StatelessWidget {
           ),
           // Cart Button
           IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pushNamed(context, '/cart'),
             icon: const Icon(Iconsax.shopping_cart),
           ),
         ],
@@ -46,14 +55,14 @@ class ProductDetail extends StatelessWidget {
         child: Column(
           children: [
             // 1 - Product Image Slider
-            const ProductImageSlider(),
+            ProductImageSlider(productModel: widget.productModel!),
 
             // 2 - Product Details (Title, Flavour & Size, Price, In Stock)
-            const ProductMetaData(),
+            ProductMetaData(productModel: widget.productModel!),
             const SizedBox(height: TSizes.spaceBtwItems),
 
             // 3 - Colors and Sizes
-            const ProductAttributes(),
+            ProductAttributes(productModel: widget.productModel!),
             const SectionDivider(),
 
             // Product Quantity
@@ -94,7 +103,11 @@ class ProductDetail extends StatelessWidget {
                             color: TColors.black,
                           ),
                           onPressed: () {
-                            // Handle minus button
+                            setState(() {
+                              if (selectedQuantity > 1) {
+                                selectedQuantity--;
+                              }
+                            });
                           },
                         ),
                       ),
@@ -114,7 +127,7 @@ class ProductDetail extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '1', // Quantity number
+                          '$selectedQuantity', // Quantity number
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ),
@@ -142,6 +155,11 @@ class ProductDetail extends StatelessWidget {
                           ),
                           onPressed: () {
                             // Handle plus button
+                            setState(() {
+                              if (selectedQuantity < 6) {
+                                selectedQuantity++;
+                              }
+                            });
                           },
                         ),
                       ),
@@ -151,7 +169,6 @@ class ProductDetail extends StatelessWidget {
               ),
             ),
             const SectionDivider(),
-
 
             // Description
             const Sectionheading(
@@ -163,19 +180,21 @@ class ProductDetail extends StatelessWidget {
             const SizedBox(height: TSizes.spaceBtwItems),
 
             // Description Text
-            const Padding(
-              padding: EdgeInsets.only(
+            Padding(
+              padding: const EdgeInsets.only(
                 left: TSizes.defaultSpace,
                 right: TSizes.defaultSpace,
               ),
               child: ReadMoreText(
-                'Biozyme Performance Whey- Recognized by the World!\nMuscleBlaze Biozyme Performance Whey is crafted exclusively for fitness and muscle-building champions who want their protein supplement to be as effective as their efforts. It is scientifically designed with Enhanced Absorption Formula (EAF®) to maximize the bioavailability of protein for the Indian bodies. It’s a part of MB’s pioneering innovation- the BIOZYME series. The other fitness supplements in this iconic series are Biozyme Whey Iso-Zero & Biozyme Whey Protein.',
+                widget.productModel!.description,
                 trimLines: 7,
                 trimMode: TrimMode.Line,
                 trimCollapsedText: ' Show more',
                 trimExpandedText: ' Show Less',
-                moreStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
-                lessStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                moreStyle:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                lessStyle:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
               ),
             ),
 
@@ -183,10 +202,13 @@ class ProductDetail extends StatelessWidget {
 
             // Reviews
             const ProductReviewsScreen(),
-            const SectionDivider(isUpperSizedBox: false,),
+            const SectionDivider(
+              isUpperSizedBox: false,
+            ),
           ],
         ),
       ),
+      // Buy Now and Add to Cart Buttons
       bottomNavigationBar: const BottomAddToCartWidget(),
     );
   }

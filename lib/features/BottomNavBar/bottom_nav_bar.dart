@@ -50,10 +50,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
               _notchBottomBarController.jumpTo(index); // Sync page index with NotchBottomBar
             },
             children: [
-              homepage(),
-              MarketplaceScreen(),
-              Center(child: Text('Workout Tracking')),
-              Center(child: Text('Settings page')),
+              const homepage(),
+              const MarketplaceScreen(),
+              const Center(child: Text('Workout Tracking')),
+              const Center(child: Text('Settings page')),
             ],
           ),
           Positioned(
@@ -82,7 +82,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               onTap: (index) {
                 _pageController.animateToPage(
                   index,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
               },
