@@ -1,5 +1,6 @@
 import 'package:conquest/features/screens/MarketPlace/Products/Product_reviews/rating_progress_indicator.dart';
 import 'package:flutter/material.dart';
+
 class OverallRatingIndicator extends StatelessWidget {
   const OverallRatingIndicator({
     super.key,
@@ -10,13 +11,13 @@ class OverallRatingIndicator extends StatelessWidget {
     return Row(
       children: [
         Expanded(
+          flex: 3,
           child: Text(
             '4.8',
             style: Theme.of(context).textTheme.displayLarge,
           ),
-          flex: 3,
         ),
-        Expanded(
+        const Expanded(
           flex: 7,
           child: Column(
             children: [

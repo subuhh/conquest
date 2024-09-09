@@ -10,7 +10,7 @@ final double rating;
   @override
   Widget build(BuildContext context) {
     return RatingBarIndicator(
-      itemBuilder: (_, __) => Icon(
+      itemBuilder: (_, __) => const Icon(
         Iconsax.star1,
         color: TColors.primary,
       ),
