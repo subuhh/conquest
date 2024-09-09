@@ -77,6 +77,7 @@ class _ProductsSectionState extends State<ProductsSection> {
                           title: product.name,
                           oldPrice: '${product.originalPrice}',
                           newPrice: '${product.discountedPrice}',
+                          productModel: product,
                         ),
                       );
                     },

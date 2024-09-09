@@ -38,6 +38,13 @@ class THelperFunctions {
     }
   }
 
+  static String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) {
+      return text; // Handle empty strings
+    }
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   static void showSnackBar(String message,context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),

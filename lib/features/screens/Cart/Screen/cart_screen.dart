@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 
 class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
   @override
-  _CartScreenState createState() => _CartScreenState();
+  State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
@@ -22,7 +24,7 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Cart'),
+        title: const Text('Cart'),
       ),
       body: Column(
         children: [
@@ -42,14 +44,14 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             color: Colors.black54,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Checkout \$${totalAmount.toStringAsFixed(2)}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -59,7 +61,7 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () {
                     // Handle checkout action
                   },
-                  child: Text('Checkout'),
+                  child: const Text('Checkout'),
                 ),
               ],
             ),
@@ -74,7 +76,7 @@ class CartItemWidget extends StatelessWidget {
   final CartItem item;
   final Function(int) onQuantityChanged;
 
-  CartItemWidget({required this.item, required this.onQuantityChanged});
+  const CartItemWidget({super.key, required this.item, required this.onQuantityChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -87,18 +89,18 @@ class CartItemWidget extends StatelessWidget {
             width: 50,
             height: 50,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item.title,
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 Text(
                   item.subtitle,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),
@@ -111,23 +113,23 @@ class CartItemWidget extends StatelessWidget {
                     onQuantityChanged(item.quantity - 1);
                   }
                 },
-                icon: Icon(Icons.remove_circle_outline, color: Colors.white),
+                icon: const Icon(Icons.remove_circle_outline, color: Colors.white),
               ),
               Text(
                 item.quantity.toString(),
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
               IconButton(
                 onPressed: () {
                   onQuantityChanged(item.quantity + 1);
                 },
-                icon: Icon(Icons.add_circle_outline, color: Colors.white),
+                icon: const Icon(Icons.add_circle_outline, color: Colors.white),
               ),
             ],
           ),
           Text(
             '\$${(item.price * item.quantity).toStringAsFixed(2)}',
-            style: TextStyle(fontSize: 16, color: Colors.white),
+            style: const TextStyle(fontSize: 16, color: Colors.white),
           ),
         ],
       ),

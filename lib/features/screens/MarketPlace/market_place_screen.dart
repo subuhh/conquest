@@ -4,7 +4,6 @@ import 'package:conquest/core/model/product.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 import 'package:conquest/features/screens/MarketPlace/Carousel/carousel_section.dart';
 import 'package:conquest/features/screens/MarketPlace/Category/category_section.dart';
-import 'package:conquest/features/screens/MarketPlace/Products/Product_cart_screen/Cart_Screen.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/Products_screen/products_section.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -66,19 +65,19 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
               'assets/logos/conquest-icon.png',
               height: TSizes.iconLg + 15,
             ),
-            const SizedBox(width: 5,),
+            const SizedBox(
+              width: 5,
+            ),
             Image.asset(
               'assets/logos/conquest-string.png',
-              height: TSizes.iconLg+80,
+              height: TSizes.iconLg + 80,
             ),
           ],
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
-            },
+            onPressed: () => Navigator.pushNamed(context, '/cart'),
             icon: const Icon(
               Iconsax.shopping_cart,
               size: TSizes.iconLg,

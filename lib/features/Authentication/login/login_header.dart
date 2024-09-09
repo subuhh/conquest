@@ -15,7 +15,7 @@ class loginHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
@@ -28,7 +28,7 @@ class loginHeader extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: TSizes.spaceBtwSections,),
+        const SizedBox(height: TSizes.spaceBtwSections,),
         Text(
          'Welcome',
           style: Theme.of(context).textTheme.headlineMedium,

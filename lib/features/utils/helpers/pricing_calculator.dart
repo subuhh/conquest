@@ -13,6 +13,17 @@ class TPricingCalculator {
   return totalPrice;
   }
 
+  /// - Calculate Discounted Percentage
+  static int calculateDiscountPercentage(int originalPrice, int discountedPrice) {
+    if (originalPrice <= 0) {
+      throw ArgumentError('Original price must be greater than zero');
+    }
+
+    double discountAmount = (originalPrice - discountedPrice).toDouble();
+    double discountPercentage = (discountAmount / originalPrice) * 100;
+    return discountPercentage.toInt();
+  }
+
   /// -- Calculate shipping cost
   static String calculateShippingCost(double productPrice, String location) {
   double shippingCost = getShippingCost(location);

@@ -18,9 +18,9 @@ class TChoiceChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isColor = THelperFunctions.getColor(text)!=null;
+    final isColor = THelperFunctions.getColor(text) != null;
     return ChoiceChip(
-      label:isColor ? const SizedBox() : Text(text),
+      label: isColor ? const SizedBox() : Text(text),
       selected: selected,
       onSelected: onSelected,
       labelStyle: TextStyle(color: selected ? TColors.white : null),
@@ -28,14 +28,14 @@ class TChoiceChip extends StatelessWidget {
           ? CircularContainer(
               height: 50,
               width: 50,
-              backgorundColor:THelperFunctions.getColor(text)!,
+              backgorundColor: THelperFunctions.getColor(text)!,
             )
           : null,
-      shape: isColor?CircleBorder():null,
-      labelPadding:isColor? EdgeInsets.all(0):null,
-      padding: isColor?EdgeInsets.all(0):null,
-      selectedColor: isColor?Colors.green:null,
-      backgroundColor: isColor ?Colors.green:null,
+      shape: isColor ? const CircleBorder() : null,
+      labelPadding: isColor ? const EdgeInsets.all(0) : null,
+      padding: isColor ? const EdgeInsets.all(0) : null,
+      selectedColor: isColor ? Colors.green : null,
+      backgroundColor: isColor ? Colors.green : null,
     );
   }
 }
