@@ -26,6 +26,7 @@ class homepage extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               'assets/logos/conquest-icon.png',

@@ -23,53 +23,56 @@ class _CategorySectionState extends State<CategorySection> {
         children: [
           widget.isLoading
               ? buildShimmerCategories()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: widget.categories.map((category) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: TColors.grey,
-                                width: 1.5,
+              : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+                child: Row(
+                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: widget.categories.map((category) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: TColors.grey,
+                                  width: 1.5,
+                                ),
                               ),
-                            ),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 35,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: SvgPicture.asset(
-                                  getSvgAssetForCategory(category['name']),
-                                  fit: BoxFit.contain,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 35,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: SvgPicture.asset(
+                                    getSvgAssetForCategory(category['name']),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: TSizes.sm),
-                          SizedBox(
-                            width: 85,
-                            child: Text(
-                              category['name']!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 13),
-                              textAlign: TextAlign.center,
+                            const SizedBox(height: TSizes.sm),
+                            SizedBox(
+                              width: 85,
+                              child: Text(
+                                category['name']!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(fontSize: 13),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+              ),
         ],
       ),
     );

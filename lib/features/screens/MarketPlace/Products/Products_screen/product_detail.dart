@@ -1,4 +1,5 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
+import 'package:conquest/features/screens/MarketPlace/Products/Product_reviews/product_reviews_screen.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/Product_Meta_data.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/bottom_add_to_cart_widget.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_attributes.dart';
@@ -55,14 +56,18 @@ class ProductDetail extends StatelessWidget {
                   /// Reviews
                   const Divider(),
                   const SizedBox(height: TSizes.spaceBtwItems,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Sectionheading(title: 'Reviews (199)',showActionButton: false,),
-                      IconButton(onPressed: (){}, icon: const Icon(Iconsax.arrow_right_3,size: 18,)),
-                    ],
+                  GestureDetector(
+                    onTap: ()=>
+                        //Navigator.push(context,MaterialPageRoute(builder: (context)=>ProductReviewsScreen())),
+                    showModalBottomSheet(context: context,builder:(BuildContext ctx)=>const ProductReviewsScreen(),isScrollControlled: true),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Sectionheading(title: 'Reviews (199)',showActionButton: false,),
+                        IconButton(onPressed: (){}, icon: const Icon(Iconsax.arrow_right_3,size: 18,)),
+                      ],
+                    ),
                   ),
-
 
 
                 ],
