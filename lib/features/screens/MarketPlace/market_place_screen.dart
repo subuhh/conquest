@@ -47,6 +47,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -100,8 +101,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                   children: [
                     // Carousel Slider
                     CarouselSection(
-                      isLoading: _isLoading,
-                      banners: _banners,
+                      isLoading: _isLoading, imageUrls: ["assets/Banners/img.png",'assets/Banners/img_1.png','assets/Banners/img_3.jpg','assets/Banners/img_4.jpg'],
+                     // banners: _banners,
                     ),
 
                     // Category Buttons

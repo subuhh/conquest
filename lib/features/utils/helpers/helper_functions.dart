@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+
+import '../constants/enums.dart';
 
 class THelperFunctions {
   static Color? getColor(String value) {
@@ -108,5 +111,53 @@ class THelperFunctions {
       wrappedList.add(Row(children: rowChildren));
     }
     return wrappedList;
+  }
+}
+Color getStatusColor(OrderStatus status) {
+  switch (status) {
+    case OrderStatus.pending:
+      return Colors.orange;
+    case OrderStatus.processing:
+      return Colors.blue;
+    case OrderStatus.shipped:
+      return Colors.purple;
+    case OrderStatus.delivered:
+      return Colors.green;
+    case OrderStatus.canceled:
+      return Colors.red;
+    default:
+      return Colors.black;
+  }
+}
+String getStatusText(OrderStatus status) {
+  switch (status) {
+    case OrderStatus.pending:
+      return 'Pending';
+    case OrderStatus.processing:
+      return 'Processing';
+    case OrderStatus.shipped:
+      return 'Shipped';
+    case OrderStatus.delivered:
+      return 'Delivered';
+    case OrderStatus.canceled:
+      return 'Canceled';
+    default:
+      return 'Unknown';
+  }
+}
+IconData getOrderStatusIcon(OrderStatus status) {
+  switch (status) {
+    case OrderStatus.pending:
+      return Iconsax.timer;
+    case OrderStatus.processing:
+      return Iconsax.clock;
+    case OrderStatus.shipped:
+      return Iconsax.truck;
+    case OrderStatus.delivered:
+      return Iconsax.tick_circle;
+    case OrderStatus.canceled:
+      return Iconsax.close_circle;
+    default:
+      return Icons.help_outline; // Fallback for unknown status
   }
 }

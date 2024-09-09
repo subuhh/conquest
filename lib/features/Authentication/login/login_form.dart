@@ -1,3 +1,4 @@
+import 'package:conquest/features/Authentication/ForgotPassword/forgot_password.dart';
 import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -83,7 +84,7 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: TSizes.spaceBtwInputFields / 2),
 
               /// Remember Me & Forget Password
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ///Remember me
@@ -99,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
 
                   ///ForgetPassword
                   TextButton(
-                    onPressed: null,
+                    onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>PasswordResetScreen())),
                     child: Text(TTexts.forgetPassword),
                   )
                 ],

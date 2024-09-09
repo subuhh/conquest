@@ -23,7 +23,7 @@ class loginHeader extends StatelessWidget {
               image: AssetImage('assets/logos/conquest-icon.png'),
             ),
             Image(
-              height: 100,
+              height: 150,
               image: AssetImage('assets/logos/conquest-string.png'),
             ),
           ],

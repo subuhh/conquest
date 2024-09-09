@@ -1,5 +1,6 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
+import 'package:conquest/features/screens/MarketPlace/Carousel/carousel_section.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -64,22 +65,23 @@ class homepage extends StatelessWidget {
                   children: [
                     SizedBox(
                       height: TSizes.imageCarouselHeight,
-                      child: CarouselView(
-                        itemSnapping: true,
-                        itemExtent: THelperFunctions.screenWidth(context) - 35,
-                        children: List.generate(
-                          10,
-                          (int index) {
-                            return Container(
-                              color: Colors.grey,
-                              child: Image.network(
-                                'https://picsum.photos/400?random=$index',
-                                fit: BoxFit.cover,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      child: CarouselSection(isLoading: false, imageUrls: ['assets/Banners/img_3.jpg','assets/Banners/img_1.png',"assets/Banners/img.png",'assets/Banners/img_4.jpg'],),
+                      // child: CarouselView(
+                      //   itemSnapping: true,
+                      //   itemExtent: THelperFunctions.screenWidth(context) - 35,
+                      //   children: List.generate(
+                      //     10,
+                      //     (int index) {
+                      //       return Container(
+                      //         color: Colors.grey,
+                      //         child: Image.network(
+                      //           'https://picsum.photos/400?random=$index',
+                      //           fit: BoxFit.cover,
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                     ),
                     const SizedBox(height: TSizes.spaceBtwItems),
                     const Row(

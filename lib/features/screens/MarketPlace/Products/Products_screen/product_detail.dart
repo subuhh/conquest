@@ -3,7 +3,7 @@ import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/bottom_add_to_cart_widget.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_attributes.dart';
 import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/product_detail_image-slider.dart';
-import 'package:conquest/features/screens/MarketPlace/Products/products_widgets/section_divider.dart';
+import 'package:conquest/common/widgets/section_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';

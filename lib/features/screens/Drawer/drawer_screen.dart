@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:conquest/core/services/auth_service.dart';
+import 'package:conquest/features/Authentication/GenderSelection/GenderSelectionPage.dart';
 import 'package:conquest/features/Authentication/login/login.dart';
+import 'package:conquest/features/screens/MarketPlace/Products/OrderHIstory/MyOrders.dart';
+import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -246,7 +249,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       tiles: [
                         menuListTile(
                           'My Orders',
-                          () {},
+                          () {
+                            Navigator.push(context, MaterialPageRoute(builder: (ctx)=>MyOrdersScreen()));
+                          },
                           'assets/icons/drawerIcons/my_order.svg',
                           context,
                         ),
@@ -264,7 +269,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ),
                         menuListTile(
                           'Workout Plan',
-                          () {},
+                          () {
+                            THelperFunctions.navigateToScreen(context, GenderSelectionScreen());
+                          },
                           'assets/icons/drawerIcons/workout.svg',
                           context,
                         ),

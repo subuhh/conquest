@@ -27,7 +27,8 @@ class ProductCard extends StatelessWidget {
         );
       },
       child: Card(
-        elevation: 4,
+        color: Colors.white,
+        elevation: 0,
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
