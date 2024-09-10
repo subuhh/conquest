@@ -142,6 +142,7 @@ class FirestoreService extends GetxController {
           .where('targetScreen', isEqualTo: targetScreen)
           .where('active', isEqualTo: true)
           .get();
+      log('Banner snapshot size: ${snapshot.size}');
       final bannersList = snapshot.docs
           .map((doc) => BannerModel.fromFirestore(doc.data(), doc.id))
           .toList();
