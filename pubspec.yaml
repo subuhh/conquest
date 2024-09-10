@@ -36,7 +36,7 @@ dependencies:
   google_sign_in: ^6.2.1
 
   # State Management
-  provider: ^6.1.2
+  get: ^4.6.6
 
   # Product Specific
   #readmore: ^2.2.0

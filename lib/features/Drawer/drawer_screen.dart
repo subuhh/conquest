@@ -1,90 +1,34 @@
-import 'dart:developer';
 import 'dart:io';
-import 'package:conquest/core/services/auth_service.dart';
-import 'package:conquest/features/Authentication/GenderSelection/GenderSelectionPage.dart';
-import 'package:conquest/features/Authentication/login/login.dart';
-import 'package:conquest/features/screens/MarketPlace/Products/OrderHIstory/MyOrders.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:conquest/core/Controllers/drawer_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:conquest/features/Authentication/GenderSelection/GenderSelectionPage.dart';
+import 'package:conquest/features/MarketPlace/Products/OrderHIstory/MyOrders.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../common/widgets/custom_list_tile_group.dart';
 import '../../../core/model/user.dart';
-import '../../../core/services/firestore_service.dart';
-import '../../utils/constants/colors.dart';
+import '../../../core/services/auth_service.dart';
+import '../utils/constants/colors.dart';
 
-class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({
-    super.key,
-  });
+class DrawerScreen extends StatelessWidget {
+  DrawerScreen({super.key});
 
-  @override
-  State<DrawerScreen> createState() => _DrawerScreenState();
-}
-
-class _DrawerScreenState extends State<DrawerScreen> {
-  final _auth = AuthService();
-  bool _isLoading = true;
-  UserModel? _userModel;
-  final FirestoreService _firestoreService = FirestoreService();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserDetails();
-  }
-
-  Future<void> _fetchUserDetails() async {
-    final user = _auth.user;
-
-    try {
-      final userData = await user.first;
-      if (userData != null) {
-        // Check if userData is not null
-        _userModel = await _firestoreService.getUserDetails(userData.uid);
-      }
-    } catch (e) {
-      // Handle errors here (e.g., show error message)
-      log('Error fetching user details: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+  // Instance of GetX Controller
+  final DrawerMenuController drawerController = Get.put(DrawerMenuController());
 
   Widget _buildProfileHeader(BuildContext context) {
-    final user = _auth.user;
     return Container(
       color: Colors.white,
-      child: StreamBuilder<User?>(
-        stream: user,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // User is logged in, fetch user details from Firestore
-            return FutureBuilder<UserModel?>(
-              future: FirestoreService().getUserDetails(snapshot.data!.uid),
-              builder: (context, userSnapshot) {
-                if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  // Show shimmer while fetching user details
-                  return _buildDrawerHeaderShimmer();
-                } else if (userSnapshot.hasError) {
-                  // Show error message
-                  return ListTile(
-                    title: Text('Error: ${userSnapshot.error}'),
-                  );
-                } else {
-                  final userModel = userSnapshot.data;
-                  return buildLoggedInHeader(context, userModel);
-                }
-              },
-            );
-          } else {
-            // User is not logged in, show login button
-            return const SizedBox.shrink();
-          }
-        },
-      ),
+      child: Obx(() {
+        if (drawerController.isLoading.value) {
+          // Show shimmer while loading user details
+          return _buildDrawerHeaderShimmer();
+        }
+
+        // Display profile details after data is loaded
+        final userModel = drawerController.userModel.value;
+        return buildLoggedInHeader(context, userModel);
+      }),
     );
   }
 
@@ -107,25 +51,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
       ),
       child: Row(
         children: [
-          if (_userModel != null) ...[
-            CircleAvatar(
-              radius: 35,
-              backgroundColor: TColors.primary.withOpacity(0.9),
-              child: Text(
-                userModel?.name[0].toUpperCase() ?? '',
-                style: const TextStyle(fontSize: 32, color: Colors.white),
-              ),
+          CircleAvatar(
+            radius: 35,
+            backgroundColor: TColors.primary.withOpacity(0.9),
+            child: Text(
+              userModel?.name[0].toUpperCase() ?? 'G',
+              style: const TextStyle(fontSize: 32, color: Colors.white),
             ),
-          ] else ...[
-            CircleAvatar(
-              radius: 35,
-              backgroundColor: TColors.primaryBackground,
-              child: Text(
-                'G',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-            ),
-          ],
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -166,7 +99,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              width: double.infinity, // Adjust width as needed
+              width: double.infinity,
               height: 40.0,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
@@ -216,7 +149,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               Icons.arrow_back,
                               color: Colors.black,
                             ),
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Get.back(),
                           ),
                         ],
                       ),
@@ -233,24 +166,21 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   [
                     CustomListTileGroup(
                       tiles: [
-                        // if (_auth.currentUser != null) ...[
                         menuListTile(
                           'Your Profile',
-                          () =>
-                              Navigator.of(context).pushNamed('/profileScreen'),
+                          () => Get.toNamed('/profileScreen'),
                           'assets/icons/drawerIcons/profile.svg',
                           context,
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    // My Orders Group
                     CustomListTileGroup(
                       tiles: [
                         menuListTile(
                           'My Orders',
                           () {
-                            Navigator.push(context, MaterialPageRoute(builder: (ctx)=>MyOrdersScreen()));
+                            Get.to(() => MyOrdersScreen());
                           },
                           'assets/icons/drawerIcons/my_order.svg',
                           context,
@@ -259,19 +189,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     ),
                     const SizedBox(height: 20),
                     CustomListTileGroup(
-                      header: 'Discover', // Optional header
+                      header: 'Discover',
                       tiles: [
                         menuListTile(
                           'Home',
-                          () => Navigator.of(context).pushNamed('/btmnav'),
+                          () => Get.toNamed('/btmnav'),
                           'assets/icons/drawerIcons/home.svg',
                           context,
                         ),
                         menuListTile(
                           'Workout Plan',
-                          () {
-                            THelperFunctions.navigateToScreen(context, GenderSelectionScreen());
-                          },
+                          () => Get.to(() => GenderSelectionScreen()),
                           'assets/icons/drawerIcons/workout.svg',
                           context,
                         ),
@@ -283,10 +211,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ),
                       ],
                     ),
-                    // Community Group
                     const SizedBox(height: 20),
                     CustomListTileGroup(
-                      header: 'Community', // Optional header
+                      header: 'Community',
                       tiles: [
                         menuListTile(
                           'Nakama Community',
@@ -316,7 +243,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     ),
                     const SizedBox(height: 20),
                     CustomListTileGroup(
-                      header: 'Support', // Optional header
+                      header: 'Support',
                       tiles: [
                         menuListTile(
                           'Feedback',
@@ -334,7 +261,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     ),
                     const SizedBox(height: 20),
                     CustomListTileGroup(
-                      header: 'Legal & About', // Optional header
+                      header: 'Legal & About',
                       tiles: [
                         menuListTile(
                           'About',
@@ -352,57 +279,43 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     ),
                     const SizedBox(height: 20),
                     CustomListTileGroup(
-                        header: 'More', // Optional header
-                        tiles: [
-                          menuListTile(
-                            'Settings',
-                            () {},
-                            'assets/icons/drawerIcons/settings.svg',
-                            context,
-                          ),
-                          menuListTile(
-                            'Invite Friends',
-                            () {},
-                            'assets/icons/drawerIcons/invite.svg',
-                            context,
-                          ),
-                          menuListTile(
-                            'Rate Us',
-                            () async {
-                              if (Platform.isAndroid) {
-                                // await launchUrl(
-                                //   Uri.parse(
-                                //       "https://play.google.com/store/apps/details?id=com.yourapp.id"),
-                                // );
-                              } else if (Platform.isIOS) {
-                                // await launchUrl(
-                                //   Uri.parse(
-                                //       "https://apps.apple.com/app/idYOUR_APP_ID"),
-                                // );
-                              }
-                            },
-                            'assets/icons/drawerIcons/rate_us.svg',
-                            context,
-                          ),
-                          // if (_auth.currentUser != null) ...[
-                          menuListTile(
-                            'Log Out',
-                            () {
-                              _auth.signOut();
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                                (route) => false,
-                              );
-                            },
-                            'assets/icons/drawerIcons/logout.svg',
-                            context,
-                          ),
-                        ]
-                        // ],
+                      header: 'More',
+                      tiles: [
+                        menuListTile(
+                          'Settings',
+                          () {},
+                          'assets/icons/drawerIcons/settings.svg',
+                          context,
                         ),
+                        menuListTile(
+                          'Invite Friends',
+                          () {},
+                          'assets/icons/drawerIcons/invite.svg',
+                          context,
+                        ),
+                        menuListTile(
+                          'Rate Us',
+                          () async {
+                            if (Platform.isAndroid) {
+                              // Handle Play Store link
+                            } else if (Platform.isIOS) {
+                              // Handle App Store link
+                            }
+                          },
+                          'assets/icons/drawerIcons/rate_us.svg',
+                          context,
+                        ),
+                        menuListTile(
+                          'Log Out',
+                          () {
+                            Get.find<AuthService>().signOut();
+                            Get.offAllNamed('/login');
+                          },
+                          'assets/icons/drawerIcons/logout.svg',
+                          context,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -415,15 +328,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
   _SliverAppBarDelegate({
     required this.minHeight,
     required this.maxHeight,
     required this.child,
   });
+
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
 
   @override
   double get minExtent => minHeight;
@@ -438,7 +351,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+  bool shouldRebuild(covariant _SliverAppBarDelegate oldDelegate) {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;

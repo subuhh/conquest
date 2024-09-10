@@ -1,13 +1,13 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
-import 'package:conquest/features/screens/MarketPlace/Carousel/carousel_section.dart';
+import 'package:conquest/features/MarketPlace/Carousel/carousel_section.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-class homepage extends StatelessWidget {
-  const homepage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class homepage extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: TSizes.imageCarouselHeight,
                       child: CarouselSection(isLoading: false, imageUrls: ['assets/Banners/img_3.jpg','assets/Banners/img_1.png',"assets/Banners/img.png",'assets/Banners/img_4.jpg'],),
                       // child: CarouselView(

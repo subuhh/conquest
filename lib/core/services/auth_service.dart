@@ -1,49 +1,43 @@
 import 'dart:developer';
-
+import 'package:conquest/common/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import '../../common/widgets/custom_snackbar.dart';
 import '../model/user.dart';
 import 'firestore_service.dart';
 
-class AuthService extends ChangeNotifier {
+class AuthService extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  Rxn<User?> firebaseUser = Rxn<User?>(); // Observable user state
 
-  // Create user object based on FirebaseUser
-  User? _userFromFirebaseUser(User? user) {
-    return user;
+  @override
+  void onInit() {
+    super.onInit();
+    firebaseUser.bindStream(_auth.authStateChanges()); // Bind Firebase auth stream to Rxn
   }
 
-  // Auth change user stream
+  // Current user
+  User? get currentUser => firebaseUser.value;
+
   Stream<User?> get user {
-    return _auth.authStateChanges().map(_userFromFirebaseUser);
-  }
-
-  // User Current Status
-  User? get currentUser {
-    return _auth.currentUser;
+    return _auth.authStateChanges();
   }
 
   // Register user with email and password
   Future<User?> registerWithEmailAndPassword(
-    String email,
-    String password,
-    String username,
-    String name,
-    String phoneNumber,
-    BuildContext context,
-  ) async {
+      String email,
+      String password,
+      String username,
+      String name,
+      String phoneNumber,
+      ) async {
     try {
       // Check if the username is available
       bool isUsernameAvailable =
-          await FirestoreService().checkUsernameAvailability(username);
+      await FirestoreService().checkUsernameAvailability(username);
 
       if (!isUsernameAvailable) {
-        showSnackBar(
-            context, 'Username is already taken. Please choose another one.',
-            isError: true);
+        showSnackBar('Error', 'Username is already taken. Please choose another one.');
         return null;
       }
 
@@ -54,7 +48,7 @@ class AuthService extends ChangeNotifier {
       );
 
       User? user = result.user;
-      notifyListeners();
+      firebaseUser.value = user; // Update the user state
 
       if (user != null) {
         // Create UserModel object with username as the userId and add to Firestore
@@ -69,80 +63,73 @@ class AuthService extends ChangeNotifier {
         // Save user data in Firestore
         await FirestoreService().createUserDocument(userModel);
 
-        return _userFromFirebaseUser(user);
+        return user;
       }
 
       return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        showSnackBar(context, 'The email is already in use.', isError: true);
+        showSnackBar('Error', 'The email is already in use.');
       } else {
-        showSnackBar(
-            context, 'An error occurred during registration. Please try again.',
-            isError: true);
+        showSnackBar('Error', 'An error occurred during registration. Please try again.');
       }
+      return null;
     } catch (error) {
-      log('Error registering: $error'); // Debug statement
-      showSnackBar(context, 'An unexpected error occurred. Please try again.',
-          isError: true);
+      log('Error registering: $error');
+      showSnackBar('Error', 'An unexpected error occurred. Please try again.');
       return null;
     }
-    return null;
   }
 
   // Login with email and password
   Future<UserCredential?> loginWithEmailAndPassword(
-    String email,
-    String password,
-    BuildContext context,
-  ) async {
+      String email,
+      String password,
+      ) async {
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      firebaseUser.value = userCredential.user;
       return userCredential;
     } on FirebaseAuthException catch (e) {
       log('FirebaseAuthException: ${e.code}');
       if (e.code == 'invalid-credential') {
-        showSnackBar(context, 'Invalid Email or Password.', isError: true);
+        showSnackBar('Error', 'Invalid Email or Password.');
       } else if (e.code == 'too-many-requests') {
-        showSnackBar(
-            context, 'Too many login attempts. Please try again later.',
-            isError: true);
+        showSnackBar('Error', 'Too many login attempts. Please try again later.');
       } else {
-        showSnackBar(
-            context, 'An error occurred during login. Please try again.',
-            isError: true);
+        showSnackBar('Error', 'An error occurred during login. Please try again.');
       }
       return null;
     } catch (e) {
-      // Handle other potential errors
       log('Error logging in with email and password: $e');
-      showSnackBar(context, 'An unexpected error occurred. Please try again.',
-          isError: true);
+      showSnackBar('Error', 'An unexpected error occurred. Please try again.');
       return null;
     }
   }
 
-  // sign in the user with google
-  Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
+  // Sign in with Google
+  Future<Map<String, dynamic>?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
+        await googleUser.authentication;
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
         final UserCredential result =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
         // Check if user document exists in Firestore
         final isDocumentExist =
-            await FirestoreService().checkUserDocumentExists(result.user!.uid);
+        await FirestoreService().checkUserDocumentExists(result.user!.uid);
+
+        firebaseUser.value = result.user;
 
         // Return a map with the user and document existence status
         return {
@@ -163,12 +150,12 @@ class AuthService extends ChangeNotifier {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (error) {
-      log('Error sending password reset email: $error'); // Debug statement
+      log('Error sending password reset email: $error');
       rethrow;
     }
   }
 
-  // check which Signed-In method
+  // Get sign-in method
   String? getSignInMethod() {
     final user = _auth.currentUser;
     if (user != null) {
@@ -181,28 +168,26 @@ class AuthService extends ChangeNotifier {
         }
       }
     }
-    return null; // User is not signed in
+    return null;
   }
 
-  // Signed with email & password ?
+  // Check if signed in with email & password
   bool isSignedInWithEmailAndPassword() {
-    String? signInMethod = getSignInMethod();
-    return signInMethod == 'email';
+    return getSignInMethod() == 'email';
   }
 
-  // Signed with google ?
+  // Check if signed in with Google
   bool isSignedInWithGoogle() {
-    String? signInMethod = getSignInMethod();
-    return signInMethod == 'google';
+    return getSignInMethod() == 'google';
   }
 
   // Sign out
   Future<void> signOut() async {
     try {
       await _auth.signOut();
-      notifyListeners(); // Notify listeners about the change
+      firebaseUser.value = null; // Reset the user
     } catch (error) {
-      log('Error signing out: $error'); // Debug statement
+      log('Error signing out: $error');
     }
   }
 }

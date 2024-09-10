@@ -1,39 +1,22 @@
-import 'package:conquest/features/BottomNavBar/bottom_nav_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
+import '../../BottomNavBar/bottom_nav_bar.dart';
+import '../Login/login.dart';
 
-import '../login/login.dart';
-
-class AuthGateScreen extends StatelessWidget {
-  const AuthGateScreen({super.key});
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthService>(
-      builder: (context, authService, child) {
-        return StreamBuilder<User?>(
-          stream: authService.user,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
+    AuthService authService = Get.find<AuthService>();
 
-            if (snapshot.hasData) {
-              // User is authenticated
-              return BottomNavBar();
-            } else {
-              // User is not authenticated
-              return const LoginScreen();
-            }
-          },
-        );
-      },
-    );
+    return Obx(() {
+      if (authService.currentUser == null) {
+        return const LoginScreen(); // Show login if not signed in
+      } else {
+        return const BottomNavBar(); // Show login if not admin
+      }
+    });
   }
 }

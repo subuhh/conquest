@@ -1,12 +1,12 @@
-import 'package:conquest/features/screens/Drawer/drawer_screen.dart';
-import 'package:conquest/features/screens/Drawer/drawer_section_screen/profile/profile_screen.dart';
-import 'package:conquest/features/screens/HomePage/homepage.dart';
-import 'package:conquest/features/screens/Cart/Screen/cart_screen.dart';
-import 'package:conquest/features/screens/SplashScreen/splash_screen.dart';
-import 'package:conquest/features/screens/MarketPlace/Products/Products_screen/product_detail.dart';
+import 'package:conquest/features/Drawer/drawer_screen.dart';
+import 'package:conquest/features/Drawer/drawer_section_screen/profile/screen/profile_screen.dart';
+import 'package:conquest/features/HomePage/homepage.dart';
+import 'package:conquest/features/Cart/Screen/cart_screen.dart';
+import 'package:conquest/features/SplashScreen/splash_screen.dart';
+import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'core/services/auth_service.dart';
 import 'features/BottomNavBar/bottom_nav_bar.dart';
 import 'features/utils/theme/theme.dart';
@@ -15,14 +15,11 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthService()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+
+  // Initialize GetX dependencies here
+  Get.put(AuthService()); // Inject AuthService as a GetX controller
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,21 +27,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       themeMode: ThemeMode.light,
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
       initialRoute: '/',
-      routes: {
-        '/homepage': (context) => const homepage(),
-        '/drawer': (context) => const DrawerScreen(),
-        '/btmnav': (context) => const BottomNavBar(),
-        '/productDetails': (context) => const ProductDetail(),
-        '/profileScreen': (context) => const ProfilePage(),
-        '/cart': (context) => const CartScreen(),
-      },
+      getPages: [
+        GetPage(name: '/', page: () => const SplashScreen()),
+        GetPage(name: '/homepage', page: () => const HomePage()),
+        GetPage(name: '/drawer', page: () => DrawerScreen()),
+        GetPage(name: '/btmnav', page: () => const BottomNavBar()),
+        GetPage(name: '/productDetails', page: () => const ProductDetail()),
+        GetPage(name: '/profileScreen', page: () => const ProfilePage()),
+        GetPage(name: '/cart', page: () => const CartScreen()),
+      ],
     );
   }
 }

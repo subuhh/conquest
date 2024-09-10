@@ -1,6 +1,7 @@
 import 'package:conquest/features/Authentication/ForgotPassword/forgot_password.dart';
 import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/widgets/custom_snackbar.dart';
 import '../../../core/services/auth_service.dart';
@@ -100,8 +101,11 @@ class _LoginFormState extends State<LoginForm> {
 
                   ///ForgetPassword
                   TextButton(
-                    onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>PasswordResetScreen())),
-                    child: Text(TTexts.forgetPassword),
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PasswordResetScreen())),
+                    child: const Text(TTexts.forgetPassword),
                   )
                 ],
               ),
@@ -155,15 +159,13 @@ class _LoginFormState extends State<LoginForm> {
         final userCredential = await _auth.loginWithEmailAndPassword(
           _emailController.text,
           _passwordController.text,
-          context,
         );
         if (userCredential != null) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/btmnav', (route) => false);
+          Get.offAllNamed('/btmnav');
         }
       }
     } catch (e) {
-      showSnackBar(context, 'Something error occurred. Please try again',
+      showSnackBar('Error', 'Something error occurred. Please try again',
           isError: true);
       setState(() => _isLoading = false);
     } finally {

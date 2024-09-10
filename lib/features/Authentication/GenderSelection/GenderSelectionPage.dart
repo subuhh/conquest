@@ -43,11 +43,11 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                               selectedGender = 'Male';
                             });
                           },
-                          avatarImage: AssetImage(
+                          avatarImage: const AssetImage(
                               'assets/female_avatar.jpg'), // Add your image
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 150,
                       ),
                     ],
@@ -58,7 +58,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 150,
                       ),
                       SizedBox(
@@ -88,9 +88,9 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 50,vertical: 15)
+                  padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 15)
                 ),
-                onPressed: () {}, child: Text('Continue')),
+                onPressed: () {}, child: const Text('Continue')),
           )
         ],
       ),
@@ -128,7 +128,7 @@ class FemaleGenderButton extends StatelessWidget {
                 //backgroundColor: isSelected ? Colors.blue : Colors.white,
                 backgroundColor:
                     selectedGender == 'Female' ? TColors.primary : TColors.grey,
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 70,
                   backgroundImage: NetworkImage(
                       'https://media.istockphoto.com/id/1440456344/photo/happy-woman-and-lingerie-in-a-studio-for-wellness-beauty-and-weight-loss-against-a-white.jpg?s=612x612&w=0&k=20&c=R6zLbOFzGj73DQlP-qyv3vKdd-H98dX2Su_vKh26dHU='),
@@ -175,7 +175,7 @@ class MaleGenderButton extends StatelessWidget {
                 //backgroundColor: isSelected ? Colors.blue : Colors.white,
                 backgroundColor:
                     selectedGender == 'Male' ? TColors.primary : TColors.grey,
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 70,
                   backgroundImage: NetworkImage(
                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9t1YBPZ3e1Zm3_eYtqMX4eTV7oYwBTIlhTg&s'),

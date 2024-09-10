@@ -1,7 +1,7 @@
-import 'package:conquest/features/Authentication/first_time_login_by_google.dart';
+import 'package:conquest/features/Authentication/FirstTimeLogin/first_time_login_by_google.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../core/services/auth_service.dart';
 import '../../features/utils/constants/colors.dart';
 import '../../features/utils/constants/image_strings.dart';
@@ -60,7 +60,7 @@ class _SocialButtonState extends State<SocialButton> {
   }
 
   Future<void> _handleGoogleSignIn() async {
-    final result = await AuthService().signInWithGoogle(context);
+    final result = await AuthService().signInWithGoogle();
 
     if (result != null) {
       final user = result['user'] as User?;
@@ -69,21 +69,16 @@ class _SocialButtonState extends State<SocialButton> {
       if (user != null) {
         if (isDocumentExist != null && isDocumentExist) {
           // User document exists, navigate to the homepage
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/btmnav', (route) => false);
+          Get.offAllNamed('/btmnav');
         } else {
           // User document does not exist, navigate to the info entry screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FirstTimeLogin(user: user),
-            ), // Replace with your info entry screen
-          );
+
+          Get.off(FirstTimeLogin(user: user));
         }
       }
     } else {
       // Handle sign-in failure (e.g., show an error message)
-      showSnackBar(context, 'Failed to sign in with Google. Please try again.',
+      showSnackBar('Error', 'Failed to sign in with Google. Please try again.',
           isError: true);
     }
   }

@@ -1,14 +1,15 @@
 import 'dart:developer';
+import 'package:conquest/common/widgets/custom_snackbar.dart';
+import 'package:conquest/core/model/user.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/constants/text_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/services/auth_service.dart';
-import '../../common/widgets/custom_snackbar.dart';
-import '../../core/model/user.dart';
 
 class FirstTimeLogin extends StatefulWidget {
   final User? user;
@@ -199,22 +200,18 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
           await FirestoreService().createUserDocument(userModel);
 
           // Navigate to homepage
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/btmnav',
-            (route) => false,
-          );
+          Get.offAllNamed('/btmnav');
 
         } else {
           // Show a message if username is not available
           showSnackBar(
-              context, 'Username is already taken. Please choose another one.',
+              'Error', 'Username is already taken. Please choose another one.',
               isError: true);
         }
       }
     } catch (e) {
       // Handle error
-      showSnackBar(context, 'Something went wrong. Please try again.',
+      showSnackBar('Error', 'Something went wrong. Please try again.',
           isError: true);
     } finally {
       setState(() {

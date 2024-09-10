@@ -2,6 +2,7 @@
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../common/widgets/custom_snackbar.dart';
@@ -45,23 +46,23 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
       //await _auth.sendPasswordResetEmail(_emailController.text);
 
       // 4. Show success message after sending email
-      Navigator.of(context).pop();
+      Get.back();
       showSnackBar(
-        context,
+        'Error',
         'Password reset email sent. Please check your inbox.',
       );
     } on FirebaseAuthException catch (e) {
       // Handle Firebase Auth specific errors
       if (e.code == 'invalid-email') {
-        showSnackBar(context, 'The email address is badly formatted.');
+        showSnackBar('Error', 'The email address is badly formatted.');
       } else if (e.code == 'user-not-found') {
-        showSnackBar(context, 'No user found with that email.');
+        showSnackBar('Error', 'No user found with that email.');
       } else {
-        showSnackBar(context, 'An error occurred: ${e.message}');
+        showSnackBar('Error', 'An error occurred: ${e.message}');
       }
     } catch (e) {
       // Handle other general errors
-      showSnackBar(context, 'An error occurred: $e');
+      showSnackBar('Error', 'An error occurred: $e');
     } finally {
       setState(() => _isLoading = false);
     }

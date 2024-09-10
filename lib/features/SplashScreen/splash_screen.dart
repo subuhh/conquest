@@ -1,7 +1,7 @@
 import 'package:conquest/features/Authentication/AuthGate/auth_gate.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:page_transition/page_transition.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,14 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Delay for 3 seconds and then navigate to HomePage
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushAndRemoveUntil(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          child: const AuthGateScreen(),
-        ),
-        (route) => false,
-      );
+      Get.offAll(() => const AuthGate(), transition: Transition.fade);
     });
   }
 

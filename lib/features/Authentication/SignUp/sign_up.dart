@@ -4,6 +4,7 @@ import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../common/widgets/custom_snackbar.dart';
@@ -280,18 +281,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _userNameController.text,
           _nameController.text,
           _phoneController.text,
-          context,
         );
         if (userCredential != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
-          );
-          showSnackBar(context, 'Account created successfully. Please log in.');
+          Get.off(const LoginScreen());
+          showSnackBar('Error', 'Account created successfully. Please log in.');
         }
       }
     } catch (e) {
-      showSnackBar(context, 'Something error occurred. Please try again',
+      showSnackBar('Error', 'Something error occurred. Please try again',
           isError: true);
       setState(() => _isLoading = false);
     } finally {
