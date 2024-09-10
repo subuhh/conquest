@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -25,41 +26,45 @@ class _CarouselSectionState extends State<CarouselSection> {
       child: widget.isLoading
           ? _buildShimmerPlaceholder()
           : CarouselSlider(
-        options: CarouselOptions(
-          height: 200.0,
-          autoPlay: true,
-          enlargeCenterPage: true,
-          viewportFraction: 1.0,
-          enableInfiniteScroll: true,
-        ),
-        items: List.generate(widget.banners.length, (index) {
-          final banner = widget.banners[index];
-          return Builder(
-            builder: (BuildContext context) {
-              return GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  banner.onTapScreen,
-                ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(
-                      banner.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }).toList(),
-      ),
+              options: CarouselOptions(
+                height: 200.0,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                viewportFraction: 1.0,
+                enableInfiniteScroll: true,
+              ),
+              items: List.generate(widget.banners.length, (index) {
+                final banner = widget.banners[index];
+                return Builder(
+                  builder: (BuildContext context) {
+                    return GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        banner.onTapScreen,
+                      ),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: CachedNetworkImage(
+                            imageUrl: banner.imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                          // Image.network(
+                          //   banner.imageUrl,
+                          //   fit: BoxFit.cover,
+                          // ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
     );
   }
 
