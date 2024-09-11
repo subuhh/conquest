@@ -55,7 +55,7 @@ class _ProductDetailState extends State<ProductDetail> {
         child: Column(
           children: [
             // 1 - Product Image Slider
-            ProductImageSlider(product: widget.productModel!),
+            ProductImageSlider(productModel: widget.productModel!,),
 
             // 2 - Product Details (Title, Price, In Stock)
             ProductMetaData(productModel: widget.productModel!),

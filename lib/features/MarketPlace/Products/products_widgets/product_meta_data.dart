@@ -40,37 +40,43 @@ class ProductMetaData extends StatelessWidget {
                   productModel.name,
                   style: Theme.of(context)
                       .textTheme
-                      .headlineMedium!
+                      .titleMedium!
                       .copyWith(fontSize: 19),
                   maxLines: 3, // Allow a maximum of 2 lines
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: TSizes.spaceBtwItems),
-
               // Share Button (Aligned to the right)
-              Align(
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
+              Spacer(),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
                     ),
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Icon(
-                      Icons.share,
-                      size: TSizes.iconMd,
-                    ),
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Icon(
+                    Icons.share,
+                    size: TSizes.iconMd,
                   ),
                 ),
               ),
             ],
           ),
+
+          // Flavour Text
+          Text(
+            '1 Kg [2.2 lb]',
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: TColors.darkerGrey
+                ),
+          ),
+          const SizedBox(height: TSizes.spaceBtwItems),
+
 
           // Price, In or Out Stock
           Row(
