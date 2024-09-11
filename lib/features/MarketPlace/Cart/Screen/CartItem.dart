@@ -47,7 +47,7 @@ class _CartItemState extends State<CartItem> {
                 children: [
                   Text(widget.title, style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   Text('Color: ${widget.color}', style: textTheme.bodyMedium?.copyWith(color: Colors.grey)),
-                  Text('\$${widget.price}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  Text('₹${widget.price}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

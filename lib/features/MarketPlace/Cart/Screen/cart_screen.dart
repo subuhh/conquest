@@ -1,6 +1,6 @@
-import 'package:conquest/features/Cart/Screen/CartItem.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'CartItem.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class CartScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text('Total', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                Text('\$320', style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                Text('₹320', style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(

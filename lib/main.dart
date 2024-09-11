@@ -1,7 +1,5 @@
 import 'package:conquest/features/Drawer/drawer_screen.dart';
 import 'package:conquest/features/Drawer/drawer_section_screen/profile/screen/profile_screen.dart';
-import 'package:conquest/features/HomePage/homepage.dart';
-import 'package:conquest/features/Cart/Screen/cart_screen.dart';
 import 'package:conquest/features/SplashScreen/splash_screen.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'core/services/auth_service.dart';
 import 'features/BottomNavBar/bottom_nav_bar.dart';
+import 'features/HomePage/homepage.dart';
+import 'features/MarketPlace/Cart/Screen/cart_screen.dart';
 import 'features/utils/theme/theme.dart';
 import 'firebase_options.dart';
 

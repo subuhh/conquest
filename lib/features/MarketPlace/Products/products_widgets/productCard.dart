@@ -107,15 +107,12 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildProductTitle(context) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Text(
+    return Text(
         title,
         style: TTextTheme.lightTextTheme.bodyMedium,
-        maxLines: 1,
+        maxLines: 2,
         overflow: TextOverflow.ellipsis,
-      ),
-    );
+      );
   }
 
   Widget _buildPriceRow(context) {
