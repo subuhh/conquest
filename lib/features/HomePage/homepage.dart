@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../MarketPlace/Carousel/carousel_section.dart';
+import '../utils/constants/colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,6 +18,7 @@ class HomePage extends StatelessWidget {
     final HomePageController controller = Get.put(HomePageController());
     return Scaffold(
       /// AppBar
+      backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {

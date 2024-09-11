@@ -2,12 +2,11 @@ import 'dart:io';
 import 'package:conquest/core/Controllers/drawer_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:conquest/features/Authentication/GenderSelection/GenderSelectionPage.dart';
-import 'package:conquest/features/MarketPlace/Products/OrderHIstory/MyOrders.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../common/widgets/custom_list_tile_group.dart';
 import '../../../core/model/user.dart';
 import '../../../core/services/auth_service.dart';
+import '../Address/address_saved_screen.dart';
 import '../utils/constants/colors.dart';
 
 class DrawerScreen extends StatelessWidget {
@@ -128,7 +127,7 @@ class DrawerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const double uniformPadding = 8.0;
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: TColors.secondaryBackground,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -175,15 +174,32 @@ class DrawerScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    CustomListTileGroup(
-                      tiles: [
-                        menuListTile(
-                          'My Orders',
-                          () {
-                            Get.to(() => MyOrdersScreen());
-                          },
-                          'assets/icons/drawerIcons/my_order.svg',
-                          context,
+                    Row(
+                      children: [
+                        Expanded(
+                          // Make sure each ListTile takes up half the available width
+                          child: CustomListTileGroup(
+                            tiles: [
+                              menuListTile(
+                                'Orders',
+                                () {},
+                                'assets/icons/drawerIcons/my_order.svg',
+                                context,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: CustomListTileGroup(
+                            tiles: [
+                              menuListTile(
+                                'Address',
+                                () => Get.to(const SavedAddress()),
+                                'assets/icons/drawerIcons/address.svg',
+                                context,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -199,7 +215,7 @@ class DrawerScreen extends StatelessWidget {
                         ),
                         menuListTile(
                           'Workout Plan',
-                          () => Get.to(() => GenderSelectionScreen()),
+                          () {},
                           'assets/icons/drawerIcons/workout.svg',
                           context,
                         ),
@@ -241,6 +257,32 @@ class DrawerScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    // const SizedBox(height: 20),
+                    // CustomListTileGroup(
+                    //   header: 'Account Settings',
+                    //   tiles: [
+                    //     menuListTile(
+                    //       'Orders',
+                    //       () {
+                    //         Get.to(() => const MyOrdersScreen());
+                    //       },
+                    //       'assets/icons/drawerIcons/my_order.svg',
+                    //       context,
+                    //     ),
+                    //     menuListTile(
+                    //       'WishList',
+                    //       () {},
+                    //       'assets/icons/drawerIcons/faq.svg',
+                    //       context,
+                    //     ),
+                    //     menuListTile(
+                    //       'Address Book',
+                    //       () {},
+                    //       'assets/icons/drawerIcons/faq.svg',
+                    //       context,
+                    //     ),
+                    //   ],
+                    // ),
                     const SizedBox(height: 20),
                     CustomListTileGroup(
                       header: 'Support',
