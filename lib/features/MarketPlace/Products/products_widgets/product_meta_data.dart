@@ -31,6 +31,7 @@ class ProductMetaData extends StatelessWidget {
         children: [
           // Title
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Name
@@ -41,7 +42,7 @@ class ProductMetaData extends StatelessWidget {
                       .textTheme
                       .headlineMedium!
                       .copyWith(fontSize: 19),
-                  maxLines: 2, // Allow a maximum of 2 lines
+                  maxLines: 3, // Allow a maximum of 2 lines
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -70,15 +71,6 @@ class ProductMetaData extends StatelessWidget {
               ),
             ],
           ),
-
-          // Flavour Text
-          Text(
-            '1 Kg [2.2 lb], Chocolate Hazelnut',
-            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontSize: 18,
-                ),
-          ),
-          const SizedBox(height: TSizes.spaceBtwItems * 2),
 
           // Price, In or Out Stock
           Row(
