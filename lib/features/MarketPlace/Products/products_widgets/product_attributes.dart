@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../../common/widgets/chips/choice_chip.dart';
 
 class ProductAttributes extends StatefulWidget {
+
   final ProductModel productModel;
   const ProductAttributes({super.key, required this.productModel});
 
@@ -33,6 +34,7 @@ class _ProductAttributesState extends State<ProductAttributes> {
 
     return Padding(
       padding: const EdgeInsets.only(left: TSizes.defaultSpace),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
