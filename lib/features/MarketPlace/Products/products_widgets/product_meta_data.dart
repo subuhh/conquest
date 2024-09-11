@@ -31,6 +31,7 @@ class ProductMetaData extends StatelessWidget {
         children: [
           // Title
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Name
@@ -41,7 +42,7 @@ class ProductMetaData extends StatelessWidget {
                       .textTheme
                       .titleMedium!
                       .copyWith(fontSize: 19),
-                  maxLines: 2, // Allow a maximum of 2 lines
+                  maxLines: 3, // Allow a maximum of 2 lines
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -75,6 +76,7 @@ class ProductMetaData extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: TSizes.spaceBtwItems),
+
 
           // Price, In or Out Stock
           Row(

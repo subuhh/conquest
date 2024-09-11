@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../../common/widgets/chips/choice_chip.dart';
 
 class ProductAttributes extends StatefulWidget {
+
   final ProductModel productModel;
   const ProductAttributes({super.key, required this.productModel});
 
@@ -33,6 +34,7 @@ class _ProductAttributesState extends State<ProductAttributes> {
 
     return Padding(
       padding: const EdgeInsets.only(left: TSizes.defaultSpace),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -90,31 +92,35 @@ class _ProductAttributesState extends State<ProductAttributes> {
           ],
           if (widget.productModel.productType == 'Supplement') ...[
             // Color
-            const Sectionheading(
-              title: 'Select Flavour',
-              showActionButton: false,
-            ),
-            const SizedBox(
-              height: TSizes.spaceBtwItems / 2,
-            ),
-            Wrap(
-              spacing: 8,
-              children: splitFlavours(widget
-                      .productModel.supplementAttributes?['flavour'] as String?)
-                  .map(
-                    (flavour) => TChoiceChip(
-                      text: flavour,
-                      selected: flavour == selectedFlavour,
-                      onSelected: (value) {
-                        setState(() {
-                          selectedFlavour = value ? flavour : null;
-                        });
-                      },
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems / 1.5),
+            if (widget.productModel.supplementAttributes?['flavour'] !=
+                'NA') ...[
+              const Sectionheading(
+                title: 'Select Flavour',
+                showActionButton: false,
+              ),
+              const SizedBox(
+                height: TSizes.spaceBtwItems / 2,
+              ),
+              Wrap(
+                spacing: 8,
+                children: splitFlavours(widget.productModel
+                        .supplementAttributes?['flavour'] as String?)
+                    .map(
+                      (flavour) => TChoiceChip(
+                        text: flavour,
+                        selected: flavour == selectedFlavour,
+                        onSelected: (value) {
+                          setState(() {
+                            selectedFlavour = value ? flavour : null;
+                          });
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems / 1.5),
+            ],
+
             // Sizes
             const Sectionheading(
               title: 'Select Weight',

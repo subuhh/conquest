@@ -22,6 +22,14 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
   int _selectedImageIndex = 0;
   final PageController _pageController = PageController();
 
+  late List<String> _imageList;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageList = List.from(widget.productModel.images); // Copy images list to modify
+  }
+
   // Function to show full-screen zoomable image
   void _showZoomableImage(BuildContext context, String imageUrl) {
     showDialog(
@@ -53,10 +61,21 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
     });
   }
 
+  // Function to update the image order and move the selected image to the first place
+  void _moveSelectedImageToFirst(int index) {
+    setState(() {
+      String selectedImage = _imageList[index];  // Get the selected image
+      _imageList.removeAt(index);               // Remove it from its current position
+      _imageList.insert(0, selectedImage);      // Insert it at the first position
+      _selectedImageIndex = 0;                  // Set the first image as the selected image
+      _pageController.jumpToPage(0);            // Move the PageView to the first image
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    final imageCount = widget.productModel.images.length;
+    final imageCount = _imageList.length;
 
     return TCurvedEdgesWidget(
       child: Container(
@@ -68,7 +87,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
             GestureDetector(
               onTap: () {
                 // Open zoomable image on tap
-                _showZoomableImage(context, widget.productModel.images[_selectedImageIndex]);
+                _showZoomableImage(context, _imageList[_selectedImageIndex]);
               },
               child: SizedBox(
                 height: 400,
@@ -77,10 +96,10 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                   child: PageView.builder(
                     controller: _pageController,
                     onPageChanged: _onPageChanged,
-                    itemCount: widget.productModel.images.length,
+                    itemCount: _imageList.length,
                     itemBuilder: (context, index) {
                       return Image.network(
-                        widget.productModel.images[index],
+                        _imageList[index],
                         fit: BoxFit.fitHeight,
                       );
                     },
@@ -98,25 +117,20 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                     ? 80
                     : imageCount == 2
                     ? MediaQuery.of(context).size.width * 0.5
-                    : MediaQuery.of(context).size.width * 0.9,
+                    : MediaQuery.of(context).size.width * 0.8,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: widget.productModel.images.length,
+                  itemCount: _imageList.length,
                   separatorBuilder: (_, __) => const SizedBox(
                     width: TSizes.spaceBtwItems,
                   ),
                   itemBuilder: (_, index) {
                     return GestureDetector(
                       onTap: () {
-                        // Update the selected image and swipe to the corresponding page
-                        setState(() {
-                          _selectedImageIndex = index;
-                          _pageController.animateToPage(index,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut);
-                        });
+                        // Move selected image to the first place and display it
+                        _moveSelectedImageToFirst(index);
                       },
                       child: TRoundedImage(
                         fit: BoxFit.fitHeight,
@@ -128,7 +142,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                               : Colors.grey, // Highlight selected image
                         ),
                         padding: const EdgeInsets.all(TSizes.sm),
-                        imageUrl: widget.productModel.images[index],
+                        imageUrl: _imageList[index],
                       ),
                     );
                   },

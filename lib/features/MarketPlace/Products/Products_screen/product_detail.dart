@@ -55,9 +55,9 @@ class _ProductDetailState extends State<ProductDetail> {
         child: Column(
           children: [
             // 1 - Product Image Slider
-            ProductImageSlider(productModel: widget.productModel!),
+            ProductImageSlider(productModel: widget.productModel!,),
 
-            // 2 - Product Details (Title, Flavour & Size, Price, In Stock)
+            // 2 - Product Details (Title, Price, In Stock)
             ProductMetaData(productModel: widget.productModel!),
             const SizedBox(height: TSizes.spaceBtwItems),
 
