@@ -1,148 +1,91 @@
+import 'package:conquest/features/Cart/Screen/CartItem.dart';
+import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
-
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  final List<CartItem> cartItems = [
-    CartItem('APPLE iPhone 8', 'Black, 64 GB', 380.0, 1, 'https://images-cdn.ubuy.co.in/6596f3716048e448bc6379aa-pre-owned-iphone-8-plus-64gb-gold.jpg'),
-    CartItem('Nike Track suit', 'Red', 500.0, 1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMDUHqpxbmnsYW0ji9mhtgx9KBmIDj0964fQ&s'),
-    CartItem('Iphone 12', '128gb and 256gb', 900.0, 2, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB2qKl--OlsgpwiXxqblEL9Fj_SBUVmo1K-A&s'),
-  ];
-
-  double get totalAmount {
-    return cartItems.fold(0, (sum, item) => sum + item.price * item.quantity);
-  }
+class CartScreen extends StatelessWidget {
+  const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Access the defined text theme
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Cart'),
+        backgroundColor: TColors.secondaryBackground,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('My Cart', style: textTheme.titleLarge?.copyWith(color: Colors.black)),
+        actions: [
+          CircleAvatar(
+            backgroundImage: NetworkImage('https://example.com/user_profile_image.jpg'),
+          ),
+          const SizedBox(width: 16.0),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: cartItems.length,
-              itemBuilder: (context, index) {
-                return CartItemWidget(
-                  item: cartItems[index],
-                  onQuantityChanged: (quantity) {
-                    setState(() {
-                      cartItems[index].quantity = quantity;
-                    });
-                  },
-                );
-              },
+            child: ListView(
+              children: [
+                CartItem(
+                  title: 'Polo Shirt For Men',
+                  color: 'Red',
+                  price: 30.0,
+                  imageUrl: 'https://example.com/polo_shirt.jpg',
+                  quantity: 1,
+                ),
+                CartItem(
+                  title: 'Scott Bag',
+                  color: 'Black',
+                  price: 42.0,
+                  imageUrl: 'https://example.com/scott_bag.jpg',
+                  quantity: 1,
+                ),
+                CartItem(
+                  title: 'Pro Tour Shoes',
+                  color: 'Blue',
+                  price: 150.0,
+                  imageUrl: 'https://example.com/pro_tour_shoes.jpg',
+                  quantity: 1,
+                ),
+                CartItem(
+                  title: 'T250 Headphones',
+                  color: 'Brown',
+                  price: 98.0,
+                  imageUrl: 'https://example.com/headphones.jpg',
+                  quantity: 1,
+                ),
+              ],
             ),
           ),
-          Container(
+          Padding(
             padding: const EdgeInsets.all(16.0),
-            color: Colors.black54,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Checkout \$${totalAmount.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle checkout action
-                  },
-                  child: const Text('Checkout'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CartItemWidget extends StatelessWidget {
-  final CartItem item;
-  final Function(int) onQuantityChanged;
-
-  const CartItemWidget({super.key, required this.item, required this.onQuantityChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Image.network(
-            item.imagePath,
-            width: 50,
-            height: 50,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  item.title,
-                  style: const TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                Text(
-                  item.subtitle,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                Text('Total', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                Text('\$320', style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {},
+                  child: Text('Order Now', style: textTheme.labelLarge?.copyWith(fontSize: 18)),
                 ),
               ],
             ),
-          ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  if (item.quantity > 1) {
-                    onQuantityChanged(item.quantity - 1);
-                  }
-                },
-                icon: const Icon(Icons.remove_circle_outline, color: Colors.white),
-              ),
-              Text(
-                item.quantity.toString(),
-                style: const TextStyle(fontSize: 18, color: Colors.white),
-              ),
-              IconButton(
-                onPressed: () {
-                  onQuantityChanged(item.quantity + 1);
-                },
-                icon: const Icon(Icons.add_circle_outline, color: Colors.white),
-              ),
-            ],
-          ),
-          Text(
-            '\$${(item.price * item.quantity).toStringAsFixed(2)}',
-            style: const TextStyle(fontSize: 16, color: Colors.white),
           ),
         ],
       ),
     );
   }
-}
-
-class CartItem {
-  final String title;
-  final String subtitle;
-  final double price;
-  int quantity;
-  final String imagePath;
-
-  CartItem(this.title, this.subtitle, this.price, this.quantity, this.imagePath);
 }
