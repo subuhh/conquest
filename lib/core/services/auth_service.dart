@@ -1,9 +1,10 @@
 import 'dart:developer';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
+import 'package:conquest/features/Authentication/GenderSelection/gender_selection_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../model/user.dart';
+// import '../model/user.dart';
 import 'firestore_service.dart';
 
 class AuthService extends GetxController {
@@ -13,7 +14,8 @@ class AuthService extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    firebaseUser.bindStream(_auth.authStateChanges()); // Bind Firebase auth stream to Rxn
+    firebaseUser.bindStream(
+        _auth.authStateChanges()); // Bind Firebase auth stream to Rxn
   }
 
   // Current user
@@ -25,19 +27,20 @@ class AuthService extends GetxController {
 
   // Register user with email and password
   Future<User?> registerWithEmailAndPassword(
-      String email,
-      String password,
-      String username,
-      String name,
-      String phoneNumber,
-      ) async {
+    String email,
+    String password,
+    String username,
+    String name,
+    String phoneNumber,
+  ) async {
     try {
       // Check if the username is available
       bool isUsernameAvailable =
-      await FirestoreService().checkUsernameAvailability(username);
+          await FirestoreService().checkUsernameAvailability(username);
 
       if (!isUsernameAvailable) {
-        showSnackBar('Error', 'Username is already taken. Please choose another one.');
+        showSnackBar(
+            'Error', 'Username is already taken. Please choose another one.');
         return null;
       }
 
@@ -50,28 +53,25 @@ class AuthService extends GetxController {
       User? user = result.user;
       firebaseUser.value = user; // Update the user state
 
-      if (user != null) {
-        // Create UserModel object with username as the userId and add to Firestore
-        final userModel = UserModel(
-          id: user.uid,
-          userName: username, // Use the username as the user ID
-          name: name,
-          email: email,
+      Get.to(
+        GenderSelectionScreen(
+          user: user!,
           phoneNumber: phoneNumber,
-        );
+          email: email,
+          username: username,
+          name: name,
+        ),
+      );
 
-        // Save user data in Firestore
-        await FirestoreService().createUserDocument(userModel);
+      return user;
 
-        return user;
-      }
-
-      return null;
+      // return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         showSnackBar('Error', 'The email is already in use.');
       } else {
-        showSnackBar('Error', 'An error occurred during registration. Please try again.');
+        showSnackBar('Error',
+            'An error occurred during registration. Please try again.');
       }
       return null;
     } catch (error) {
@@ -83,12 +83,12 @@ class AuthService extends GetxController {
 
   // Login with email and password
   Future<UserCredential?> loginWithEmailAndPassword(
-      String email,
-      String password,
-      ) async {
+    String email,
+    String password,
+  ) async {
     try {
       UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -99,9 +99,11 @@ class AuthService extends GetxController {
       if (e.code == 'invalid-credential') {
         showSnackBar('Error', 'Invalid Email or Password.');
       } else if (e.code == 'too-many-requests') {
-        showSnackBar('Error', 'Too many login attempts. Please try again later.');
+        showSnackBar(
+            'Error', 'Too many login attempts. Please try again later.');
       } else {
-        showSnackBar('Error', 'An error occurred during login. Please try again.');
+        showSnackBar(
+            'Error', 'An error occurred during login. Please try again.');
       }
       return null;
     } catch (e) {
@@ -117,17 +119,17 @@ class AuthService extends GetxController {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+            await googleUser.authentication;
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
         final UserCredential result =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+            await FirebaseAuth.instance.signInWithCredential(credential);
 
         // Check if user document exists in Firestore
         final isDocumentExist =
-        await FirestoreService().checkUserDocumentExists(result.user!.uid);
+            await FirestoreService().checkUserDocumentExists(result.user!.uid);
 
         firebaseUser.value = result.user;
 

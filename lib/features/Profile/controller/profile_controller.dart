@@ -8,7 +8,7 @@ import '../../../../../../core/services/firestore_service.dart';
 
 class ProfileController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
-  final AuthService _auth = AuthService();
+  final auth = Get.put(AuthService());
 
   var isLoading = true.obs;
   var isEdited = false.obs;
@@ -24,12 +24,13 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    log('Fetch User Data Called');
     _fetchUserData();
   }
 
   Future<void> _fetchUserData() async {
     try {
-      final user = _auth.currentUser;
+      final user = auth.currentUser;
       if (user != null) {
         UserModel? fetchedUserModel = await _firestoreService.getUserDetails(user.uid);
         if (fetchedUserModel != null) {
@@ -46,10 +47,12 @@ class ProfileController extends GetxController {
             ..addListener(_checkIfEdited);
           selectedGender = fetchedUserModel.gender;
           isLoading.value = false;
+          log('Fetch User Data loading 3 : ${isLoading.value}');
         }
       }
     } catch (e) {
       log('Error fetching user data: $e');
+      isLoading.value = false;
       // Handle errors here (e.g., show error message)
     }
   }
@@ -87,6 +90,7 @@ class ProfileController extends GetxController {
         Get.back(result: updatedUser);
       } catch (e) {
         showSnackBar('Error', 'Failed to update profile');
+        isLoading.value = false;
         log('$e');
       } finally {
         isLoading.value = false;

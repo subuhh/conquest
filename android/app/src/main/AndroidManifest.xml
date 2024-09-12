@@ -3,6 +3,9 @@
         android:label="conquest"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCBtpWilOVkQLru53RgB3e4KYteZDtJhkM" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -43,4 +46,5 @@
         </intent>
     </queries>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>

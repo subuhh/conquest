@@ -5,7 +5,6 @@ class CategoryModel {
   final bool isFeatured;
   final String parentId;
 
-
   CategoryModel({
     required this.id,
     required this.name,
