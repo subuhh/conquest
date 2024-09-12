@@ -74,12 +74,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   children: [
                     SizedBox(
                       height:
-                          // _locationController.selectedAddress.value == null ||
-                          //         _locationController
-                          //             .selectedAddress.value!.isNotEmpty
-                          //     ?
-                          MediaQuery.of(context).size.height * 0.69,
-                      // : MediaQuery.of(context).size.height * 0.66,
+                          _locationController.selectedAddress.value == null ||
+                                  _locationController
+                                      .selectedAddress.value!.isNotEmpty
+                              ? MediaQuery.of(context).size.height * 0.69
+                              : MediaQuery.of(context).size.height * 0.66,
                       child: GoogleMap(
                         mapType: MapType.normal,
                         initialCameraPosition: _cameraPosition ??
@@ -117,6 +116,43 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         },
                       ),
                     ),
+                    // if (_placeList.isNotEmpty)
+                    //   Positioned(
+                    //     top: 0,
+                    //     left: 0,
+                    //     right: 0,
+                    //     child: Container(
+                    //       color: Colors.white,
+                    //       height: MediaQuery.of(context).size.height * 0.28,
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.only(left: 10, right: 10),
+                    //         child: ListView.builder(
+                    //           itemCount:
+                    //               _placeList.length > 3 ? 3 : _placeList.length,
+                    //           itemBuilder: (context, index) {
+                    //             return ListTile(
+                    //               onTap: () =>
+                    //                   onSuggestionSelected(_placeList[index]),
+                    //               title: Text(
+                    //                 _placeList[index]['structured_formatting']
+                    //                     ['main_text'],
+                    //                 style: const TextStyle(
+                    //                     fontSize: 17,
+                    //                     fontWeight: FontWeight.bold),
+                    //               ),
+                    //               subtitle: Text(
+                    //                 _placeList[index]['description'],
+                    //                 softWrap: true,
+                    //                 overflow: TextOverflow.ellipsis,
+                    //                 style: const TextStyle(fontSize: 15),
+                    //               ),
+                    //               leading: const Icon(Icons.location_on),
+                    //             );
+                    //           },
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
                     // TextField
                     Positioned(
                       top: 10,
@@ -247,10 +283,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     children: [
                       Expanded(
                         child: Text(
-                          // _locationController.selectedAddress.value!.isEmpty
-                          //     ?
-                          _locationController.currentAddressLocality.value!,
-                          // : _locationController.selectedAddress.value!,
+                          _locationController.selectedAddress.value!.isEmpty
+                              ? _locationController
+                                  .currentAddressLocality.value!
+                              : _locationController.selectedAddress.value!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TTextTheme.lightTextTheme.headlineSmall!
@@ -278,16 +314,15 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       ),
                     ],
                   ),
-                  subtitle:
-                      // _locationController.selectedAddress.value!.isEmpty
-                      //     ?
-                      Text(
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    _locationController.currentAddress.value!,
-                    style: TTextTheme.lightTextTheme.headlineSmall!.copyWith(),
-                  ),
-                  // : null,
+                  subtitle: _locationController.selectedAddress.value!.isEmpty
+                      ? Text(
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          _locationController.currentAddress.value!,
+                          style: TTextTheme.lightTextTheme.headlineSmall!
+                              .copyWith(),
+                        )
+                      : null,
                 )
               ],
             ),

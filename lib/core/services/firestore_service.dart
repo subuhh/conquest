@@ -192,7 +192,7 @@ class FirestoreService extends GetxController {
           .collection('address')
           .get();
       final fetchedAddress = snapshot.docs
-          .map((doc) => AddressModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => AddressModel.fromFirestore(doc.data()))
           .toList();
       addresses.value = fetchedAddress;
       isLoading.value = false;
