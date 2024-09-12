@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conquest/core/model/address.dart';
+import 'package:conquest/core/services/auth_service.dart';
 import 'package:get/get.dart';
 import '../model/banner.dart';
 import '../model/product.dart';
@@ -13,6 +15,7 @@ class FirestoreService extends GetxController {
   var categories = <Map<String, dynamic>>[].obs;
   var banners = <BannerModel>[].obs;
   var products = <ProductModel>[].obs;
+  var addresses = <AddressModel>[].obs;
   var isLoading = false.obs;
 
   // --- User ---
@@ -173,6 +176,30 @@ class FirestoreService extends GetxController {
     } catch (e) {
       isLoading.value = false;
       log('Error fetching the products: $e');
+      Get.snackbar('Error', 'Could not fetch products');
+      rethrow;
+    }
+  }
+
+  // --- Address ---
+  Future<List<AddressModel>> fetchAllAddress() async {
+    try {
+      isLoading.value = true;
+      final userId = AuthService().currentUser!.uid;
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('address')
+          .get();
+      final fetchedAddress = snapshot.docs
+          .map((doc) => AddressModel.fromFirestore(doc.data(), doc.id))
+          .toList();
+      addresses.value = fetchedAddress;
+      isLoading.value = false;
+      return fetchedAddress;
+    } catch (e) {
+      isLoading.value = false;
+      log('Error Fetching address: $e');
       Get.snackbar('Error', 'Could not fetch products');
       rethrow;
     }

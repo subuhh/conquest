@@ -194,7 +194,7 @@ class DrawerScreen extends StatelessWidget {
                             tiles: [
                               menuListTile(
                                 'Address',
-                                () => Get.to(const SavedAddress()),
+                                () => Get.to(() => const SavedAddress()),
                                 'assets/icons/drawerIcons/address.svg',
                                 context,
                               ),
@@ -257,32 +257,6 @@ class DrawerScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // const SizedBox(height: 20),
-                    // CustomListTileGroup(
-                    //   header: 'Account Settings',
-                    //   tiles: [
-                    //     menuListTile(
-                    //       'Orders',
-                    //       () {
-                    //         Get.to(() => const MyOrdersScreen());
-                    //       },
-                    //       'assets/icons/drawerIcons/my_order.svg',
-                    //       context,
-                    //     ),
-                    //     menuListTile(
-                    //       'WishList',
-                    //       () {},
-                    //       'assets/icons/drawerIcons/faq.svg',
-                    //       context,
-                    //     ),
-                    //     menuListTile(
-                    //       'Address Book',
-                    //       () {},
-                    //       'assets/icons/drawerIcons/faq.svg',
-                    //       context,
-                    //     ),
-                    //   ],
-                    // ),
                     const SizedBox(height: 20),
                     CustomListTileGroup(
                       header: 'Support',

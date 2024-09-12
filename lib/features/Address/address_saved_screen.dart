@@ -1,19 +1,19 @@
+import 'package:conquest/features/Address/add_new_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../core/Controllers/location_service.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/sizes.dart';
 
-class SavedAddress extends StatefulWidget {
+class SavedAddress extends StatelessWidget {
   const SavedAddress({super.key});
 
   @override
-  State<SavedAddress> createState() => _SavedAddressState();
-}
-
-class _SavedAddressState extends State<SavedAddress> {
-  @override
   Widget build(BuildContext context) {
+    final locationController = Get.put(LocationController());
+
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
@@ -46,7 +46,12 @@ class _SavedAddressState extends State<SavedAddress> {
                 color: Colors.grey,
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              onTap: () {
+                locationController.currentPosition.value;
+                Get.to(() => const AddNewAddress());
+              },
             ),
             const SizedBox(height: TSizes.defaultSpace),
             Row(
@@ -120,16 +125,14 @@ class _SavedAddressState extends State<SavedAddress> {
                         ),
                       ],
                     ),
-                    subtitle: const Flexible(
-                      child: Column(
-                        children: [
-                          Text(
-                              '156/35, Neerav Nikunj, Sikandra, Agra, in fornt of kk bar, Agra, Uttar Pradesh, 282007'),
-                          SizedBox(
-                            height: 5,
-                          )
-                        ],
-                      ),
+                    subtitle: const Column(
+                      children: [
+                        Text(
+                            '156/35, Neerav Nikunj, Sikandra, Agra, in fornt of kk bar, Agra, Uttar Pradesh, 282007'),
+                        SizedBox(
+                          height: 5,
+                        )
+                      ],
                     ),
                   );
                 },
