@@ -7,6 +7,9 @@ import 'package:conquest/features/MarketPlace/Category/category_section.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/products_section.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
+import 'package:iconsax/iconsax.dart';
+
+
 
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});
@@ -47,11 +50,15 @@ class MarketplaceScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
+            onPressed: () {},
+               // Navigator.push(context,MaterialPageRoute(builder: (context)=>WishListScreen())
+                //),
+            icon: const Icon(Iconsax.heart),
+          ),
+          // Cart Button
+          IconButton(
             onPressed: () => Navigator.pushNamed(context, '/cart'),
-            icon: const Icon(
-              Icons.shopping_cart,
-              size: TSizes.iconLg,
-            ),
+            icon: const Icon(Iconsax.shopping_cart),
           ),
         ],
       ),

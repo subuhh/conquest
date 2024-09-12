@@ -1,5 +1,9 @@
+import 'package:conquest/features/MarketPlace/Cart/Checkout/checkoutScreen.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
+import 'package:conquest/features/utils/constants/sizes.dart';
+import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import '../LIstForCart/CartList.dart';
 import 'CartItem.dart';
 
 class CartScreen extends StatelessWidget {
@@ -11,8 +15,9 @@ class CartScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
-        backgroundColor: TColors.secondaryBackground,
+        backgroundColor: TColors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -20,10 +25,12 @@ class CartScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text('My Cart', style: textTheme.titleLarge?.copyWith(color: Colors.black)),
+        title: Text('My Cart',
+            style: textTheme.titleLarge?.copyWith(color: Colors.black)),
         actions: [
           CircleAvatar(
-            backgroundImage: NetworkImage('https://example.com/user_profile_image.jpg'),
+            backgroundImage:
+                NetworkImage('https://example.com/user_profile_image.jpg'),
           ),
           const SizedBox(width: 16.0),
         ],
@@ -31,55 +38,44 @@ class CartScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: [
-                CartItem(
-                  title: 'Polo Shirt For Men',
-                  color: 'Red',
-                  price: 30.0,
-                  imageUrl: 'https://example.com/polo_shirt.jpg',
-                  quantity: 1,
-                ),
-                CartItem(
-                  title: 'Scott Bag',
-                  color: 'Black',
-                  price: 42.0,
-                  imageUrl: 'https://example.com/scott_bag.jpg',
-                  quantity: 1,
-                ),
-                CartItem(
-                  title: 'Pro Tour Shoes',
-                  color: 'Blue',
-                  price: 150.0,
-                  imageUrl: 'https://example.com/pro_tour_shoes.jpg',
-                  quantity: 1,
-                ),
-                CartItem(
-                  title: 'T250 Headphones',
-                  color: 'Brown',
-                  price: 98.0,
-                  imageUrl: 'https://example.com/headphones.jpg',
-                  quantity: 1,
-                ),
-              ],
-            ),
-          ),
+              child: ListView.builder(
+            itemCount: cartData.length,
+            itemBuilder: (context, index) {
+              final item = cartData[index];
+              return CartItem(
+                title: item['title'],
+                color: item['color'],
+                imageUrl: item['imageUrl'],
+                quantity: item['quantity'],
+                orignalPrice: item['originalPrice'],
+                dicountedPrice: item['discountedPrice'],
+              );
+            },
+          )),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Total', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                Text('₹320', style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 16.0),
+                Text('Total ₹320',
+                    style: textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+
+                const SizedBox(height: TSizes.spaceBtwItems),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.red,
                     padding: EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: () {},
-                  child: Text('Order Now', style: textTheme.labelLarge?.copyWith(fontSize: 18)),
+                  onPressed: () {
+                    THelperFunctions.navigateToScreen(
+                        context, Checkoutscreen());
+                  },
+                  child: Text('Order Now',
+                      style:
+                          textTheme.titleMedium?.copyWith(color: Colors.white)),
                 ),
               ],
             ),

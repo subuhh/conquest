@@ -5,14 +5,14 @@ import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCardSmall extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String oldPrice;
   final String newPrice;
   final ProductModel productModel;
 
-  const ProductCard({
+  const ProductCardSmall({
     required this.imageUrl,
     required this.title,
     required this.oldPrice,

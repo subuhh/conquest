@@ -1,4 +1,4 @@
-import 'package:conquest/features/MarketPlace/Products/products_widgets/productCard.dart';
+import 'package:conquest/features/MarketPlace/Products/ProductCard/productCardSmall.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/model/product.dart';
@@ -72,7 +72,7 @@ class _ProductsSectionState extends State<ProductsSection> {
                         width: MediaQuery.of(context).size.width *
                             0.475, // Adjust width based on your requirement
                         //margin: EdgeInsets.symmetric(horizontal: 10.0), // Add some spacing between items
-                        child: ProductCard(
+                        child: ProductCardSmall(
                           imageUrl: imageUrl,
                           title: product.name,
                           oldPrice: '${product.originalPrice}',
