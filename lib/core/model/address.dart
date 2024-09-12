@@ -1,58 +1,93 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class AddressModel {
-  String id;
-  final String name;
-  final String phoneNumber;
-  final String street;
-  final String city;
-  final String state;
-  final String postalCode;
-  final String country;
-  final DateTime? dateTime;
-  bool selectedAddress;
+  final String id; // Unique identifier for the address (e.g., UUID)
+  final String userId; // ID of the user to whom this address belongs
+  final String recipientName; // Name of the person receiving the delivery
+  final String phoneNumber; // Recipient's phone number
+  final String email; // Optional: Recipient's email
+  final String houseNumber; // House/Apartment number
+  final String streetAddress; // Street address or road name
+  final String landmark; // Optional: Nearby landmark
+  final String area; // Neighborhood or area
+  final String city; // City or town name
+  final String state; // State or province
+  final String postalCode; // Zip or postal code
+  final String country; // Country name
+  final AddressType addressType; // Enum: Home, Work, Other
+  final String floor; // Optional: Floor/level in a building
+  final String towerOrBlock; // Optional: Tower/Block information
+  final bool isDefault; // Is this the default address for the user
 
   AddressModel({
     required this.id,
-    required this.name,
+    required this.userId,
+    required this.recipientName,
     required this.phoneNumber,
-    required this.street,
+    required this.email,
+    required this.houseNumber,
+    required this.streetAddress,
+    required this.landmark,
+    required this.area,
     required this.city,
     required this.state,
     required this.postalCode,
     required this.country,
-    this.dateTime,
-    this.selectedAddress = true,
+    required this.addressType,
+    required this.isDefault,
+    this.floor = '',
+    this.towerOrBlock = '',
   });
 
-  // Factory constructor to create a UserModel instance from Firestore document
-  factory AddressModel.fromFirestore(Map<String, dynamic> data, String id) {
-    return AddressModel(
-      id: id,
-      name: data['name'] ?? '',
-      phoneNumber: data['phoneNumber'] ?? '',
-      street: data['street'] ?? '',
-      city: data['city'] ?? '',
-      state: data['state'] ?? '',
-      postalCode: data['postalCode'] ?? '',
-      country: data['country'] ?? '',
-      dateTime: (data['dateTime'] as Timestamp).toDate(),
-      selectedAddress: data['selectedAddress'] ?? false,
-    );
-  }
-
-  // Method to convert a UserModel into a Map for storing in Firestore
+  // Convert AddressModel to Map (for Firebase or other NoSQL databases)
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'id': id,
+      'userId': userId,
+      'recipientName': recipientName,
       'phoneNumber': phoneNumber,
-      'street': street,
+      'email': email,
+      'houseNumber': houseNumber,
+      'streetAddress': streetAddress,
+      'landmark': landmark,
+      'area': area,
       'city': city,
       'state': state,
       'postalCode': postalCode,
       'country': country,
-      'dateTime': DateTime.now(),
-      'selectedAddress': selectedAddress,
+      'addressType': addressType.name,
+      'isDefault': isDefault,
+      'floor': floor,
+      'towerOrBlock': towerOrBlock,
     };
   }
+
+  // Create AddressModel from Map (for deserializing)
+  factory AddressModel.fromFirestore(Map<String, dynamic> map) {
+    return AddressModel(
+      id: map['id'],
+      userId: map['userId'],
+      recipientName: map['recipientName'],
+      phoneNumber: map['phoneNumber'],
+      email: map['email'],
+      houseNumber: map['houseNumber'],
+      streetAddress: map['streetAddress'],
+      landmark: map['landmark'] ?? '',
+      area: map['area'],
+      city: map['city'],
+      state: map['state'],
+      postalCode: map['postalCode'],
+      country: map['country'],
+      addressType: AddressType.values.firstWhere(
+              (e) => e.name == map['addressType'], orElse: () => AddressType.other),
+      isDefault: map['isDefault'],
+      floor: map['floor'] ?? '',
+      towerOrBlock: map['towerOrBlock'] ?? '',
+    );
+  }
+}
+
+// Enum to handle different types of addresses
+enum AddressType {
+  home,
+  work,
+  other,
 }

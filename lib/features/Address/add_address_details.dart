@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:conquest/core/model/user.dart';
 import 'package:conquest/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,10 @@ import '../utils/theme/customthemes/textThemes.dart';
 
 class AddAddressDetails extends StatefulWidget {
   final String selectedAddress;
-  const AddAddressDetails({super.key, required this.selectedAddress});
+  const AddAddressDetails({
+    super.key,
+    required this.selectedAddress,
+  });
 
   @override
   State<AddAddressDetails> createState() => _AddAddressDetailsState();
@@ -24,19 +29,26 @@ class _AddAddressDetailsState extends State<AddAddressDetails> {
   final landmarkController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  // UserModel? userModel;
-  // final FirestoreService _firestoreService = FirestoreService();
+  UserModel? userModel;
+  final FirestoreService _firestoreService = FirestoreService();
 
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   _fetchUserDetails();
-  // }
-  //
-  // Future<void> _fetchUserDetails() async {
-  //   final user = controller.currentUser!.uid;
-  //   userModel = await _firestoreService.getUserDetails(user);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserDetails();
+  }
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      final user = controller.user;
+      final userData = await user.first;
+      if (userData != null) {
+        userModel = await _firestoreService.getUserDetails(userData.uid);
+      }
+    } catch (e) {
+      log('Error fetching user details: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +88,7 @@ class _AddAddressDetailsState extends State<AddAddressDetails> {
                       const SizedBox(width: 10),
                       Text(
                         // '${userModel!.name}, ${userModel!.phoneNumber}',
-                        'Anubhav Bindal, 8881284276',
+                        '${userModel?.name ?? ''}, ${userModel?.phoneNumber ?? ''}',
                         style: TTextTheme.lightTextTheme.titleSmall,
                       ),
                       const Spacer(),
@@ -145,11 +157,12 @@ class _AddAddressDetailsState extends State<AddAddressDetails> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           width: THelperFunctions.screenWidth(context) * 0.6,
                           child: Text(
-                            'Nekchand Tower, NEKCHAND TOWER, sahibzada Ajit Singh Nagar, Punjab, 140413',
+                            widget.selectedAddress,
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                             style: TTextTheme.lightTextTheme.displayLarge,
@@ -157,6 +170,12 @@ class _AddAddressDetailsState extends State<AddAddressDetails> {
                         ),
                         OutlinedButton(
                           onPressed: () => Get.back(),
+                          style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              side: const BorderSide(color: Colors.green)),
                           child: const Text('Change'),
                         )
                       ],

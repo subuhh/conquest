@@ -7,7 +7,7 @@ import '../../common/widgets/custom_snackbar.dart';
 class LocationController extends GetxController {
   var currentPosition = Rxn<Position>(); // To store the user's current position
   var currentAddress = Rxn<String>(); // To store the user's current position
-  var selectedAddress = Rxn<String>();
+  var selectedAddress = Rxn<String>('');
   var currentAddressLocality = Rxn<String>();
   var isLoading = false.obs; // For managing loading state
 

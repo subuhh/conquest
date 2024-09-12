@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:conquest/core/Controllers/drawer_controller.dart';
+import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -15,7 +16,7 @@ class DrawerScreen extends StatelessWidget {
   // Instance of GetX Controller
   final DrawerMenuController drawerController = Get.put(DrawerMenuController());
 
-  Widget _buildProfileHeader(BuildContext context) {
+  Widget _buildProfileHeader() {
     return Container(
       color: Colors.white,
       child: Obx(() {
@@ -26,12 +27,12 @@ class DrawerScreen extends StatelessWidget {
 
         // Display profile details after data is loaded
         final userModel = drawerController.userModel.value;
-        return buildLoggedInHeader(context, userModel);
+        return buildLoggedInHeader(userModel);
       }),
     );
   }
 
-  Widget buildLoggedInHeader(BuildContext context, UserModel? userModel) {
+  Widget buildLoggedInHeader(UserModel? userModel) {
     return Container(
       margin: const EdgeInsets.all(10.0),
       padding:
@@ -65,13 +66,11 @@ class DrawerScreen extends StatelessWidget {
               children: [
                 Text(
                   userModel?.name ?? '',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: TTextTheme.lightTextTheme.headlineMedium,
                 ),
                 Text(
                   userModel?.email ?? '',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
+                  style: TTextTheme.lightTextTheme.bodyMedium!
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
@@ -152,7 +151,7 @@ class DrawerScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      _buildProfileHeader(context),
+                      _buildProfileHeader(),
                     ],
                   ),
                 ),
