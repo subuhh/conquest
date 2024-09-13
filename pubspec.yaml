@@ -58,6 +58,7 @@ flutter:
   #-------------------LOCAL ASSETS---------------#
   assets:
     - assets/logos/
+    - assets/images/
     - assets/icons/appicons/
     - assets/icons/drawerIcons/
     - assets/icons/bottomNavbaricons/InactiveIcons/

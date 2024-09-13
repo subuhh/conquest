@@ -14,8 +14,10 @@ class AddAddressDetails extends StatefulWidget {
   final String selectedAddress;
   final String userName;
   final String phoneNumber;
+  final String userId;
   final bool isCurrentAddress;
   final LocationController locationController;
+
   const AddAddressDetails({
     super.key,
     required this.selectedAddress,
@@ -23,6 +25,7 @@ class AddAddressDetails extends StatefulWidget {
     required this.phoneNumber,
     required this.isCurrentAddress,
     required this.locationController,
+    required this.userId,
   });
 
   @override
@@ -329,35 +332,49 @@ class _AddAddressDetailsState extends State<AddAddressDetails> {
                   padding: const EdgeInsets.only(left: 15, right: 15),
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         setState(() => isLoading = true);
                         try {
+                          bool isFirstAddress =
+                              await _fireStore.isFirstAddress(widget.userId);
+
                           AddressModel addressModel = AddressModel(
-                            id: '',
-                            recipientName: nameController.text,
-                            phoneNumber: phoneController.text.trim(),
-                            houseNumber: houseNumberController.text,
-                            addressType: selectedAddressType,
-                            streetAddress: widget.isCurrentAddress
-                                ? widget.locationController.currentStreet.value!
-                                : widget
-                                    .locationController.selectedStreet.value!,
-                            city: widget.isCurrentAddress
-                                ? widget.locationController.currentCity.value!
-                                : widget.locationController.selectedCity.value!,
-                            postalCode: widget.isCurrentAddress
-                                ? widget
-                                    .locationController.currentPostalCode.value!
-                                : widget.locationController.selectedPostalCode
-                                    .value!,
-                            state: widget.isCurrentAddress
-                                ? widget.locationController.currentState.value!
-                                : widget
-                                    .locationController.selectedState.value!,
-                          );
+                              id: '',
+                              recipientName: nameController.text,
+                              phoneNumber: phoneController.text.trim(),
+                              houseNumber: houseNumberController.text,
+                              addressType: selectedAddressType,
+                              streetAddress: widget.isCurrentAddress
+                                  ? widget
+                                      .locationController.currentStreet.value!
+                                  : widget
+                                      .locationController.selectedStreet.value!,
+                              city: widget.isCurrentAddress
+                                  ? widget.locationController.currentCity.value!
+                                  : widget
+                                      .locationController.selectedCity.value!,
+                              postalCode: widget.isCurrentAddress
+                                  ? widget.locationController.currentPostalCode
+                                      .value!
+                                  : widget.locationController.selectedPostalCode
+                                      .value!,
+                              state: widget.isCurrentAddress
+                                  ? widget
+                                      .locationController.currentState.value!
+                                  : widget
+                                      .locationController.selectedState.value!,
+                              isDefault: isFirstAddress);
+
                           _fireStore.addAddress(addressModel);
-                          // showSnackBar('Success', 'Address added successfully');
+
+                          if (isFirstAddress) {
+                            await _fireStore.updateDefaultAddress(
+                              widget.userId,
+                              addressModel.id,
+                            );
+                          }
+
                           setState(() => isLoading = false);
                           Get.back();
                           Get.back();

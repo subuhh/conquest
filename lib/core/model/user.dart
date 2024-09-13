@@ -14,22 +14,21 @@ class UserModel {
   final List<String>? workoutHistory;
   final String? defaultAddressId;
 
-  UserModel({
-    required this.id,
-    required this.userName, // Renamed userId to userName
-    required this.email,
-    required this.name,
-    required this.phoneNumber,
-    this.profileImageUrl,
-    this.bio,
-    this.age,
-    this.gender,
-    this.height,
-    this.weight,
-    this.fitnessGoal,
-    this.workoutHistory,
-    this.defaultAddressId
-  });
+  UserModel(
+      {required this.id,
+      required this.userName, // Renamed userId to userName
+      required this.email,
+      required this.name,
+      required this.phoneNumber,
+      this.profileImageUrl,
+      this.bio,
+      this.age,
+      this.gender,
+      this.height,
+      this.weight,
+      this.fitnessGoal,
+      this.workoutHistory,
+      this.defaultAddressId});
 
   // Factory constructor to create a UserModel instance from Firestore document
   factory UserModel.fromFirestore(Map<String, dynamic> data, String id) {

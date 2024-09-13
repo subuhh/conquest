@@ -1,133 +1,165 @@
-import 'dart:developer';
-
+import 'package:conquest/common/widgets/custom_snackbar.dart';
 import 'package:conquest/core/model/address.dart';
-import 'package:conquest/core/services/firestore_service.dart';
 import 'package:conquest/features/Address/add_new_address.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
+import 'package:conquest/features/utils/Shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../core/Controllers/location_service.dart';
-import '../../core/services/auth_service.dart';
+import '../../common/widgets/divider_with_text.dart';
+import '../../core/Controllers/Address_Controllers/saved_address_controller.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/sizes.dart';
+import '../utils/theme/customthemes/textThemes.dart';
 
-class SavedAddress extends StatefulWidget {
+class SavedAddress extends StatelessWidget {
   const SavedAddress({super.key});
 
   @override
-  State<SavedAddress> createState() => _SavedAddressState();
-}
-
-class _SavedAddressState extends State<SavedAddress> {
-  final locationController = Get.put(LocationController());
-  final controller = Get.put(AuthService());
-  List<AddressModel> addressModel = [];
-  bool isLoading = true;
-  final FirestoreService fireStore = FirestoreService();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchAllAddress();
-  }
-
-  Future<void> _fetchAllAddress() async {
-    try {
-      addressModel =
-          await fireStore.fetchAllAddress(controller.currentUser!.uid);
-      log('Address Model Length: ${addressModel.length}');
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      rethrow;
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  // Function to get icon based on address type
-  IconData _getAddressIcon(String type) {
-    switch (type.toLowerCase()) {
-      case 'home':
-        return Iconsax.home;
-      case 'work':
-        return Iconsax.building_4;
-      default:
-        return Iconsax.location;
-    }
-  }
-
-  // Function to get title for address type
-  String _getAddressTypeTitle(String type) {
-    switch (type.toLowerCase()) {
-      case 'home':
-        return 'Home';
-      case 'work':
-        return 'Work';
-      default:
-        return 'Other';
-    }
-  }
-
-  // Function to build the address string
-  String buildAddress(AddressModel address) {
-    List<String> addressComponents = [];
-
-    // Only add fields if they are not empty
-    if (address.houseNumber.isNotEmpty) {
-      addressComponents.add(address.houseNumber);
-    }
-    if (address.floor.isNotEmpty) {
-      addressComponents.add(address.floor);
-    }
-    if (address.towerOrBlock.isNotEmpty) {
-      addressComponents.add(address.towerOrBlock);
-    }
-    if (address.streetAddress.isNotEmpty) {
-      addressComponents.add(address.streetAddress);
-    }
-    if (address.landmark.isNotEmpty) {
-      addressComponents.add(address.landmark);
-    }
-    if (address.city.isNotEmpty) addressComponents.add(address.city);
-
-    if (address.state.isNotEmpty) addressComponents.add(address.state);
-
-    if (address.postalCode.isNotEmpty) {
-      addressComponents.add(address.postalCode);
-    }
-
-    // Join all the address components with commas
-    return addressComponents.join(', ');
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final AddressController addressController = Get.put(AddressController());
+
+    // Function to get icon based on address type
+    IconData getAddressIcon(String type) {
+      switch (type.toLowerCase()) {
+        case 'home':
+          return Iconsax.home;
+        case 'work':
+          return Iconsax.building_4;
+        default:
+          return Iconsax.location;
+      }
+    }
+
+    // Function to get title for address type
+    String getAddressTypeTitle(String type) {
+      switch (type.toLowerCase()) {
+        case 'home':
+          return 'Home';
+        case 'work':
+          return 'Work';
+        default:
+          return 'Other';
+      }
+    }
+
+    // Function to build the address string
+    String buildAddress(AddressModel address) {
+      List<String> addressComponents = [];
+
+      if (address.houseNumber.isNotEmpty) {
+        addressComponents.add(address.houseNumber);
+      }
+      if (address.floor.isNotEmpty) addressComponents.add(address.floor);
+      if (address.towerOrBlock.isNotEmpty) {
+        addressComponents.add(address.towerOrBlock);
+      }
+      if (address.streetAddress.isNotEmpty) {
+        addressComponents.add(address.streetAddress);
+      }
+      if (address.landmark.isNotEmpty) addressComponents.add(address.landmark);
+      if (address.city.isNotEmpty) addressComponents.add(address.city);
+      if (address.state.isNotEmpty) addressComponents.add(address.state);
+      if (address.postalCode.isNotEmpty) {
+        addressComponents.add(address.postalCode);
+      }
+
+      return addressComponents.join(', ');
+    }
+
+    void showDeleteConfirmationDialog(AddressModel address) {
+      Get.defaultDialog(
+        title: 'Delete Address',
+        middleText: 'Are you sure you want to delete this address?',
+        textCancel: 'Cancel',
+        textConfirm: 'Delete',
+        buttonColor: Colors.green,
+        confirmTextColor: Colors.white,
+        onCancel: () {},
+        onConfirm: () async {
+          Get.back(); // Close the dialog
+          await addressController.deleteAddress(address.id);
+          showSnackBar('Success', 'Address deleted successfully');
+        },
+        barrierDismissible: false,
+      );
+    }
+
+    ListTile addressTile(AddressModel address) {
+      return ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+        tileColor: Colors.white,
+        leading: Icon(getAddressIcon(address.addressType)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(getAddressTypeTitle(address.addressType)),
+            const Spacer(),
+            PopupMenuButton<String>(
+              color: Colors.white,
+              icon: CircleAvatar(
+                radius: 13,
+                backgroundColor: Colors.grey.withOpacity(0.5),
+                child: const CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.more_horiz, color: Colors.black, size: 22),
+                ),
+              ),
+              onSelected: (value) {
+                // if (value == 'edit') {
+                // }
+                if (value == 'delete') {
+                  showDeleteConfirmationDialog(address);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  // PopupMenuItem(
+                  //   value: 'edit',
+                  //   child: Text(
+                  //     'Edit',
+                  //     style: TTextTheme.lightTextTheme.titleLarge,
+                  //   ),
+                  // ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(
+                      'Delete',
+                      style: TTextTheme.lightTextTheme.titleLarge,
+                    ),
+                  ),
+                ];
+              },
+            ),
+          ],
+        ),
+        subtitle: Text(
+          buildAddress(address),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
         elevation: 0,
-        title: const Text(
-          'My Addresses',
-        ),
+        title: const Text('My Addresses'),
       ),
-      body: Container(
-        margin: const EdgeInsets.all(20),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Add Address Tile
             ListTile(
               tileColor: Colors.white,
               leading: const Icon(
                 Icons.add,
                 color: Colors.green,
                 size: 24,
-                weight: 4,
               ),
               title: Text(
                 'Add Address',
@@ -143,194 +175,55 @@ class _SavedAddressState extends State<SavedAddress> {
                 borderRadius: BorderRadius.circular(12),
               ),
               onTap: () {
-                locationController.currentPosition.value;
                 Get.to(() => const AddNewAddress());
               },
             ),
-            if (addressModel.length.isGreaterThan(0)) ...[
-              const SizedBox(height: TSizes.defaultSpace),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(child: Divider()),
-                  const SizedBox(width: 10),
-                  Text(
-                    ' SAVED ADDRESSES ',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black.withOpacity(0.9)),
-                  ),
-                  const SizedBox(width: 10),
-                  const Expanded(child: Divider()),
-                ],
-              ),
-              const SizedBox(height: TSizes.defaultSpace),
-              isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.green,
-                      ),
-                    )
-                  : Expanded(
-                      child: ListView.separated(
-                        itemCount: addressModel.length,
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            height: 20,
-                          );
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          final address = addressModel[index];
-                          return ListTile(
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            tileColor: Colors.white,
-                            leading: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(
-                                  _getAddressIcon(address.addressType),
-                                ),
-                              ],
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            title: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _getAddressTypeTitle(address.addressType),
-                                ),
-                                const Spacer(),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: CircleAvatar(
-                                    radius: 13,
-                                    backgroundColor:
-                                        Colors.grey.withOpacity(0.5),
-                                    child: const CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        Icons.more_horiz,
-                                        color: Colors.black,
-                                        size: 22,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: CircleAvatar(
-                                    radius: 13,
-                                    backgroundColor:
-                                        Colors.grey.withOpacity(0.5),
-                                    child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: Colors.white,
-                                      child: SvgPicture.asset(
-                                        'assets/icons/appicons/share.svg',
-                                        height: 22,
-                                        width: 22,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: THelperFunctions.screenWidth(context) *
-                                      0.6,
-                                  child: Text(
-                                    buildAddress(address),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+            const SizedBox(height: TSizes.defaultSpace),
+
+            // Saved Address
+            Obx(
+              () => addressController.addressList.isEmpty
+                  ? const SizedBox.shrink()
+                  : const DividerWithText(title: 'SAVED ADDRESSES'),
+            ),
+            const SizedBox(height: TSizes.defaultSpace),
+
+            // StreamBuilder for fetching addresses
+            StreamBuilder<List<AddressModel>>(
+              stream: addressController.addressStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Expanded(
+                    child: ListView.separated(
+                      itemCount: 5, // Show 5 shimmer placeholders
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: TSizes.defaultSpace),
+                      itemBuilder: (context, index) =>
+                          TShimmer.singleContainer(60),
                     ),
-            ]
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const SizedBox.shrink();
+                } else {
+                  final addresses = snapshot.data!;
+                  return Expanded(
+                    child: ListView.separated(
+                      itemCount: addresses.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 20),
+                      itemBuilder: (context, index) {
+                        final address = addresses[index];
+                        return addressTile(address);
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Container customAddressTile({
-    required IconData icon,
-    required String title,
-    required String subTitle,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Leading Icon on top
-          Icon(
-            icon, // Adjust the icon size if necessary
-            size: 30,
-            color: Colors.black,
-          ),
-          const SizedBox(height: 8), // Spacing between icon and text
-
-          // Title
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8), // Spacing between title and subtitle
-
-          // Subtitle
-          Text(
-            subTitle,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 12), // Spacing between subtitle and icons
-
-          // Row with two icons below the subtitle
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () {
-                  // Add functionality for first icon
-                },
-                icon: const Icon(
-                  Icons.more_horiz,
-                  color: Colors.black,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  // Add functionality for second icon
-                },
-                icon: const Icon(
-                  Icons.share,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

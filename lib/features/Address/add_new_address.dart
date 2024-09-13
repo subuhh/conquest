@@ -1,10 +1,11 @@
 import 'dart:developer';
-
 import 'package:conquest/features/Address/add_address_details.dart';
 import 'package:conquest/features/Address/search_bottom_sheet.dart';
+import 'package:conquest/features/utils/Shimmer/shimmer.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../core/Controllers/location_service.dart';
@@ -13,7 +14,9 @@ import '../../core/services/auth_service.dart';
 import '../../core/services/firestore_service.dart';
 
 class AddNewAddress extends StatefulWidget {
-  const AddNewAddress({super.key});
+  const AddNewAddress({
+    super.key,
+  });
 
   @override
   State<AddNewAddress> createState() => _AddNewAddressState();
@@ -21,7 +24,6 @@ class AddNewAddress extends StatefulWidget {
 
 class _AddNewAddressState extends State<AddNewAddress> {
   CameraPosition? _cameraPosition;
-  Marker? _marker;
   GoogleMapController? _mapController;
 
   UserModel? userModel;
@@ -31,10 +33,28 @@ class _AddNewAddressState extends State<AddNewAddress> {
   final LocationController _locationController =
       Get.put(LocationController()); // GetX location controller
 
+  bool isFetchingAddress = false;
+
   @override
   void initState() {
     super.initState();
     _fetchUserDetails();
+  }
+
+  void _onCameraIdle() async {
+    if (_cameraPosition != null) {
+      setState(() {
+        isFetchingAddress = true;
+      });
+      // Fetch address based on the new camera position
+      await _locationController.getAddressFromLatLng(
+        _cameraPosition!.target.latitude,
+        _cameraPosition!.target.longitude,
+      );
+      setState(() {
+        isFetchingAddress = false;
+      });
+    }
   }
 
   void _handleSuggestionSelected(Map<String, dynamic> suggestion) {
@@ -44,15 +64,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
     setState(() {
       _cameraPosition = CameraPosition(
-        target: LatLng(latitude, longitude), zoom: 15,
-        // zoom: 14.4743,
-      );
-
-      _marker = Marker(
-        markerId: const MarkerId('selected_location'),
-        position: LatLng(latitude, longitude),
-        infoWindow: const InfoWindow(title: 'Selected Location'),
-        draggable: true,
+        target: LatLng(latitude, longitude),
+        zoom: 17.5,
       );
 
       _locationController.selectedAddress.value = suggestion['address'];
@@ -64,12 +77,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
     _mapController?.animateCamera(
       CameraUpdate.newCameraPosition(_cameraPosition!),
     );
-  }
-
-  // Called when the user drags the marker and releases it
-  void _onMarkerDragged(LatLng position) {
-    _locationController.getAddressFromLatLng(
-        position.latitude, position.longitude);
   }
 
   Future<void> _fetchUserDetails() async {
@@ -107,6 +114,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
               // Map
               Stack(
                 children: [
+                  // Map
                   SizedBox(
                     height: _locationController.selectedAddress.value == null ||
                             _locationController
@@ -124,27 +132,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                 _locationController
                                         .currentPosition.value?.longitude ??
                                     0),
-                            zoom: 14.4743,
+                            zoom: 17.5,
                           ),
                       zoomControlsEnabled: false,
                       myLocationEnabled: false,
-                      markers: {
-                        _marker ??
-                            Marker(
-                              markerId: const MarkerId('live_location'),
-                              position: LatLng(
-                                  _locationController
-                                          .currentPosition.value?.latitude ??
-                                      0,
-                                  _locationController
-                                          .currentPosition.value?.longitude ??
-                                      0),
-                              infoWindow:
-                                  const InfoWindow(title: 'Live Location'),
-                              draggable: true,
-                              onDragEnd: _onMarkerDragged,
-                            )
+                      onCameraMove: (position) {
+                        _cameraPosition = position;
                       },
+                      onCameraIdle: _onCameraIdle,
                       onMapCreated: (GoogleMapController controller) {
                         // Set up the map controller
                         _mapController = controller;
@@ -208,20 +203,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
                           final newCameraPosition = CameraPosition(
                               target:
                                   LatLng(position.latitude, position.longitude),
-                              zoom: 14.4743);
+                              zoom: 17.5);
                           _mapController?.animateCamera(
                               CameraUpdate.newCameraPosition(
                                   newCameraPosition));
-                          setState(() {
-                            _marker = Marker(
-                              markerId: const MarkerId('live_location'),
-                              position:
-                                  LatLng(position.latitude, position.longitude),
-                              infoWindow:
-                                  const InfoWindow(title: 'Live Location'),
-                              draggable: true,
-                            );
-                          });
                         }
                       },
                       style: OutlinedButton.styleFrom(
@@ -249,6 +234,20 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       ),
                     ),
                   ),
+
+                  Positioned(
+                    top: MediaQuery.of(context).size.width / 1.5 + 10,
+                    left: MediaQuery.of(context).size.width / 2 - 10,
+                    child: SizedBox(
+                      width: 35,
+                      height: 35,
+                      child:
+                          // Image.asset('assets/images/location-icon-removebg-preview.png')
+                          SvgPicture.asset(
+                        'assets/icons/appicons/location-pin.svg',
+                      ),
+                    ),
+                  )
                 ],
               ),
 
@@ -280,15 +279,17 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text(
-                        _locationController.selectedAddress.value!.isEmpty
-                            ? _locationController.currentCity.value!
-                            : _locationController.selectedCity.value!,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TTextTheme.lightTextTheme.headlineSmall!
-                            .copyWith(fontSize: 18),
-                      ),
+                      child: isFetchingAddress
+                          ? TShimmer.singleContainer(20)
+                          : Text(
+                              _locationController.selectedAddress.value!.isEmpty
+                                  ? _locationController.currentCity.value!
+                                  : _locationController.selectedCity.value!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TTextTheme.lightTextTheme.headlineSmall!
+                                  .copyWith(fontSize: 18),
+                            ),
                     ),
                     TextButton(
                       onPressed: () {
@@ -312,15 +313,17 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     ),
                   ],
                 ),
-                subtitle: Text(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  _locationController.selectedAddress.value!.isEmpty
-                      ? _locationController.currentAddress.value!
-                      : _locationController.selectedAddress.value!,
-                  style: TTextTheme.lightTextTheme.headlineSmall!
-                      .copyWith(fontSize: 16),
-                ),
+                subtitle: isFetchingAddress
+                    ? TShimmer.singleContainer(50)
+                    : Text(
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        _locationController.selectedAddress.value!.isEmpty
+                            ? _locationController.currentAddress.value!
+                            : _locationController.selectedAddress.value!,
+                        style: TTextTheme.lightTextTheme.headlineSmall!
+                            .copyWith(fontSize: 16),
+                      ),
               )
             ],
           );
@@ -347,6 +350,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                             : _locationController.selectedAddress.value!,
                     phoneNumber: userModel!.phoneNumber,
                     userName: userModel!.name,
+                    userId: userModel!.id,
                     isCurrentAddress:
                         _locationController.selectedAddress.value!.isEmpty,
                     locationController: _locationController,
