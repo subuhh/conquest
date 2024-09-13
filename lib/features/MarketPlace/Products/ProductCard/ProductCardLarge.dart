@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/RoundedContainer.dart';
 import '../../../../common/widgets/product_price_text.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 
 class Productcardlarge extends StatelessWidget {
-  const Productcardlarge({super.key, required this.title, required this.color, required this.orignalPrice, required this.discountedPrice});
+  const Productcardlarge(
+      {super.key,
+      required this.title,
+      required this.color,
+      required this.orignalPrice,
+      required this.discountedPrice,
+      required this.isCategoryCard});
 
   final String title;
   final String color;
   final double orignalPrice;
+  final bool isCategoryCard;
   final double discountedPrice;
-  final String? imageUrl = 'https://cdn.shopify.com/s/files/1/0070/7032/files/product-label-design.jpg?v=1680902906';
+  final String? imageUrl =
+      'https://cdn.shopify.com/s/files/1/0070/7032/files/product-label-design.jpg?v=1680902906';
+
   @override
   Widget build(BuildContext context) {
     // Access the defined text theme
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems/2),
+      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems / 2),
       child: Card(
         elevation: 0.25,
         color: Colors.white,
@@ -40,12 +50,11 @@ class Productcardlarge extends StatelessWidget {
                         width: 80,
                         fit: BoxFit.cover,
                       ),
-                      SizedBox(height: TSizes.spaceBtwItems,),
-
-
+                      SizedBox(
+                        height: TSizes.spaceBtwItems,
+                      ),
                     ],
                   ),
-
                   const SizedBox(width: 16.0),
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -53,36 +62,53 @@ class Productcardlarge extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title, style: textTheme.titleMedium),
-                      Text('Color: ${color}', style: textTheme.bodyMedium?.copyWith(color: Colors.grey)),
-                      SizedBox(height: TSizes.spaceBtwItems/1.5,),
-
+                      Text('Color: ${color}',
+                          style: textTheme.bodyMedium
+                              ?.copyWith(color: Colors.grey)),
+                      SizedBox(
+                        height: TSizes.spaceBtwItems / 1.5,
+                      ),
 
                       /// Price
-                      buildPriceText(orignalPrice: orignalPrice, dicountedPrice: discountedPrice,),
+                      buildPriceText(
+                        orignalPrice: orignalPrice,
+                        dicountedPrice: discountedPrice,
+                      ),
                       //Text('₹${widget.price*widget.quantity}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                      buildDiscountRibbon(orignalPrice: orignalPrice,dicountedPrice:discountedPrice ,),
-                      SizedBox(height: TSizes.spaceBtwItems/1.5,),
-
-
+                      buildDiscountRibbon(
+                        orignalPrice: orignalPrice,
+                        dicountedPrice: discountedPrice,
+                      ),
+                      SizedBox(
+                        height: TSizes.spaceBtwItems / 1.5,
+                      ),
                     ],
-
                   ),
                   Spacer(),
-                  IconButton(onPressed: (){
-                    //Remove From List
-                  },icon: SvgPicture.asset('assets/icons/drawerIcons/delete.svg',color:Colors.grey,)),
-
+                  isCategoryCard
+                      ? IconButton(
+                          onPressed: () {
+                            //is tapped add to wishlist
+                          },
+                          icon: Icon(Iconsax.heart))
+                      : IconButton(
+                          onPressed: () {
+                            //Remove From wishList
+                          },
+                          icon: SvgPicture.asset(
+                            'assets/icons/drawerIcons/delete.svg',
+                            color: Colors.grey,
+                          ))
                 ],
               ),
-              Divider(height: 2,color: TColors.grey,),
-              SizedBox(height: TSizes.spaceBtwItems,),
-              Expanded(child: GestureDetector(
-                  onTap: (){
-                    //Remove From Cart
-                    //Move to WishList
-                  },
-                  child: buildMoveToWhishList()))
-
+              Divider(
+                height: 2,
+                color: TColors.grey,
+              ),
+              SizedBox(
+                height: TSizes.spaceBtwItems,
+              ),
+              buildMoveToWhishList()
             ],
           ),
         ),
@@ -90,6 +116,7 @@ class Productcardlarge extends StatelessWidget {
     );
   }
 }
+
 class buildMoveToWhishList extends StatefulWidget {
   const buildMoveToWhishList({super.key});
 
@@ -100,26 +127,53 @@ class buildMoveToWhishList extends StatefulWidget {
 class _buildMoveToWhishListState extends State<buildMoveToWhishList> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: TSizes.spaceBtwItems),
-      child: Container(
-        height: 30,
-        decoration: BoxDecoration(
-            border: Border.all(color: TColors.grey,width: 1.5),
-            borderRadius: BorderRadius.circular(5)
-
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(color: TColors.grey, width: 1.5),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Center(
+                child: Text(
+              'Buy Now',
+              style: Theme.of(context).textTheme.bodyMedium,
+            )),
+          ),
         ),
-        child: Center(child: Text('Move To WishList',style: Theme.of(context).textTheme.bodyMedium,)),
-      ),
+        SizedBox(
+          width: TSizes.spaceBtwItems,
+        ),
+        Expanded(
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(color: TColors.primary, width: 1.5),
+              borderRadius: BorderRadius.circular(5),
+              color: TColors.primary,
+            ),
+            child: Center(
+                child: Text(
+              'Move To Cart',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .apply(color: Colors.white),
+            )),
+          ),
+        ),
+      ],
     );
   }
 }
 
-
 class buildDiscountRibbon extends StatelessWidget {
   const buildDiscountRibbon({
-    super.key, required this.orignalPrice, required this.dicountedPrice,
-
+    super.key,
+    required this.orignalPrice,
+    required this.dicountedPrice,
   });
 
   final double orignalPrice;
@@ -137,7 +191,7 @@ class buildDiscountRibbon extends StatelessWidget {
           vertical: TSizes.xs,
         ),
         child: Text(
-          '${((orignalPrice-dicountedPrice)/orignalPrice * 100).toInt()}% OFF',
+          '${((orignalPrice - dicountedPrice) / orignalPrice * 100).toInt()}% OFF',
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
@@ -150,12 +204,13 @@ class buildDiscountRibbon extends StatelessWidget {
 
 class buildPriceText extends StatelessWidget {
   const buildPriceText({
-    super.key, required this.orignalPrice, required this.dicountedPrice,
-
+    super.key,
+    required this.orignalPrice,
+    required this.dicountedPrice,
   });
-final double orignalPrice;
-final double dicountedPrice;
 
+  final double orignalPrice;
+  final double dicountedPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -169,9 +224,8 @@ final double dicountedPrice;
                 .titleLarge!
                 .copyWith(fontWeight: FontWeight.w400)
                 .apply(
-              decoration: TextDecoration.lineThrough,
-            ),
-
+                  decoration: TextDecoration.lineThrough,
+                ),
             children: [
               TextSpan(
                 text: '₹${orignalPrice}',
@@ -180,8 +234,8 @@ final double dicountedPrice;
                     .titleLarge!
                     .copyWith(fontWeight: FontWeight.w400)
                     .apply(
-                  decoration: TextDecoration.lineThrough,
-                ),
+                      decoration: TextDecoration.lineThrough,
+                    ),
               ),
             ],
           ),
@@ -194,12 +248,10 @@ final double dicountedPrice;
           price: '${dicountedPrice}',
         ),
 
-
         // Old Price
 
         const SizedBox(width: TSizes.spaceBtwItems),
         // Discounted Container
-
       ],
     );
   }

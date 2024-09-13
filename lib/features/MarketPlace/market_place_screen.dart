@@ -1,4 +1,5 @@
 import 'package:conquest/core/Controllers/marketplace_controller.dart';
+import 'package:conquest/features/MarketPlace/WishList/WIshListScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
@@ -50,9 +51,9 @@ class MarketplaceScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
-               // Navigator.push(context,MaterialPageRoute(builder: (context)=>WishListScreen())
-                //),
+            onPressed: () =>
+               Navigator.push(context,MaterialPageRoute(builder: (context)=>Wishlistscreen())
+                ),
             icon: const Icon(Iconsax.heart),
           ),
           // Cart Button
@@ -110,6 +111,7 @@ class MarketplaceScreen extends StatelessWidget {
                         isLoading: controller.isLoading.value,
                         products: controller.products,
                       ),
+                      SizedBox(height: 110,)
                     ],
                   ),
                 ),
