@@ -5,11 +5,20 @@ import 'dart:developer';
 import '../../common/widgets/custom_snackbar.dart';
 
 class LocationController extends GetxController {
+  var isLoading = false.obs; // For managing loading state
   var currentPosition = Rxn<Position>(); // To store the user's current position
   var currentAddress = Rxn<String>(); // To store the user's current position
+  // var currentAddressLocality = Rxn<String>();
+  var currentStreet = Rxn<String>();
+  var currentCity = Rxn<String>();
+  var currentPostalCode = Rxn<String>();
+  var currentState = Rxn<String>();
+
   var selectedAddress = Rxn<String>('');
-  var currentAddressLocality = Rxn<String>();
-  var isLoading = false.obs; // For managing loading state
+  var selectedStreet = Rxn<String>('');
+  var selectedCity = Rxn<String>('');
+  var selectedPostalCode = Rxn<String>('');
+  var selectedState = Rxn<String>('');
 
   @override
   void onInit() {
@@ -70,7 +79,6 @@ class LocationController extends GetxController {
   }
 
   // Function to get user address from Lat and Lang
-  // Function to get user address from Lat and Lang
   Future<void> getAddressFromLatLng(double lat, double lng) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
@@ -80,11 +88,34 @@ class LocationController extends GetxController {
 
       // Update the current address
       currentAddress.value = formattedAddress;
-      currentAddressLocality.value = place.locality;
+      currentCity.value = place.locality;
+      currentPostalCode.value = place.postalCode;
+      currentStreet.value = place.street;
+      currentState.value = place.subAdministrativeArea;
       log('Address: $formattedAddress');
     } catch (e) {
       showSnackBar('Error', 'Failed to get address from coordinates: $e');
       log('Failed to get address from coordinates: $e');
+    }
+  }
+
+  // Handle when an address is selected from suggestions
+  Future<void> setSelectedAddress(double lat, double lng) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+
+        selectedAddress.value =
+            "${place.street}, ${place.locality}, ${place.administrativeArea}";
+        selectedCity.value = place.locality;
+        selectedPostalCode.value = place.postalCode;
+        selectedStreet.value = place.street;
+        selectedState.value = place.subAdministrativeArea;
+        log('Selected Address: ${selectedAddress.value}');
+      }
+    } catch (e) {
+      showSnackBar('Error', 'Failed to get address from coordinates: $e');
     }
   }
 }

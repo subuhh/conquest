@@ -9,6 +9,7 @@ import '../model/user.dart';
 
 class FirestoreService extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = Get.find<AuthService>();
 
   // Reactive variables
   var userModel = Rxn<UserModel>();
@@ -182,14 +183,15 @@ class FirestoreService extends GetxController {
   }
 
   // --- Address ---
-  Future<List<AddressModel>> fetchAllAddress() async {
+
+  // To fetch all address
+  Future<List<AddressModel>> fetchAllAddress(String userId) async {
     try {
       isLoading.value = true;
-      final userId = AuthService().currentUser!.uid;
       final snapshot = await _firestore
           .collection('users')
           .doc(userId)
-          .collection('address')
+          .collection('addresses')
           .get();
       final fetchedAddress = snapshot.docs
           .map((doc) => AddressModel.fromFirestore(doc.data()))
@@ -202,6 +204,33 @@ class FirestoreService extends GetxController {
       log('Error Fetching address: $e');
       Get.snackbar('Error', 'Could not fetch products');
       rethrow;
+    }
+  }
+
+  // To store user address in address sub-collection
+  Future<void> addAddress(AddressModel address) async {
+    try {
+      // Get current user's ID
+      final user = _authService.user;
+      final userData = await user.first;
+
+      if (userData != null) {
+        String userId = userData.uid;
+
+        // Generate a new document ID for the address
+        DocumentReference addressRef = _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('addresses')
+            .doc();
+
+        // Add the address to Firestore
+        await addressRef.set(address.toMap());
+
+        log('Address successfully added!');
+      }
+    } catch (e) {
+      log('Error adding address: $e');
     }
   }
 }

@@ -101,12 +101,14 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header
+          const SizedBox(height: TSizes.defaultSpace / 2),
           Text(
             'My Addresses',
-            style: TTextTheme.lightTextTheme.headlineMedium!,
+            style: TTextTheme.lightTextTheme.headlineMedium!
+                .copyWith(fontSize: 22),
             // style: ,
           ),
-          const SizedBox(height: TSizes.defaultSpace / 2),
+          const SizedBox(height: TSizes.defaultSpace),
           // Search TextField
           TextField(
             controller: _searchController,
@@ -141,7 +143,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
               ),
             ),
           ),
-          const SizedBox(height: TSizes.defaultSpace / 1.5),
+          const SizedBox(height: TSizes.defaultSpace),
           if (_searchController.text.isEmpty) ...[
             // Current Location Text
             Row(
@@ -150,9 +152,9 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                 const Expanded(child: Divider()),
                 const SizedBox(width: 10),
                 Text(
-                  ' Current Location ',
+                  ' CURRENT LOCATION ',
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w500,
                       color: Colors.black.withOpacity(0.9)),
                 ),
@@ -160,7 +162,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                 const Expanded(child: Divider()),
               ],
             ),
-            const SizedBox(height: TSizes.defaultSpace / 1.5),
+            const SizedBox(height: TSizes.defaultSpace),
             // Current List Tile
             ListTile(
               tileColor: Colors.white,
@@ -172,20 +174,20 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                 children: [
                   Icon(
                     Icons.my_location,
-                    size: 32,
+                    size: 28,
                     color: Colors.green[900],
                   ),
                 ],
               ),
               title: Text(
-                _locationController.currentAddressLocality.value!,
+                _locationController.currentStreet.value!,
                 style: TTextTheme.lightTextTheme.headlineSmall!
-                    .copyWith(fontSize: 20),
+                    .copyWith(fontSize: 18),
               ),
               subtitle: Text(
                 _locationController.currentAddress.value!,
                 style: TTextTheme.lightTextTheme.headlineSmall!.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black.withOpacity(0.7),
                 ),
               ),
@@ -203,9 +205,9 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                   const Expanded(child: Divider()),
                   const SizedBox(width: 10),
                   Text(
-                    ' Recent Location ',
+                    ' RECENT LOCATION ',
                     style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w500,
                         color: Colors.black.withOpacity(0.9)),
                   ),
@@ -213,7 +215,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                   const Expanded(child: Divider()),
                 ],
               ),
-              const SizedBox(height: TSizes.defaultSpace / 1.5),
+              const SizedBox(height: TSizes.defaultSpace),
               // Current List Tile
               ListTile(
                 tileColor: Colors.white,
@@ -225,15 +227,22 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                   children: [
                     Icon(
                       Icons.schedule,
-                      size: 32,
+                      size: 28,
                       color: Colors.green[900],
                     ),
                   ],
                 ),
                 title: Text(
-                  _locationController.selectedAddress.value!,
+                  _locationController.selectedStreet.value!,
                   style: TTextTheme.lightTextTheme.headlineSmall!
-                      .copyWith(fontSize: 20),
+                      .copyWith(fontSize: 18),
+                ),
+                subtitle: Text(
+                  _locationController.selectedAddress.value!,
+                  style: TTextTheme.lightTextTheme.headlineSmall!.copyWith(
+                    fontSize: 14,
+                    color: Colors.black.withOpacity(0.7),
+                  ),
                 ),
                 trailing: const Icon(
                   Icons.arrow_forward_ios,

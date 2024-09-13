@@ -167,7 +167,7 @@ class DrawerScreen extends StatelessWidget {
                     CustomListTileGroup(
                       tiles: [
                         menuListTile(
-                          'Your Profile',
+                          'My Profile',
                           () => Get.toNamed('/profileScreen'),
                           'assets/icons/drawerIcons/profile.svg',
                           context,
@@ -175,34 +175,20 @@ class DrawerScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          // Make sure each ListTile takes up half the available width
-                          child: CustomListTileGroup(
-                            tiles: [
-                              menuListTile(
-                                'Orders',
-                                () {
-                                  THelperFunctions.navigateToScreen(context, MyOrdersScreen());
-                                },
-                                'assets/icons/drawerIcons/my_order.svg',
-                                context,
-                              ),
-                            ],
-                          ),
+                    CustomListTileGroup(
+                      header: 'Account Section',
+                      tiles: [
+                        menuListTile(
+                          'My Orders',
+                          () => Get.to(() => const MyOrdersScreen()),
+                          'assets/icons/drawerIcons/my_order.svg',
+                          context,
                         ),
-                        Expanded(
-                          child: CustomListTileGroup(
-                            tiles: [
-                              menuListTile(
-                                'Address',
-                                () => Get.to(() => const SavedAddress()),
-                                'assets/icons/drawerIcons/address.svg',
-                                context,
-                              ),
-                            ],
-                          ),
+                        menuListTile(
+                          'Address Book',
+                          () => Get.to(() => const SavedAddress()),
+                          'assets/icons/drawerIcons/address.svg',
+                          context,
                         ),
                       ],
                     ),

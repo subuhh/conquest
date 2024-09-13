@@ -9,7 +9,7 @@ class TChipTheme {
     labelStyle: const TextStyle(color: TColors.black),
     selectedColor: TColors.primary,
     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-    checkmarkColor: TColors.white,
+    showCheckmark: false,
   );
 
   static ChipThemeData darkChipTheme = const ChipThemeData(
@@ -17,6 +17,6 @@ class TChipTheme {
     labelStyle: TextStyle(color: TColors.white),
     selectedColor: TColors.primary,
     padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-    checkmarkColor: TColors.white,
+    showCheckmark: false,
   );
 }

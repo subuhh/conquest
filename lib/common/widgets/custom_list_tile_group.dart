@@ -45,7 +45,8 @@ class CustomListTileGroup extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     header!,
-                    style: TTextTheme.lightTextTheme.headlineSmall,
+                    style: TTextTheme.lightTextTheme.headlineSmall!
+                        .copyWith(fontSize: 16),
                   ),
                 ],
               ),
@@ -57,6 +58,8 @@ class CustomListTileGroup extends StatelessWidget {
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(10.0),
               bottomRight: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+              topLeft: Radius.circular(10.0),
             ),
             child: Column(
               children: tiles
@@ -72,11 +75,12 @@ class CustomListTileGroup extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           // Round the corners of individual tiles
                           borderRadius: BorderRadius.vertical(
-                            bottom: tile == tiles.last
-                                ? const Radius.circular(10.0)
-                                : Radius
-                                    .zero, // Only round bottom corners of the last tile
-                          ),
+                              bottom: tile == tiles.last
+                                  ? const Radius.circular(10.0)
+                                  : Radius.zero,
+                              top: const Radius.circular(
+                                  10.0) // Only round bottom corners of the last tile
+                              ),
                         ),
                         leading: tile.leading,
                         onTap: tile.onTap,
@@ -101,23 +105,25 @@ ListTile menuListTile(
     tileColor: Colors.white,
     title: Text(
       title,
-      style: TTextTheme.lightTextTheme.titleLarge,
+      style: TTextTheme.lightTextTheme.titleLarge!.copyWith(fontSize: 14),
     ),
     onTap: onTap,
     leading: CircleAvatar(
-      radius: 18,
+      radius: 17,
       backgroundColor: Colors.grey.withOpacity(0.2),
       child: SvgPicture.asset(
         imgPath,
-        width: 22,
-        height: 22,
-        colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.75), BlendMode.srcIn),
+        width: 20,
+        height: 20,
+        colorFilter:
+            ColorFilter.mode(Colors.black.withOpacity(0.75), BlendMode.srcIn),
       ),
     ),
     trailing: isTrailing
         ? const Icon(
             Icons.arrow_forward_ios,
             color: Colors.grey,
+            size: 22,
           )
         : null,
   );

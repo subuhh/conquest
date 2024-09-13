@@ -12,6 +12,7 @@ class UserModel {
   final double? weight;
   final String? fitnessGoal;
   final List<String>? workoutHistory;
+  final String? defaultAddressId;
 
   UserModel({
     required this.id,
@@ -27,6 +28,7 @@ class UserModel {
     this.weight,
     this.fitnessGoal,
     this.workoutHistory,
+    this.defaultAddressId
   });
 
   // Factory constructor to create a UserModel instance from Firestore document
@@ -45,6 +47,7 @@ class UserModel {
       weight: data['weight']?.toDouble() ?? 0.0,
       fitnessGoal: data['fitnessGoal'] ?? '',
       workoutHistory: List<String>.from(data['workoutHistory'] ?? []),
+      defaultAddressId: data['defaultAddressId'] ?? '',
     );
   }
 
@@ -63,6 +66,7 @@ class UserModel {
       'weight': weight,
       'fitnessGoal': fitnessGoal,
       'workoutHistory': workoutHistory,
+      'defaultAddressId': defaultAddressId
     };
   }
 }
