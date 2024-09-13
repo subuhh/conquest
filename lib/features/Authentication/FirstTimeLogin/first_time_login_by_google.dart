@@ -1,7 +1,3 @@
-import 'dart:developer';
-import 'package:conquest/common/widgets/custom_snackbar.dart';
-import 'package:conquest/core/model/user.dart';
-import 'package:conquest/core/services/firestore_service.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/constants/text_strings.dart';
@@ -9,53 +5,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../core/services/auth_service.dart';
+import '../../../core/Controllers/Authentication_Controller/first_time_login_controller.dart';
 
-class FirstTimeLogin extends StatefulWidget {
+class FirstTimeLogin extends StatelessWidget {
   final User? user;
   const FirstTimeLogin({super.key, required this.user});
 
   @override
-  State<FirstTimeLogin> createState() => _FirstTimeLoginState();
-}
-
-class _FirstTimeLoginState extends State<FirstTimeLogin> {
-  final _formKey = GlobalKey<FormState>();
-  final AuthService _auth = AuthService();
-  final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  bool _isLoading = false;
-  bool _isChecked = false;
-
-  @override
-  void dispose() {
-    _userNameController.dispose();
-    _nameController.dispose();
-    _phoneController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(TSizes.defaultSpace),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ///Title
-              Text(
-                TTexts.signupTitle,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+    final controller = Get.put(FirstTimeLoginController(user));
 
-              ///Form
-              Form(
-                  key: _formKey,
+    return WillPopScope(
+      onWillPop: controller.onWillPop,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(TSizes.defaultSpace),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ///Title
+                Text(
+                  TTexts.signupTitle,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: TSizes.spaceBtwSections),
+
+                ///Form
+                Form(
+                  key: controller.formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -63,7 +42,7 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
                           labelText: 'Full Name',
                           prefixIcon: Icon(Iconsax.user),
                         ),
-                        controller: _nameController,
+                        controller: controller.nameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your Full Name';
@@ -73,7 +52,7 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
                       ),
                       const SizedBox(height: TSizes.spaceBtwInputFields),
                       TextFormField(
-                        controller: _userNameController,
+                        controller: controller.userNameController,
                         decoration: const InputDecoration(
                           labelText: 'UserName',
                           prefixIcon: Icon(Iconsax.user_edit),
@@ -82,7 +61,6 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your Username';
                           }
-                          // Validate for allowed characters
                           if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
                             return 'Only alphabets, numbers, and underscores are allowed';
                           }
@@ -91,34 +69,31 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
                       ),
                       const SizedBox(height: TSizes.spaceBtwInputFields),
                       TextFormField(
-                        controller: _phoneController,
+                        controller: controller.phoneController,
                         decoration: const InputDecoration(
                           labelText: 'Phone no.',
                           prefixIcon: Icon(Iconsax.call),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a Phone Number'; // Allows empty input
+                            return 'Please enter a Phone Number';
                           } else if (!RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
                             return 'Please enter a valid Phone Number';
                           }
-                          return null; // Valid input
+                          return null;
                         },
                       ),
                       const SizedBox(height: TSizes.spaceBtwInputFields),
 
                       ///Term & Condition CheckBox
                       Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Checkbox(
-                            value: _isChecked,
-                            onChanged: (value) {
-                              setState(() {
-                                _isChecked = value!;
-                              });
-                            },
-                          ),
+                          Obx(() => Checkbox(
+                                value: controller.isChecked.value,
+                                onChanged: (value) {
+                                  controller.isChecked.value = value!;
+                                },
+                              )),
                           Text.rich(TextSpan(children: [
                             TextSpan(
                                 text: '${TTexts.iAgreeTo} ',
@@ -150,73 +125,31 @@ class _FirstTimeLoginState extends State<FirstTimeLogin> {
                       const SizedBox(height: TSizes.spaceBtwSections),
 
                       ///Sign up button
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: ElevatedButton(
-                          onPressed: _isChecked ? _handleSignUp : () {},
-                          child: _isLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Text(
-                                  TTexts.createAccount,
-                                ),
-                        ),
-                      ),
+                      Obx(() => SizedBox(
+                            width: double.maxFinite,
+                            child: ElevatedButton(
+                              onPressed: controller.isChecked.value
+                                  ? controller.handleSignUp
+                                  : () {},
+                              child: controller.isLoading.value
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text(
+                                      TTexts.createAccount,
+                                    ),
+                            ),
+                          )),
                     ],
-                  ))
-            ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
-  }
-
-  Future<void> _handleSignUp() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      if (_formKey.currentState!.validate()) {
-        // Check if username is available
-        bool isUsernameAvailable = await FirestoreService()
-            .checkUsernameAvailability(_userNameController.text);
-
-        log('isAvaiable: $isUsernameAvailable');
-
-        if (isUsernameAvailable) {
-          final userModel = UserModel(
-            id: widget.user!.uid,
-            userName:
-                _userNameController.text, // Use the username as the user ID
-            name: _nameController.text,
-            email: _auth.currentUser!.email!,
-            phoneNumber: _phoneController.text,
-          );
-
-          await FirestoreService().createUserDocument(userModel);
-
-          // Navigate to homepage
-          Get.offAllNamed('/btmnav');
-
-        } else {
-          // Show a message if username is not available
-          showSnackBar(
-              'Error', 'Username is already taken. Please choose another one.',
-              isError: true);
-        }
-      }
-    } catch (e) {
-      // Handle error
-      showSnackBar('Error', 'Something went wrong. Please try again.',
-          isError: true);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 }

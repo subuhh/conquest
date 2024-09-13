@@ -25,6 +25,7 @@ dependencies:
   flutter_rating_bar:
   bottom_nav_layout:
   cached_network_image: ^3.4.0
+  google_sign_in: ^6.2.1
 
   # Location & Address
   geocoding: ^3.0.0
@@ -39,10 +40,12 @@ dependencies:
   cloud_firestore: ^5.4.0
   firebase_storage: ^12.2.0
   firebase_messaging: ^15.0.3
-  google_sign_in: ^6.2.1
 
   # State Management
   get: ^4.6.6
+
+  # App Icon
+  flutter_launcher_icons: ^0.13.1
 
 
 #-------------------PACKAGES END---------------#
@@ -50,6 +53,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logos/1024.png"
 
   flutter_lints: ^4.0.0
 flutter:

@@ -95,7 +95,8 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
+      padding:
+          const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
       height: THelperFunctions.screenHeight(context) * 0.7,
       child: Column(
         mainAxisSize: MainAxisSize.min,

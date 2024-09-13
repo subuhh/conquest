@@ -18,7 +18,6 @@ void main() async {
 
   // Initialize GetX dependencies here
   Get.put(AuthService()); // Inject AuthService as a GetX controller
-
   runApp(const MyApp());
 }
 

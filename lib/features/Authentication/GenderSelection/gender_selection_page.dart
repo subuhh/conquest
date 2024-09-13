@@ -160,7 +160,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
         // Save user data in Firestore
         await FirestoreService().createUserDocument(userModel);
 
-        Get.off(const LoginScreen());
+        Get.offAll(() =>const LoginScreen());
         showSnackBar('Success', 'Account created successfully. Please log in.');
       } else {
         showSnackBar('Error', 'Please Select Gender!');

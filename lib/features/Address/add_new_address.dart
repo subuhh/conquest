@@ -116,11 +116,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 children: [
                   // Map
                   SizedBox(
-                    height: _locationController.selectedAddress.value == null ||
-                            _locationController
-                                .selectedAddress.value!.isNotEmpty
-                        ? MediaQuery.of(context).size.height * 0.69
-                        : MediaQuery.of(context).size.height * 0.66,
+                    height: MediaQuery.of(context).size.height * 0.65,
                     child: GoogleMap(
                       mapType: MapType.normal,
                       initialCameraPosition: _cameraPosition ??

@@ -19,8 +19,7 @@ class LoginScreen extends StatelessWidget {
         child: Padding(
           padding: TSpacingStyle.paddingWithAppBarHeight,
           child: Column(
-            mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ///Logo, Title & Sub-Title
               loginHeader(dark: dark),
@@ -29,9 +28,7 @@ class LoginScreen extends StatelessWidget {
               const LoginForm(),
 
               /// Divider
-              const FormDivider(
-                divierText: TTexts.orSignInWith,
-              ),
+              const FormDivider(divierText: TTexts.orSignInWith),
               const SizedBox(height: TSizes.spaceBtwSections),
 
               /// Footer

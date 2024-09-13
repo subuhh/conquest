@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:conquest/core/services/auth_service.dart';
-import '../../../common/widgets/custom_snackbar.dart';
+import '../../../../common/widgets/custom_snackbar.dart';
 
 class LoginController extends GetxController {
   final AuthService _authService = AuthService();

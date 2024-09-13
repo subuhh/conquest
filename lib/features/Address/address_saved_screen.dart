@@ -180,14 +180,6 @@ class SavedAddress extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.defaultSpace),
 
-            // Saved Address
-            Obx(
-              () => addressController.addressList.isEmpty
-                  ? const SizedBox.shrink()
-                  : const DividerWithText(title: 'SAVED ADDRESSES'),
-            ),
-            const SizedBox(height: TSizes.defaultSpace),
-
             // StreamBuilder for fetching addresses
             StreamBuilder<List<AddressModel>>(
               stream: addressController.addressStream,
@@ -209,14 +201,23 @@ class SavedAddress extends StatelessWidget {
                 } else {
                   final addresses = snapshot.data!;
                   return Expanded(
-                    child: ListView.separated(
-                      itemCount: addresses.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 20),
-                      itemBuilder: (context, index) {
-                        final address = addresses[index];
-                        return addressTile(address);
-                      },
+                    child: Column(
+                      children: [
+                        // Saved Address
+                        const DividerWithText(title: 'SAVED ADDRESSES'),
+                        const SizedBox(height: TSizes.defaultSpace),
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: addresses.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 20),
+                            itemBuilder: (context, index) {
+                              final address = addresses[index];
+                              return addressTile(address);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }

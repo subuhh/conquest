@@ -2,8 +2,6 @@ import 'package:conquest/features/MarketPlace/Category/Category%20Screen.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
@@ -22,63 +20,59 @@ class _CategorySectionState extends State<CategorySection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: [
           widget.isLoading
               ? buildShimmerCategories()
-              : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-                child: Row(
-                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: widget.categories.map((category) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                        ),
-                        child: GestureDetector(
-                          onTap: ()=>THelperFunctions.navigateToScreen(context,CategoryScreen()),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: TColors.grey,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 35,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: SvgPicture.asset(
-                                      getSvgAssetForCategory(category['name']),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
+              : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: widget.categories.map((category) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: GestureDetector(
+                      onTap: () => THelperFunctions.navigateToScreen(
+                          context, CategoryScreen()),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: TColors.grey,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 30,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: SvgPicture.asset(
+                                  getSvgAssetForCategory(category['name']),
+                                  fit: BoxFit.contain,
                                 ),
                               ),
-                              const SizedBox(height: TSizes.sm),
-                              SizedBox(
-                                width: 85,
-                                child: Text(
-                                  category['name']!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(fontSize: 13),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                          const SizedBox(height: TSizes.sm),
+                          SizedBox(
+                            width: 85,
+                            child: Text(
+                              category['name']!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(fontSize: 12),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
         ],
       ),

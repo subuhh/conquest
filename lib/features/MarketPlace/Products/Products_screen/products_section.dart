@@ -1,4 +1,5 @@
 import 'package:conquest/features/MarketPlace/Products/ProductCard/productCardSmall.dart';
+import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/model/product.dart';
@@ -38,7 +39,11 @@ class _ProductsSectionState extends State<ProductsSection> {
               ),
               TextButton(
                 onPressed: () {},
-                child: const Text('See All'),
+                child: Text(
+                  'See All',
+                  style: TTextTheme.lightTextTheme.titleMedium!
+                      .copyWith(color: Colors.green),
+                ),
               ),
             ],
           ),
