@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:conquest/core/Controllers/drawer_controller.dart';
+import 'package:conquest/features/MarketPlace/Products/OrderHIstory/MyOrders.dart';
+import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -181,7 +183,9 @@ class DrawerScreen extends StatelessWidget {
                             tiles: [
                               menuListTile(
                                 'Orders',
-                                () {},
+                                () {
+                                  THelperFunctions.navigateToScreen(context, MyOrdersScreen());
+                                },
                                 'assets/icons/drawerIcons/my_order.svg',
                                 context,
                               ),

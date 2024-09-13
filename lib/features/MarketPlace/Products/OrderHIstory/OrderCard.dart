@@ -141,6 +141,8 @@ class OrderCard extends StatelessWidget {
               ),
             ),
             const Divider(),
+            SizedBox(height: TSizes.spaceBtwItems,),
+
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

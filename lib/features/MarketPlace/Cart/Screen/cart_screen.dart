@@ -1,8 +1,8 @@
-import 'package:conquest/features/MarketPlace/Cart/Checkout/checkoutScreen.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import '../../Checkout/checkoutScreen.dart';
 import '../LIstForCart/CartList.dart';
 import 'CartItem.dart';
 
