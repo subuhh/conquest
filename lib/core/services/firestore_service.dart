@@ -4,7 +4,7 @@ import 'package:conquest/core/model/address.dart';
 import 'package:conquest/core/services/auth_service.dart';
 import 'package:get/get.dart';
 import '../model/banner.dart';
-import '../model/product.dart';
+import '../model/Product_Models/product.dart';
 import '../model/user.dart';
 
 class FirestoreService extends GetxController {
@@ -160,27 +160,6 @@ class FirestoreService extends GetxController {
     }
   }
 
-  // --- Products ---
-
-  // Fetching all Products
-  Future<List<ProductModel>> fetchAllProducts() async {
-    try {
-      isLoading.value = true;
-      final snapshot = await _firestore.collection('products').get();
-      log('Products snapshot size: ${snapshot.size}');
-      final fetchedProducts = snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data()))
-          .toList();
-      products.value = fetchedProducts;
-      isLoading.value = false;
-      return fetchedProducts;
-    } catch (e) {
-      isLoading.value = false;
-      log('Error fetching the products: $e');
-      Get.snackbar('Error', 'Could not fetch products');
-      rethrow;
-    }
-  }
 
   // --- Address ---
 

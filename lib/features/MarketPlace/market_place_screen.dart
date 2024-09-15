@@ -1,4 +1,5 @@
 import 'package:conquest/core/Controllers/marketplace_controller.dart';
+import 'package:conquest/core/Controllers/Product_Controller/product_controller.dart';
 import 'package:conquest/features/MarketPlace/WishList/WIshListScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,14 +11,13 @@ import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:iconsax/iconsax.dart';
 
-
-
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final MarketplaceController controller = Get.put(MarketplaceController());
+    final controllerP = Get.put(ProductController());
+    final controller = Get.put(MarketplaceController());
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
@@ -51,9 +51,8 @@ class MarketplaceScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () =>
-               Navigator.push(context,MaterialPageRoute(builder: (context)=>Wishlistscreen())
-                ),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Wishlistscreen())),
             icon: const Icon(Iconsax.heart),
           ),
           // Cart Button
@@ -63,19 +62,14 @@ class MarketplaceScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Obx(() {
-        return RefreshIndicator(
-          onRefresh: () async {
-            await controller.fetchMarketplaceData();
-          },
-          color: TColors.primary,
-          backgroundColor: Colors.white,
-          child: Column(
-            children: [
-              const Searchbar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+      body: Column(
+        children: [
+          const Searchbar(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Obx(
+                () {
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Carousel Slider
@@ -94,32 +88,34 @@ class MarketplaceScreen extends StatelessWidget {
                       // Trending Section
                       ProductsSection(
                         title: 'Trending Now',
-                        isLoading: controller.isLoading.value,
-                        products: controller.products,
+                        isLoading: controllerP.isLoading.value,
+                        products: controllerP.featuredProducts,
                       ),
 
                       // Bestseller Section
                       ProductsSection(
                         title: 'Bestseller',
-                        isLoading: controller.isLoading.value,
-                        products: controller.products,
+                        isLoading: controllerP.isLoading.value,
+                        products: controllerP.allProducts,
                       ),
 
                       // Top Picks Section
-                      ProductsSection(
-                        title: 'Top Picks',
-                        isLoading: controller.isLoading.value,
-                        products: controller.products,
-                      ),
-                      SizedBox(height: 110,)
+                      // ProductsSection(
+                      //   title: 'Top Picks',
+                      //   isLoading: controller.isLoading.value,
+                      //   products: controller.products,
+                      // ),
+                      SizedBox(
+                        height: 110,
+                      )
                     ],
-                  ),
-                ),
+                  );
+                },
               ),
-            ],
+            ),
           ),
-        );
-      }),
+        ],
+      ),
     );
   }
 }

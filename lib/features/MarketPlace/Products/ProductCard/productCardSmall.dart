@@ -1,4 +1,4 @@
-import 'package:conquest/core/model/product.dart';
+import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
@@ -65,7 +65,7 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
                     )
                   ],
                 ),
-                _buildProductDetails(context, constraints.maxHeight - 150),
+                _buildProductDetails(context, constraints.maxHeight - 160),
               ],
             );
           },
@@ -79,9 +79,9 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
       child: Image.network(
         widget.imageUrl,
-        height: 150,
+        height: 160,
         width: maxWidth,
-        fit: BoxFit.contain,
+        fit: BoxFit.fitWidth,
         errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
       ),
     );

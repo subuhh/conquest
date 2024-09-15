@@ -2,7 +2,7 @@ import 'package:conquest/features/MarketPlace/Products/ProductCard/productCardSm
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../../core/model/product.dart';
+import '../../../../core/model/Product_Models/product.dart';
 
 class ProductsSection extends StatefulWidget {
   final String title;
@@ -66,22 +66,20 @@ class _ProductsSectionState extends State<ProductsSection> {
                   ),
                 )
               : SizedBox(
-                  height: 300, // Adjust this height based on the item size
+                  height: 320, // Adjust this height based on the item size
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.products.length,
                     itemBuilder: (context, index) {
                       final product = widget.products[index];
-                      final imageUrl = product.images[0];
+                      final imageUrl = product.thumbnail;
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width *
-                            0.475, // Adjust width based on your requirement
-                        //margin: EdgeInsets.symmetric(horizontal: 10.0), // Add some spacing between items
+                        width: MediaQuery.of(context).size.width * 0.475,
                         child: ProductCardSmall(
                           imageUrl: imageUrl,
-                          title: product.name,
-                          oldPrice: '${product.originalPrice}',
-                          newPrice: '${product.discountedPrice}',
+                          title: product.title,
+                          oldPrice: '${product.price}',
+                          newPrice: '${product.salePrice}',
                           productModel: product,
                         ),
                       );
