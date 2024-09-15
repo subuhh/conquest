@@ -18,6 +18,7 @@ class MarketplaceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controllerP = Get.put(ProductController());
     final controller = Get.put(MarketplaceController());
+
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
@@ -86,11 +87,12 @@ class MarketplaceScreen extends StatelessWidget {
                       ),
 
                       // Trending Section
-                      ProductsSection(
-                        title: 'Trending Now',
-                        isLoading: controllerP.isLoading.value,
-                        products: controllerP.featuredProducts,
-                      ),
+                      if (controllerP.featuredProducts.isNotEmpty)
+                        ProductsSection(
+                          title: 'Trending Now',
+                          isLoading: controllerP.isLoading.value,
+                          products: controllerP.featuredProducts,
+                        ),
 
                       // Bestseller Section
                       ProductsSection(

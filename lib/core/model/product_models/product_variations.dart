@@ -19,6 +19,9 @@ class ProductVariationModel {
     required this.images, // Initialize this in the constructor
   });
 
+  static ProductVariationModel empty() =>
+      ProductVariationModel(id: '', attributeValues: {}, images: []);
+
   factory ProductVariationModel.fromFirestore(
       Map<String, dynamic> data, String id) {
     return ProductVariationModel(

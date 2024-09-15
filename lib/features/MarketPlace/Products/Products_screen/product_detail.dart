@@ -6,8 +6,10 @@ import 'package:conquest/features/MarketPlace/Products/products_widgets/product_
 import 'package:conquest/common/widgets/section_divider.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_detail_image_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
+import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 import '../Product_reviews/product_reviews_screen.dart';
@@ -25,6 +27,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(VariationController());
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
@@ -57,13 +60,13 @@ class _ProductDetailState extends State<ProductDetail> {
             // 1 - Product Image Slider
             ProductImageSlider(productModel: widget.productModel),
 
-
             // 2 - Product Details (Title, Price, In Stock)
             ProductMetaData(productModel: widget.productModel),
             const SizedBox(height: TSizes.spaceBtwItems),
 
             // 3 - Colors and Sizes
-            ProductAttributes(productModel: widget.productModel),
+            if (widget.productModel.productType != 'Single')
+              ProductAttributes(productModel: widget.productModel),
             const SectionDivider(),
 
             // Product Quantity

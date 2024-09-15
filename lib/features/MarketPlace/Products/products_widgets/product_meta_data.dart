@@ -2,7 +2,9 @@ import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import '../../../../../common/widgets/RoundedContainer.dart';
+import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 import '../../../utils/helpers/pricing_calculator.dart';
@@ -16,6 +18,8 @@ class ProductMetaData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final variationController = VariationController.instance;
+
     int price = int.parse(productModel.price.trim());
     int salePrice = int.parse(productModel.salePrice.trim());
 
@@ -38,12 +42,12 @@ class ProductMetaData extends StatelessWidget {
               // Product Name
               Flexible(
                 child: Text(
-                  productModel.title,
+                  '${productModel.title}',
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
                       .copyWith(fontSize: 18),
-                  maxLines: 3, // Allow a maximum of 2 lines
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -68,31 +72,33 @@ class ProductMetaData extends StatelessWidget {
               ),
             ],
           ),
-
-          // Flavour Text
-          Text(
-            '1 Kg [2.2 lb]',
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .copyWith(color: TColors.darkerGrey),
-          ),
           const SizedBox(height: TSizes.spaceBtwItems),
 
-          // Price, In or Out Stock
+          // Price,
           Row(
             children: [
               // New Price Tag
-              Text(
-                '₹${productModel.salePrice}',
-                style: TTextTheme.lightTextTheme.headlineSmall!
-                    .copyWith(fontSize: 26),
-              ),
+              if (productModel.productType != 'Single') ...[
+                Obx(() {
+                  return Text(
+                    '₹${variationController.getVariationPrice()}',
+                    style: TTextTheme.lightTextTheme.headlineSmall!
+                        .copyWith(fontSize: 26),
+                  );
+                }),
+              ] else ...[
+                Text(
+                  '₹${productModel.salePrice}',
+                  style: TTextTheme.lightTextTheme.headlineSmall!
+                      .copyWith(fontSize: 26),
+                )
+              ],
+
               const SizedBox(width: TSizes.spaceBtwItems / 1.5),
               // Old Price
               RichText(
                 text: TextSpan(
-                  text: 'MRP ',
+                  text: 'MRP',
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
@@ -102,7 +108,7 @@ class ProductMetaData extends StatelessWidget {
                       ),
                   children: [
                     TextSpan(
-                      text: '₹${productModel.price}',
+                      text: ' ₹${productModel.price}',
                       style: TTextTheme.lightTextTheme.titleLarge!
                           .copyWith(fontSize: 20, fontWeight: FontWeight.w400)
                           .apply(

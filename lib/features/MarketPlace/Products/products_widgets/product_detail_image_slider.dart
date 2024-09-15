@@ -20,6 +20,7 @@ class ProductImageSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     final controller = Get.put(ProductImageController());
+
     final images = controller.getAllProductImage(productModel);
 
     return TCurvedEdgesWidget(
@@ -33,6 +34,7 @@ class ProductImageSlider extends StatelessWidget {
               onTap: () => controller.showZoomableImage(context, image),
               child: SizedBox(
                 height: 400,
+                width: double.infinity,
                 child: CachedNetworkImage(
                   imageUrl: image,
                   fit: BoxFit.fitWidth,
@@ -45,7 +47,9 @@ class ProductImageSlider extends StatelessWidget {
           Positioned(
             right: images.length == 1
                 ? THelperFunctions.screenWidth(context) * 0.5 - 30
-                : 0,
+                : images.length >= 4
+                    ? 15
+                    : 0,
             bottom: 30,
             left: images.length >= 4 ? 15 : null,
             child: SizedBox(
