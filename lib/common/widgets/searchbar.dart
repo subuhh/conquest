@@ -1,3 +1,4 @@
+import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -14,7 +15,8 @@ class Searchbar extends StatelessWidget {
       child: Container(
         height: 50.0, // Adjust the height as needed
         decoration: BoxDecoration(
-          color: Colors.grey[200], // Light grey background
+          border: Border.all(color: TColors.white),
+          color: TColors.grey, // Light grey background
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: const TextField(

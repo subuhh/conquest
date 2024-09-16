@@ -1,6 +1,7 @@
 import 'package:conquest/core/model/product.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
+import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,7 +38,7 @@ class ProductCardSmall extends StatelessWidget {
       child: Card(
         color: Colors.white,
         elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -93,7 +94,8 @@ class ProductCardSmall extends StatelessWidget {
             _buildProductTitle(context),
             //const SizedBox(height: 6),
             _buildPriceRow(context),
-            //const Spacer(),
+            const SizedBox(height: TSizes.spaceBtwItems/2),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -202,7 +204,7 @@ class ProductCardSmall extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.redAccent,
+          color: TColors.primary,
           borderRadius: BorderRadius.circular(10),
         ),
         child: const Text(

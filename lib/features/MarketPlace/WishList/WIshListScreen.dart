@@ -10,15 +10,27 @@ class Wishlistscreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
-        title: Text('WishList',style: Theme.of(context).textTheme.titleMedium,),
+        leading: IconButton(
+            onPressed: ()=>Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_outlined,color: Colors.white,)),
+        backgroundColor: TColors.primary,
+        title: Text(
+          'WishList',
+          style: Theme.of(context).textTheme.titleMedium!.apply(color: TColors.textWhite),
+        ),
         centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: 5,
-        itemBuilder: (context,index) {
-          return Productcardlarge(title: 'Title', color: 'color', orignalPrice: 50, discountedPrice: 40,isCategoryCard: false,);
+        itemBuilder: (context, index) {
+          return Productcardlarge(
+            title: 'Title',
+            color: 'color',
+            orignalPrice: 50,
+            discountedPrice: 40,
+            isCategoryCard: false,
+          );
         },
-
       ),
     );
   }

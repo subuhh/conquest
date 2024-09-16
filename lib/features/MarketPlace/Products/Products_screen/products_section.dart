@@ -1,4 +1,5 @@
 import 'package:conquest/features/MarketPlace/Products/ProductCard/productCardSmall.dart';
+import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../core/model/product.dart';
@@ -31,10 +32,7 @@ class _ProductsSectionState extends State<ProductsSection> {
             children: [
               Text(
                 widget.title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.titleMedium
               ),
               TextButton(
                 onPressed: () {},

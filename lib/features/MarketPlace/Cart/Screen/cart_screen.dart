@@ -17,23 +17,17 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
-        backgroundColor: TColors.white,
+        backgroundColor: TColors.primary,
+        centerTitle: true,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text('My Cart',
-            style: textTheme.titleLarge?.copyWith(color: Colors.black)),
-        actions: [
-          CircleAvatar(
-            backgroundImage:
-                NetworkImage('https://example.com/user_profile_image.jpg'),
-          ),
-          const SizedBox(width: 16.0),
-        ],
+            style: textTheme.titleLarge?.copyWith(color: Colors.white)),
       ),
       body: Column(
         children: [

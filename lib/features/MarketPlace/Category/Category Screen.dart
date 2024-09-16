@@ -11,10 +11,12 @@ class CategoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
+        leading: IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back,color: Colors.white,)),
+        backgroundColor: TColors.primary,
         title: Text('Category Title', style: Theme
             .of(context)
             .textTheme
-            .titleMedium,),
+            .titleMedium!.apply(color: Colors.white),),
         centerTitle: true,
       ),
       body: ListView.builder(

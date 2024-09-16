@@ -36,11 +36,11 @@ class _CartItemState extends State<CartItem> {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems/2),
+      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems/3),
       child: Card(
         elevation: 0.25,
         color: Colors.white,
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
           padding: const EdgeInsets.all(16.0),

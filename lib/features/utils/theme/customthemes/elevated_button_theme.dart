@@ -1,3 +1,4 @@
+import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class TElevatedButtonTheme{
@@ -8,7 +9,7 @@ class TElevatedButtonTheme{
     style: ElevatedButton.styleFrom(
       elevation: 0,
       foregroundColor: Colors.white,
-      backgroundColor: Colors.redAccent,
+      backgroundColor: TColors.primary,
       disabledForegroundColor: Colors.grey,
       disabledBackgroundColor: Colors.grey,
       side: const BorderSide(color: Colors.transparent),

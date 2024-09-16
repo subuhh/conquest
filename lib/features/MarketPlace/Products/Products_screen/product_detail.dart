@@ -27,27 +27,28 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: TColors.primary,
         elevation: 10,
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,color: Colors.white,),
         ),
         actions: [
           // Search Button
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Iconsax.search_normal),
+            icon: const Icon(Iconsax.search_normal,color: Colors.white,),
           ),
           // Favourite Button
           IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Iconsax.heart),
+            onPressed: (){},//Navigator.pop(context),
+            icon: const Icon(Iconsax.heart,color: Colors.white,),
           ),
           // Cart Button
           IconButton(
             onPressed: () => Navigator.pushNamed(context, '/cart'),
-            icon: const Icon(Iconsax.shopping_cart),
+            icon: const Icon(Iconsax.shopping_cart,color: Colors.white,),
           ),
         ],
       ),

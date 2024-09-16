@@ -2,7 +2,7 @@
     <application
         android:label="conquest"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCBtpWilOVkQLru53RgB3e4KYteZDtJhkM" />

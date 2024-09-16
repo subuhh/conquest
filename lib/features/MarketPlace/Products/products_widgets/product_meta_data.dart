@@ -158,10 +158,10 @@ class ProductMetaData extends StatelessWidget {
           // Price With Premium
           Container(
             padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 8),
+                const EdgeInsets.only(left: 0, right: 10, top: 8, bottom: 0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: TColors.primary),
+              //border: Border.all(color: TColors.darkGrey),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

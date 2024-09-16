@@ -83,7 +83,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 _pageController.animateToPage(
                   index,
                   duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
+                  curve: Curves.bounceIn,
                 );
               },
               removeMargins: false,

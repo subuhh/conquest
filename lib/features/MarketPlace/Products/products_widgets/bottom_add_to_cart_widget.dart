@@ -21,7 +21,7 @@ class BottomAddToCartWidget extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(TSizes.md),
                 backgroundColor: TColors.white,
-                side: const BorderSide(color: TColors.black, width: 1.5),
+                side: const BorderSide(color: TColors.darkGrey, width: 1.5),
               ),
               child: Text(
                 'Buy Now',
