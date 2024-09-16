@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../features/utils/constants/sizes.dart';
 
 class ProductImageController extends GetxController {
@@ -44,8 +41,6 @@ class ProductImageController extends GetxController {
         }
       }
     }
-
-    log('Image Size from image controller: ${images.length}');
 
     return images.toList();
   }

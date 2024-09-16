@@ -41,15 +41,17 @@ class ProductMetaData extends StatelessWidget {
             children: [
               // Product Name
               Flexible(
-                child: Text(
-                  '${productModel.title}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontSize: 18),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: Obx(() {
+                  return Text(
+                    '${productModel.title}${variationController.selectedAttributeSummary.value}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 18),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }),
               ),
               const SizedBox(width: 10),
               // Share Button (Aligned to the right)
@@ -78,21 +80,13 @@ class ProductMetaData extends StatelessWidget {
           Row(
             children: [
               // New Price Tag
-              if (productModel.productType != 'Single') ...[
-                Obx(() {
-                  return Text(
-                    '₹${variationController.getVariationPrice()}',
-                    style: TTextTheme.lightTextTheme.headlineSmall!
-                        .copyWith(fontSize: 26),
-                  );
-                }),
-              ] else ...[
-                Text(
-                  '₹${productModel.salePrice}',
+              Obx(() {
+                return Text(
+                  '₹${variationController.variationPrice.value}',
                   style: TTextTheme.lightTextTheme.headlineSmall!
                       .copyWith(fontSize: 26),
-                )
-              ],
+                );
+              }),
 
               const SizedBox(width: TSizes.spaceBtwItems / 1.5),
               // Old Price

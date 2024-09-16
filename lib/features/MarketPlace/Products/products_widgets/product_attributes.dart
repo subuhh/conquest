@@ -18,13 +18,7 @@ class ProductAttributes extends StatefulWidget {
 class _ProductAttributesState extends State<ProductAttributes> {
   final variationController = VariationController.instance;
 
-  @override
-  void initState() {
-    super.initState();
-    // Reset selected attributes when the widget is initialized
-    variationController.resetSelectedAttributes();
-    variationController.initializeSelectedAttributes(widget.productModel);
-  }
+
 
   @override
   Widget build(BuildContext context) {

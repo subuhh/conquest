@@ -14,10 +14,17 @@ class VariationController extends GetxController {
   RxString variationStockStatus = ''.obs;
   RxString selectedAttributeSummary = ''.obs;
   RxString errorMessage = ''.obs;
+  RxString variationPrice = ''.obs;
 
   // Initialize with the first variation's attributes
   void initializeSelectedAttributes(ProductModel product) {
     resetSelectedAttributes();
+
+    if (product.productType == 'Single') {
+      variationPrice.value =
+          int.parse(product.salePrice) > 0 ? product.salePrice : product.price;
+    }
+
     if (product.productVariations != null &&
         product.productVariations!.isNotEmpty) {
       ProductVariationModel firstVariation = product.productVariations![0];
@@ -31,8 +38,8 @@ class VariationController extends GetxController {
 
       // Update product image and stock status
       getProductVariationStockStatus();
-      getVariationPrice();
-      updateSelectedAttributeSummary();
+      getVariationPrice(product);
+      updateSelectedAttributeSummary(product);
       if (firstVariation.images.isNotEmpty) {
         ProductImageController.instance.selectedProductImage.value =
             firstVariation.images[0];
@@ -63,7 +70,9 @@ class VariationController extends GetxController {
           product, attributeName, attributeValue);
     }
     // Update the summary text
-    updateSelectedAttributeSummary();
+    getVariationPrice(product);
+    updateSelectedAttributeSummary(product);
+    getProductVariationStockStatus();
 
     // Update product image if the variation has images
     if (selectedVariation.value.images.isNotEmpty) {
@@ -121,24 +130,58 @@ class VariationController extends GetxController {
     return null;
   }
 
-  String getVariationPrice() {
-    return int.parse(selectedVariation.value.salePrice!) > 0
-        ? selectedVariation.value.salePrice!
-        : selectedVariation.value.price!;
+  void getVariationPrice(ProductModel product) {
+    if (product.productType == 'Single') {
+      // Return the product's sale price for single products
+      variationPrice.value =
+          int.parse(product.salePrice) > 0 ? product.salePrice : product.price;
+    } else {
+      // Check if the selectedVariation exists and has valid prices
+      if (selectedVariation.value.id.isEmpty ||
+          selectedVariation.value.price == null) {
+        // Return a default message or price if no valid variation is selected
+        variationPrice.value = 'No Price Available';
+      }
+
+      // Check for salePrice and price, ensuring they are not null
+      if (selectedVariation.value.salePrice != null &&
+          int.parse(selectedVariation.value.salePrice!) > 0) {
+        // Return salePrice if available and greater than 0
+        variationPrice.value = selectedVariation.value.salePrice!;
+      } else if (selectedVariation.value.price != null) {
+        // Return price if salePrice is not available or invalid
+        variationPrice.value = selectedVariation.value.price!;
+      } else {
+        // If neither price nor salePrice is available, return a default message
+        variationPrice.value = product.salePrice;
+      }
+    }
   }
 
-  void updateSelectedAttributeSummary() {
-    // Build a string with only the selected attribute values
-    List<String> selectedValues = [];
+  void updateSelectedAttributeSummary(ProductModel product) {
+    // Check if the product is of type 'Single'
+    if (product.productType == 'Single') {
+      // For single products, no need for variation attributes, so clear summary
+      selectedAttributeSummary.value = ''; // Default empty format for single products
+    } else {
+      // For products with variations, format selected attributes
+      List<String> selectedValues = [];
 
-    // Only add the values (e.g., "Blue", "S")
-    selectedAttributes.forEach((attribute, value) {
-      selectedValues.add(value); // Only add the attribute value, not the name
-    });
+      // Add the selected values (e.g., "S", "Blue")
+      selectedAttributes.forEach((attribute, value) {
+        selectedValues.add(value); // Only add the attribute value, not the name
+      });
 
-    // Join the values with commas and update the summary
-    selectedAttributeSummary.value = selectedValues.join(', ');
+      // Ensure there are always two values in the format (, value1, value2)
+      while (selectedValues.length < 2) {
+        selectedValues.insert(0, ''); // Add empty string for missing values
+      }
+
+      // Join the values with commas, ensuring the format starts with "(," and ends with ")"
+      selectedAttributeSummary.value = ', ${selectedValues.join(', ')}';
+    }
   }
+
 
   // Get the stock status of the selected variation
   void getProductVariationStockStatus() {
@@ -155,6 +198,8 @@ class VariationController extends GetxController {
     selectedAttributes.clear();
     variationStockStatus.value = '';
     selectedVariation.value = ProductVariationModel.empty();
+    variationPrice.value = '';
+    selectedAttributeSummary.value = '';
     errorMessage.value = '';
   }
 }

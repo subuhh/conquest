@@ -1,4 +1,5 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
+import 'package:conquest/core/Controllers/Product_Controller/product_image_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_meta_data.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/bottom_add_to_cart_widget.dart';
@@ -24,10 +25,17 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   int selectedQuantity = 1;
+  final controller = Get.put(VariationController());
+  final imageController = Get.put(ProductImageController());
+
+  void initState() {
+    super.initState();
+    controller.resetSelectedAttributes();
+    controller.initializeSelectedAttributes(widget.productModel);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(VariationController());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: TColors.primary,
@@ -35,23 +43,35 @@ class _ProductDetailState extends State<ProductDetail> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back,color: Colors.white,),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
         ),
         actions: [
           // Search Button
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Iconsax.search_normal,color: Colors.white,),
+            icon: const Icon(
+              Iconsax.search_normal,
+              color: Colors.white,
+            ),
           ),
           // Favourite Button
           IconButton(
-            onPressed: (){},//Navigator.pop(context),
-            icon: const Icon(Iconsax.heart,color: Colors.white,),
+            onPressed: () {}, //Navigator.pop(context),
+            icon: const Icon(
+              Iconsax.heart,
+              color: Colors.white,
+            ),
           ),
           // Cart Button
           IconButton(
             onPressed: () => Navigator.pushNamed(context, '/cart'),
-            icon: const Icon(Iconsax.shopping_cart,color: Colors.white,),
+            icon: const Icon(
+              Iconsax.shopping_cart,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -183,8 +203,6 @@ class _ProductDetailState extends State<ProductDetail> {
               isHeader: true,
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
-
-            // Description Text
             Padding(
               padding: const EdgeInsets.only(
                 left: TSizes.defaultSpace,
@@ -207,9 +225,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
             // Reviews
             const ProductReviewsScreen(),
-            const SectionDivider(
-              isUpperSizedBox: false,
-            ),
+            const SectionDivider(isUpperSizedBox: false),
           ],
         ),
       ),
