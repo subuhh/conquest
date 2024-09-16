@@ -2,6 +2,7 @@ import 'package:conquest/common/widgets/SectionHeading.dart';
 import 'package:conquest/core/Controllers/Product_Controller/product_image_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/common/widgets/section_divider.dart';
+import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -13,7 +14,6 @@ import '../../products_widgets/bottom_add_to_cart_widget.dart';
 import '../../products_widgets/product_attributes.dart';
 import '../../products_widgets/product_detail_image_slider.dart';
 import '../../products_widgets/product_meta_data.dart';
-import '../../products_widgets/wishlist_widget.dart';
 import '../Product_reviews/product_reviews_screen.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -59,7 +59,10 @@ class _ProductDetailState extends State<ProductDetail> {
             ),
           ),
           // Favourite Button
-          WishListButton(isDecoration: false,),
+          FavoriteButton(
+            isDecoration: false,
+            productId: widget.productModel.id,
+          ),
           // IconButton(
           //   onPressed: () {}, //Navigator.pop(context),
           //   icon: const Icon(
@@ -85,7 +88,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
             // 2 - Product Details (Title, Price, In Stock)
             ProductMetaData(productModel: widget.productModel),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            const SizedBox(height: TSizes.spaceBtwItems / 2),
 
             // 3 - Colors and Sizes
             if (widget.productModel.productType != 'Single')

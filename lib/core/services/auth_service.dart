@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'firestore_service.dart';
 
 class AuthService extends GetxController {
+  static AuthService get instance => Get.find();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Rxn<User?> firebaseUser = Rxn<User?>(); // Observable user state
 

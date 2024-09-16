@@ -54,8 +54,7 @@ class MarketplaceScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Wishlistscreen())),
+            onPressed: () => Get.to(() => WishListScreen()),
             icon: const Icon(Iconsax.heart),
           ),
           // Cart Button

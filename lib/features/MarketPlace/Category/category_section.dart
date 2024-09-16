@@ -1,11 +1,8 @@
-import 'package:conquest/features/MarketPlace/Category/Category%20Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
-import '../../../utils/helpers/helper_functions.dart';
 
 class CategorySection extends StatefulWidget {
   final List<Map<String, dynamic>> categories;
@@ -32,8 +29,7 @@ class _CategorySectionState extends State<CategorySection> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: GestureDetector(
-                      onTap: () => THelperFunctions.navigateToScreen(
-                          context, CategoryScreen()),
+                      onTap: () {},
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [

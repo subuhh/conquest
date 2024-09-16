@@ -18,8 +18,6 @@ class ProductAttributes extends StatefulWidget {
 class _ProductAttributesState extends State<ProductAttributes> {
   final variationController = VariationController.instance;
 
-
-
   @override
   Widget build(BuildContext context) {
     return Padding(

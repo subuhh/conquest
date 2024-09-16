@@ -1,5 +1,6 @@
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
+import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/theme/customthemes/textThemes.dart';
-import '../../products_widgets/wishlist_widget.dart';
 
 class ProductCardSmall extends StatefulWidget {
   final String imageUrl;
@@ -65,7 +65,7 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
                     Positioned(
                       right: 5,
                       top: 5,
-                      child: WishListButton(),
+                      child: FavoriteButton(productId: widget.productModel.id),
                     )
                   ],
                 ),

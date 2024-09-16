@@ -47,7 +47,7 @@ class ProductMetaData extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!
-                        .copyWith(fontSize: 18),
+                        .copyWith(fontSize: 17),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   );
@@ -74,7 +74,7 @@ class ProductMetaData extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: TSizes.spaceBtwItems),
+          const SizedBox(height: TSizes.spaceBtwItems / 2),
 
           // Price,
           Row(
@@ -84,7 +84,7 @@ class ProductMetaData extends StatelessWidget {
                 return Text(
                   '₹${variationController.variationPrice.value}',
                   style: TTextTheme.lightTextTheme.headlineSmall!
-                      .copyWith(fontSize: 26),
+                      .copyWith(fontSize: 22),
                 );
               }),
 
@@ -96,7 +96,7 @@ class ProductMetaData extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
-                      .copyWith(fontSize: 19, fontWeight: FontWeight.w400)
+                      .copyWith(fontSize: 14, fontWeight: FontWeight.w400)
                       .apply(
                         decoration: TextDecoration.lineThrough,
                       ),
@@ -104,7 +104,7 @@ class ProductMetaData extends StatelessWidget {
                     TextSpan(
                       text: ' ₹${productModel.price}',
                       style: TTextTheme.lightTextTheme.titleLarge!
-                          .copyWith(fontSize: 20, fontWeight: FontWeight.w400)
+                          .copyWith(fontSize: 14, fontWeight: FontWeight.w400)
                           .apply(
                             decoration: TextDecoration.lineThrough,
                           ),
@@ -117,7 +117,7 @@ class ProductMetaData extends StatelessWidget {
               RoundedContainer(
                 radius: TSizes.sm,
                 backgroundColor: Colors.green,
-                height: 27,
+                height: 25,
                 padding: const EdgeInsets.symmetric(
                   horizontal: TSizes.sm,
                   vertical: TSizes.xs,
@@ -125,7 +125,7 @@ class ProductMetaData extends StatelessWidget {
                 child: Text(
                   '${discountedPercentage}% OFF',
                   style: TTextTheme.lightTextTheme.bodyLarge!
-                      .apply(color: TColors.white),
+                      .copyWith(color: TColors.white, fontSize: 12),
                 ),
               ),
             ],
@@ -143,7 +143,7 @@ class ProductMetaData extends StatelessWidget {
             'Inclusive of all taxes',
             style: TTextTheme.lightTextTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontSize: 12,
               color: Colors.black.withOpacity(0.6),
             ),
           ),
@@ -151,10 +151,11 @@ class ProductMetaData extends StatelessWidget {
 
           // Price With Premium
           Container(
-            //padding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 4),
+            padding:
+                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              //border: Border.all(color: TColors.darkGrey),
+              border: Border.all(color: TColors.primary),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -162,17 +163,17 @@ class ProductMetaData extends StatelessWidget {
                 Text(
                   '₹3899',
                   style: TTextTheme.lightTextTheme.headlineSmall!
-                      .copyWith(color: Colors.black, fontSize: 16),
+                      .copyWith(color: Colors.black, fontSize: 14),
                 ),
                 Text(
                   ' with ',
                   style: TTextTheme.lightTextTheme.headlineSmall!
-                      .copyWith(color: TColors.black, fontSize: 16),
+                      .copyWith(color: TColors.black, fontSize: 14),
                 ),
                 Center(
                   child: SvgPicture.asset(
                     'assets/icons/appicons/premiumicon.svg',
-                    height: 20,
+                    height: 18,
                     colorFilter: const ColorFilter.mode(
                         TColors.primary, BlendMode.srcIn),
                   ),
