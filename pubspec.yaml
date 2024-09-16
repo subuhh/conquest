@@ -27,6 +27,8 @@ dependencies:
   cached_network_image: ^3.4.0
   google_sign_in: ^6.2.1
   smooth_page_indicator: ^1.2.0+3
+  connectivity_plus: ^6.0.5
+  get_storage: ^2.1.1
 
   # Location & Address
   geocoding: ^3.0.0
