@@ -6,13 +6,14 @@ import 'package:conquest/features/MarketPlace/Products/products_widgets/bottom_a
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_attributes.dart';
 import 'package:conquest/common/widgets/section_divider.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_detail_image_slider.dart';
+import 'package:conquest/features/MarketPlace/Products/products_widgets/wishlist_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sizes.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
 import '../Product_reviews/product_reviews_screen.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -58,13 +59,14 @@ class _ProductDetailState extends State<ProductDetail> {
             ),
           ),
           // Favourite Button
-          IconButton(
-            onPressed: () {}, //Navigator.pop(context),
-            icon: const Icon(
-              Iconsax.heart,
-              color: Colors.white,
-            ),
-          ),
+          WishListButton(isDecoration: false,),
+          // IconButton(
+          //   onPressed: () {}, //Navigator.pop(context),
+          //   icon: const Icon(
+          //     Iconsax.heart,
+          //     color: Colors.white,
+          //   ),
+          // ),
           // Cart Button
           IconButton(
             onPressed: () => Navigator.pushNamed(context, '/cart'),

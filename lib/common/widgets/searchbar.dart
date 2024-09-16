@@ -1,8 +1,8 @@
-import 'package:conquest/features/utils/constants/colors.dart';
+import 'package:conquest/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../features/utils/constants/sizes.dart';
+import '../../utils/constants/sizes.dart';
 
 class Searchbar extends StatelessWidget {
   const Searchbar({super.key});

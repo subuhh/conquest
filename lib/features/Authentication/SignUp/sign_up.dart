@@ -4,9 +4,9 @@ import 'package:iconsax/iconsax.dart';
 import '../../../common/widgets/form_divider.dart';
 import '../../../common/widgets/social_buttons.dart';
 import '../../../core/Controllers/Authentication_Controller/signup_controller.dart';
-import '../../../features/utils/constants/colors.dart';
-import '../../../features/utils/constants/sizes.dart';
-import '../../../features/utils/constants/text_strings.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/sizes.dart';
+import '../../../utils/constants/text_strings.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});

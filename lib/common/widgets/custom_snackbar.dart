@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../features/utils/constants/colors.dart';
+import '../../utils/constants/colors.dart';
 
 void showSnackBar(
     String message, String title, {

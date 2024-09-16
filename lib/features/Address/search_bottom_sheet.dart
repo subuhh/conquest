@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:conquest/common/widgets/divider_with_text.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/Controllers/location_service.dart';
 import '../../core/api_key/google_api_key.dart';
-import '../utils/constants/sizes.dart';
-import '../utils/theme/customthemes/textThemes.dart';
 import 'package:http/http.dart' as http;
+
+import '../../utils/constants/sizes.dart';
+import '../../utils/helpers/helper_functions.dart';
+import '../../utils/theme/customthemes/textThemes.dart';
 
 class SearchBottomSheet extends StatefulWidget {
   final Function(Map<String, dynamic>) onSuggestionSelected;

@@ -1,5 +1,5 @@
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
+import 'package:conquest/utils/constants/colors.dart';
+import 'package:conquest/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class CircularIcon extends StatelessWidget {

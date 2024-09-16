@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/services/auth_service.dart';
-import '../../features/utils/constants/colors.dart';
-import '../../features/utils/constants/image_strings.dart';
-import '../../features/utils/constants/sizes.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/image_strings.dart';
+import '../../utils/constants/sizes.dart';
 import 'custom_snackbar.dart';
 
 class SocialButton extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:conquest/core/services/auth_service.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/widgets/custom_snackbar.dart';
-import '../../utils/constants/text_strings.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/text_strings.dart';
 
 class PasswordResetScreen extends StatefulWidget {
   const PasswordResetScreen({super.key});

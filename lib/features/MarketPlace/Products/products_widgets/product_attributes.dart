@@ -1,11 +1,11 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../common/widgets/chips/choice_chip.dart';
 import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
 import '../../../../core/model/Product_Models/product.dart';
+import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/helpers/helper_functions.dart';
 
 class ProductAttributes extends StatefulWidget {
   final ProductModel productModel;

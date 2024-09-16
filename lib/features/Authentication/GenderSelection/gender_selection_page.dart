@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../../common/widgets/custom_snackbar.dart';
 import '../../../core/model/user.dart';
 import '../../../core/services/firestore_service.dart';
-import '../../utils/constants/colors.dart';
+import '../../../utils/constants/colors.dart';
 
 String? selectedGender;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../features/utils/constants/colors.dart';
-import '../../features/utils/constants/sizes.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/sizes.dart';
 
 class SectionDivider extends StatelessWidget {
   final bool isUpperSizedBox;

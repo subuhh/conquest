@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../features/utils/constants/colors.dart';
-import '../../features/utils/constants/sizes.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/sizes.dart';
 
 class Sectionheading extends StatelessWidget {
   final Color? textColor;

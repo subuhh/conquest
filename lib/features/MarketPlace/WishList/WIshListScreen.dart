@@ -1,6 +1,7 @@
 import 'package:conquest/features/MarketPlace/Products/ProductCard/ProductCardLarge.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../../utils/constants/colors.dart';
 
 class Wishlistscreen extends StatelessWidget {
   const Wishlistscreen({super.key});

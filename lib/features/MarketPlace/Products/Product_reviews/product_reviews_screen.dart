@@ -1,7 +1,7 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
 import 'package:conquest/features/MarketPlace/Products/Product_reviews/UserReviewCard.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import '../../../../utils/constants/sizes.dart';
 import 'RatingBarIndicator.dart';
 import 'overall_rating_indicator.dart';
 

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../features/utils/constants/sizes.dart';
+import '../../../utils/constants/sizes.dart';
 
 class ProductImageController extends GetxController {
   static ProductImageController get instance => Get.find();

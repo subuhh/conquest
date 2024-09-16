@@ -1,10 +1,11 @@
 import 'package:conquest/features/MarketPlace/Category/Category%20Screen.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../utils/constants/colors.dart';
-import '../../utils/constants/sizes.dart';
+
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/sizes.dart';
+import '../../../utils/helpers/helper_functions.dart';
 
 class CategorySection extends StatefulWidget {
   final List<Map<String, dynamic>> categories;

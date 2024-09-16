@@ -1,10 +1,10 @@
 import 'package:conquest/common/widgets/RoundedContainer.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/enums.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/enums.dart';
+import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/helpers/helper_functions.dart';
 import 'helpSupportDialogBox.dart';
 
 class OrderCard extends StatelessWidget {

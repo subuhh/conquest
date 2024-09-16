@@ -1,7 +1,8 @@
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
+
 import 'package:flutter/material.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/helpers/helper_functions.dart';
 import '../../Checkout/checkoutScreen.dart';
 import '../LIstForCart/CartList.dart';
 import 'CartItem.dart';

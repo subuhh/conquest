@@ -1,5 +1,5 @@
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
+import 'package:conquest/utils/constants/colors.dart';
+import 'package:conquest/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 

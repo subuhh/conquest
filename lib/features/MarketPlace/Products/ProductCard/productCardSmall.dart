@@ -1,10 +1,13 @@
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
-import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/theme/customthemes/textThemes.dart';
+import '../products_widgets/wishlist_widget.dart';
 
 class ProductCardSmall extends StatefulWidget {
   final String imageUrl;
@@ -62,7 +65,7 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
                     Positioned(
                       right: 5,
                       top: 5,
-                      child: _buildWishlistButton(),
+                      child: WishListButton(),
                     )
                   ],
                 ),
@@ -101,7 +104,7 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
             _buildProductTitle(context),
             //const SizedBox(height: 6),
             _buildPriceRow(context),
-            const SizedBox(height: TSizes.spaceBtwItems/2),
+            const SizedBox(height: TSizes.spaceBtwItems / 2),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -225,30 +228,30 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
     );
   }
 
-  Widget _buildWishlistButton() {
-    return Container(
-      height: 35,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.grey.shade400,
-        ),
-      ),
-      child: Center(
-        child: IconButton(
-          icon: Icon(
-            itemInWishList ? Icons.favorite : Icons.favorite_border,
-            color: itemInWishList ? Colors.redAccent : Colors.black,
-            size: 20,
-          ),
-          onPressed: () {
-            setState(() {
-              itemInWishList = !itemInWishList;
-            });
-          },
-        ),
-      ),
-    );
-  }
+  // Widget _buildWishlistButton() {
+  //   return Container(
+  //     height: 35,
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       shape: BoxShape.circle,
+  //       border: Border.all(
+  //         color: Colors.grey.shade400,
+  //       ),
+  //     ),
+  //     child: Center(
+  //       child: IconButton(
+  //         icon: Icon(
+  //           itemInWishList ? Icons.favorite : Icons.favorite_border,
+  //           color: itemInWishList ? Colors.redAccent : Colors.black,
+  //           size: 20,
+  //         ),
+  //         onPressed: () {
+  //           setState(() {
+  //             itemInWishList = !itemInWishList;
+  //           });
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 }

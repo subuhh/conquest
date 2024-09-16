@@ -1,6 +1,6 @@
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/enums.dart';
 import 'package:flutter/material.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/enums.dart';
 import 'OrderCard.dart';
 
 final List<OrderCard> orders = [

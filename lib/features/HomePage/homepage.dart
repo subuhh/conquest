@@ -1,14 +1,14 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
 import 'package:conquest/core/Controllers/homepage_controller.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/sizes.dart';
+import '../../utils/helpers/helper_functions.dart';
 import '../MarketPlace/Carousel/carousel_section.dart';
-import '../utils/constants/colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

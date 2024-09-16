@@ -1,13 +1,13 @@
 import 'package:conquest/core/model/Product_Models/product.dart';
-import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../../../common/widgets/RoundedContainer.dart';
 import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sizes.dart';
-import '../../../utils/helpers/pricing_calculator.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/helpers/pricing_calculator.dart';
+import '../../../../utils/theme/customthemes/textThemes.dart';
 
 class ProductMetaData extends StatelessWidget {
   final ProductModel productModel;

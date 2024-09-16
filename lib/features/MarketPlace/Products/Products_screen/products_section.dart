@@ -1,10 +1,8 @@
 import 'package:conquest/features/MarketPlace/Products/ProductCard/productCardSmall.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
-
-import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/model/Product_Models/product.dart';
+import '../../../../utils/theme/customthemes/textThemes.dart';
 
 class ProductsSection extends StatefulWidget {
   final String title;

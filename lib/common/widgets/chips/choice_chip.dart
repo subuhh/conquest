@@ -1,8 +1,8 @@
 import 'package:conquest/common/widgets/customShapes/circcularContainer.dart';
-import 'package:conquest/features/utils/helpers/helper_functions.dart';
+import 'package:conquest/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
-import '../../../features/utils/constants/colors.dart';
+import '../../../utils/constants/colors.dart';
 
 class TChoiceChip extends StatelessWidget {
   const TChoiceChip({

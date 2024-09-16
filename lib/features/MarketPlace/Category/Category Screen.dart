@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/constants/colors.dart';
+import '../../../utils/constants/colors.dart';
 import '../Products/ProductCard/ProductCardLarge.dart';
 
 class CategoryScreen extends StatelessWidget {

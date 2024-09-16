@@ -1,9 +1,6 @@
 import 'dart:developer';
 import 'package:conquest/features/Address/add_address_details.dart';
 import 'package:conquest/features/Address/search_bottom_sheet.dart';
-import 'package:conquest/features/utils/Shimmer/shimmer.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -12,6 +9,9 @@ import '../../core/Controllers/location_service.dart';
 import '../../core/model/user.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/services/firestore_service.dart';
+import '../../utils/Shimmer/shimmer.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/theme/customthemes/textThemes.dart';
 
 class AddNewAddress extends StatefulWidget {
   const AddNewAddress({

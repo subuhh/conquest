@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../features/utils/constants/colors.dart';
-import '../../features/utils/theme/customthemes/textThemes.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/theme/customthemes/textThemes.dart';
 
 class CustomListTileGroup extends StatelessWidget {
   final String? header;

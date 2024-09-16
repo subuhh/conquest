@@ -7,9 +7,11 @@ import 'package:conquest/common/widgets/searchbar.dart';
 import 'package:conquest/features/MarketPlace/Carousel/carousel_section.dart';
 import 'package:conquest/features/MarketPlace/Category/category_section.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/products_section.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
+
 import 'package:iconsax/iconsax.dart';
+
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/sizes.dart';
 
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});

@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/RoundedContainer.dart';
 import '../../../../common/widgets/product_price_text.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sizes.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
 
 class Productcardlarge extends StatelessWidget {
   const Productcardlarge(

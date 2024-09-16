@@ -1,9 +1,9 @@
 import 'package:conquest/features/MarketPlace/Products/Product_reviews/RatingBarIndicator.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 
-import '../../../utils/constants/sizes.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/sizes.dart';
 
 class UserReviewCard extends StatelessWidget {
   const UserReviewCard({super.key});

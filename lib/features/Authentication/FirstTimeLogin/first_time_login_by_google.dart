@@ -1,11 +1,11 @@
-import 'package:conquest/features/utils/constants/colors.dart';
-import 'package:conquest/features/utils/constants/sizes.dart';
-import 'package:conquest/features/utils/constants/text_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/Controllers/Authentication_Controller/first_time_login_controller.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/sizes.dart';
+import '../../../utils/constants/text_strings.dart';
 
 class FirstTimeLogin extends StatelessWidget {
   final User? user;

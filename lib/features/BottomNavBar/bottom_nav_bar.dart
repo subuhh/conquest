@@ -4,9 +4,10 @@ import 'package:conquest/features/BottomNavBar/src/notch_bottom_bar_controller.d
 
 import 'package:conquest/features/HomePage/homepage.dart';
 import 'package:conquest/features/MarketPlace/market_place_screen.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../utils/constants/colors.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});

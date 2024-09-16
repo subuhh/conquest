@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:conquest/features/utils/constants/colors.dart';
-import '../../utils/constants/text_strings.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/text_strings.dart';
 import '../controller/profile_controller.dart';
 
 class ProfilePage extends StatelessWidget {
