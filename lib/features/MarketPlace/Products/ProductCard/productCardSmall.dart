@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/theme/customthemes/textThemes.dart';
-import '../products_widgets/wishlist_widget.dart';
+import '../../products_widgets/wishlist_widget.dart';
 
 class ProductCardSmall extends StatefulWidget {
   final String imageUrl;
