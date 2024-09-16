@@ -19,7 +19,6 @@ class ProductImageSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProductImageController());
-
     final images = controller.getAllProductImage(productModel);
 
     return TCurvedEdgesWidget(
@@ -66,7 +65,7 @@ class ProductImageSlider extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: images.length,
                 separatorBuilder: (_, __) => const SizedBox(
-                  width: TSizes.spaceBtwItems,
+                  width: TSizes.spaceBtwItems-5,
                 ),
                 itemBuilder: (_, index) {
                   return TRoundedImage(
@@ -75,7 +74,7 @@ class ProductImageSlider extends StatelessWidget {
                     fit: BoxFit.fitHeight,
                     backgroundColor: TColors.white,
                     width: 80,
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color:controller.selectedProductImage.value == images[index]?TColors.primary:Colors.grey),
                     padding: const EdgeInsets.all(TSizes.sm),
                     imageUrl: images[index],
                   );
