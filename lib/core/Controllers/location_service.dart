@@ -71,7 +71,7 @@ class LocationController extends GetxController {
       // Fetch the address from the current coordinates
       await getAddressFromLatLng(position.latitude, position.longitude);
     } catch (e) {
-      showSnackBar('Error', 'Failed to get current location: $e');
+      showSnackBar('Oops....', 'Unable to deliver');
       log('Failed to get current location. Please Try Again.');
     } finally {
       isLoading.value = false; // Stop loading
@@ -94,7 +94,7 @@ class LocationController extends GetxController {
       currentState.value = place.subAdministrativeArea;
       log('Address: $formattedAddress');
     } catch (e) {
-      showSnackBar('Error', 'Failed to get address from coordinates: $e');
+      showSnackBar('Oops....', 'Unable to deliver');
       log('Failed to get address from coordinates: $e');
     }
   }

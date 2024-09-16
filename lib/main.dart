@@ -1,6 +1,5 @@
 import 'package:conquest/features/Drawer/drawer_screen.dart';
 import 'package:conquest/features/SplashScreen/splash_screen.dart';
-import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +17,6 @@ void main() async {
 
   // Initialize GetX dependencies here
   Get.put(AuthService()); // Inject AuthService as a GetX controller
-
   runApp(const MyApp());
 }
 
@@ -39,7 +37,6 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/homepage', page: () => const HomePage()),
         GetPage(name: '/drawer', page: () => DrawerScreen()),
         GetPage(name: '/btmnav', page: () => const BottomNavBar()),
-        GetPage(name: '/productDetails', page: () => const ProductDetail()),
         GetPage(name: '/profileScreen', page: () => const ProfilePage()),
         GetPage(name: '/cart', page: () => const CartScreen()),
       ],

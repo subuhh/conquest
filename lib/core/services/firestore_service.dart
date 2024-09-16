@@ -4,7 +4,7 @@ import 'package:conquest/core/model/address.dart';
 import 'package:conquest/core/services/auth_service.dart';
 import 'package:get/get.dart';
 import '../model/banner.dart';
-import '../model/product.dart';
+import '../model/Product_Models/product.dart';
 import '../model/user.dart';
 
 class FirestoreService extends GetxController {
@@ -160,27 +160,6 @@ class FirestoreService extends GetxController {
     }
   }
 
-  // --- Products ---
-
-  // Fetching all Products
-  Future<List<ProductModel>> fetchAllProducts() async {
-    try {
-      isLoading.value = true;
-      final snapshot = await _firestore.collection('products').get();
-      log('Products snapshot size: ${snapshot.size}');
-      final fetchedProducts = snapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc.data()))
-          .toList();
-      products.value = fetchedProducts;
-      isLoading.value = false;
-      return fetchedProducts;
-    } catch (e) {
-      isLoading.value = false;
-      log('Error fetching the products: $e');
-      Get.snackbar('Error', 'Could not fetch products');
-      rethrow;
-    }
-  }
 
   // --- Address ---
 
@@ -207,13 +186,21 @@ class FirestoreService extends GetxController {
     }
   }
 
+  // Stream to fetch all address
+  Stream<QuerySnapshot> getAddressStream(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('addresses')
+        .snapshots();
+  }
+
   // To store user address in address sub-collection
   Future<void> addAddress(AddressModel address) async {
     try {
       // Get current user's ID
       final user = _authService.user;
       final userData = await user.first;
-
       if (userData != null) {
         String userId = userData.uid;
 
@@ -225,12 +212,65 @@ class FirestoreService extends GetxController {
             .doc();
 
         // Add the address to Firestore
-        await addressRef.set(address.toMap());
+        await addressRef.set({
+          ...address.toMap(),
+          'id': addressRef.id,
+        });
 
         log('Address successfully added!');
       }
     } catch (e) {
       log('Error adding address: $e');
+    }
+  }
+
+  // Check if user has any addresses saved
+  Future<bool> isFirstAddress(String userId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('addresses')
+          .get();
+      return snapshot.docs.isEmpty;
+    } catch (e) {
+      throw Exception("Failed to check if it's the first address: $e");
+    }
+  }
+
+  // Update the default address for the user
+  Future<void> updateDefaultAddress(String userId, String addressId) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'defaultAddressId': addressId,
+      });
+    } catch (e) {
+      throw Exception("Failed to update default address: $e");
+    }
+  }
+
+  // Delete Address from user
+  Future<void> deleteAddress(String userId, String addressId) async {
+    if (userId.isEmpty) {
+      log('Error: UserId is empty.');
+      throw Exception("Invalid userId ");
+    }
+    if (addressId.isEmpty) {
+      log('Error: AddressId is empty.');
+      throw Exception("Invalid addressId");
+    }
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('addresses')
+          .doc(addressId)
+          .delete();
+
+      log('Address Deleted successfully!');
+    } catch (e) {
+      throw Exception("Failed to delete address: $e");
     }
   }
 }

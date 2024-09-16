@@ -1,20 +1,22 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
-import 'package:conquest/core/model/product.dart';
+import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_meta_data.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/bottom_add_to_cart_widget.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_attributes.dart';
 import 'package:conquest/common/widgets/section_divider.dart';
 import 'package:conquest/features/MarketPlace/Products/products_widgets/product_detail_image_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
+import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 import '../Product_reviews/product_reviews_screen.dart';
 
 class ProductDetail extends StatefulWidget {
-  final ProductModel? productModel;
-  const ProductDetail({super.key, this.productModel});
+  final ProductModel productModel;
+  const ProductDetail({super.key, required this.productModel});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -25,6 +27,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(VariationController());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: TColors.primary,
@@ -56,14 +59,15 @@ class _ProductDetailState extends State<ProductDetail> {
         child: Column(
           children: [
             // 1 - Product Image Slider
-            ProductImageSlider(productModel: widget.productModel!,),
+            ProductImageSlider(productModel: widget.productModel),
 
             // 2 - Product Details (Title, Price, In Stock)
-            ProductMetaData(productModel: widget.productModel!),
+            ProductMetaData(productModel: widget.productModel),
             const SizedBox(height: TSizes.spaceBtwItems),
 
             // 3 - Colors and Sizes
-            ProductAttributes(productModel: widget.productModel!),
+            if (widget.productModel.productType != 'Single')
+              ProductAttributes(productModel: widget.productModel),
             const SectionDivider(),
 
             // Product Quantity
@@ -187,7 +191,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 right: TSizes.defaultSpace,
               ),
               child: ReadMoreText(
-                widget.productModel!.description,
+                widget.productModel.description!,
                 trimLines: 7,
                 trimMode: TrimMode.Line,
                 trimCollapsedText: ' Show more',

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/widgets/form_divider.dart';
 import '../../../common/widgets/social_buttons.dart';
-import '../../../core/Controllers/signup_controller.dart';
+import '../../../core/Controllers/Authentication_Controller/signup_controller.dart';
 import '../../../features/utils/constants/colors.dart';
 import '../../../features/utils/constants/sizes.dart';
 import '../../../features/utils/constants/text_strings.dart';

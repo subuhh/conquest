@@ -50,8 +50,16 @@ class _LoginFormState extends State<LoginForm> {
                     labelText: TTexts.email),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your Email';
+                    return 'Email is required.';
                   }
+
+                  final emailRegExp =
+                      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+                  if (!emailRegExp.hasMatch(value)) {
+                    return 'Invalid email address.';
+                  }
+
                   return null;
                 },
               ),
@@ -77,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
                 obscureText: _obscureText,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your Password';
+                    return 'Password is required.';
                   }
                   return null;
                 },

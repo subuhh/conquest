@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:conquest/common/widgets/divider_with_text.dart';
 import 'package:conquest/features/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -94,7 +95,8 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
+      padding:
+          const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
       height: THelperFunctions.screenHeight(context) * 0.7,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -146,22 +148,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
           const SizedBox(height: TSizes.defaultSpace),
           if (_searchController.text.isEmpty) ...[
             // Current Location Text
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Expanded(child: Divider()),
-                const SizedBox(width: 10),
-                Text(
-                  ' CURRENT LOCATION ',
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black.withOpacity(0.9)),
-                ),
-                const SizedBox(width: 10),
-                const Expanded(child: Divider()),
-              ],
-            ),
+            const DividerWithText(title: 'CURRENT LOCATION'),
             const SizedBox(height: TSizes.defaultSpace),
             // Current List Tile
             ListTile(
@@ -199,22 +186,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
             // Recent Locations
             if (_locationController.selectedAddress.value!.isNotEmpty) ...[
               const SizedBox(height: TSizes.defaultSpace),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(child: Divider()),
-                  const SizedBox(width: 10),
-                  Text(
-                    ' RECENT LOCATION ',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black.withOpacity(0.9)),
-                  ),
-                  const SizedBox(width: 10),
-                  const Expanded(child: Divider()),
-                ],
-              ),
+              const DividerWithText(title: 'RECENT LOCATION'),
               const SizedBox(height: TSizes.defaultSpace),
               // Current List Tile
               ListTile(

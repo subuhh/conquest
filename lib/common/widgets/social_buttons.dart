@@ -39,22 +39,6 @@ class _SocialButtonState extends State<SocialButton> {
             ),
           ),
         ),
-        const SizedBox(width: TSizes.spaceBtwItems),
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: TColors.grey,
-              ),
-              borderRadius: BorderRadius.circular(100)),
-          child: IconButton(
-            onPressed: () {},
-            icon: const Image(
-              width: TSizes.iconMd,
-              height: TSizes.iconMd,
-              image: AssetImage(TImages.facebook),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -73,7 +57,7 @@ class _SocialButtonState extends State<SocialButton> {
         } else {
           // User document does not exist, navigate to the info entry screen
 
-          Get.off(FirstTimeLogin(user: user));
+          Get.off(() => FirstTimeLogin(user: user));
         }
       }
     } else {

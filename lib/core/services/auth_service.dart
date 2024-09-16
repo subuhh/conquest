@@ -98,6 +98,8 @@ class AuthService extends GetxController {
       log('FirebaseAuthException: ${e.code}');
       if (e.code == 'invalid-credential') {
         showSnackBar('Error', 'Invalid Email or Password.');
+      } else if (e.code == 'user-not-found') {
+        showSnackBar('Error', 'No user found with that email.');
       } else if (e.code == 'too-many-requests') {
         showSnackBar(
             'Error', 'Too many login attempts. Please try again later.');
@@ -151,6 +153,17 @@ class AuthService extends GetxController {
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      log('FirebaseAuthException: ${e.code}');
+      if (e.code == 'invalid-credential') {
+        showSnackBar('Error', 'Invalid Email or Password.');
+      } else if (e.code == 'user-not-found') {
+        showSnackBar('Error', 'No user found with that email.');
+      } else {
+        showSnackBar('Error',
+            'An error occurred during reset password. Please try again.');
+      }
+      return null;
     } catch (error) {
       log('Error sending password reset email: $error');
       rethrow;

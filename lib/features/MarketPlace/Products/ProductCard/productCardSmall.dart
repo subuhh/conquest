@@ -1,4 +1,4 @@
-import 'package:conquest/core/model/product.dart';
+import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/utils/constants/colors.dart';
 import 'package:conquest/features/utils/constants/sizes.dart';
@@ -6,7 +6,7 @@ import 'package:conquest/features/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ProductCardSmall extends StatelessWidget {
+class ProductCardSmall extends StatefulWidget {
   final String imageUrl;
   final String title;
   final String oldPrice;
@@ -23,6 +23,13 @@ class ProductCardSmall extends StatelessWidget {
   });
 
   @override
+  State<ProductCardSmall> createState() => _ProductCardSmallState();
+}
+
+class _ProductCardSmallState extends State<ProductCardSmall> {
+  bool itemInWishList = false;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -30,7 +37,7 @@ class ProductCardSmall extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetail(
-              productModel: productModel,
+              productModel: widget.productModel,
             ),
           ),
         );
@@ -59,7 +66,7 @@ class ProductCardSmall extends StatelessWidget {
                     )
                   ],
                 ),
-                _buildProductDetails(context, constraints.maxHeight - 150),
+                _buildProductDetails(context, constraints.maxHeight - 160),
               ],
             );
           },
@@ -72,10 +79,10 @@ class ProductCardSmall extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
       child: Image.network(
-        imageUrl,
-        height: 150,
+        widget.imageUrl,
+        height: 160,
         width: maxWidth,
-        fit: BoxFit.contain,
+        fit: BoxFit.fitWidth,
         errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
       ),
     );
@@ -110,31 +117,31 @@ class ProductCardSmall extends StatelessWidget {
 
   Widget _buildProductTitle(context) {
     return Text(
-        title,
-        style: TTextTheme.lightTextTheme.bodyMedium,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      );
+      widget.title,
+      style: TTextTheme.lightTextTheme.bodyMedium,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 
   Widget _buildPriceRow(context) {
-    final discountAmount = double.parse(newPrice) * 0.05;
+    final discountAmount = double.parse(widget.newPrice) * 0.05;
     final premiumPrice =
-        (double.parse(newPrice) - discountAmount).toStringAsFixed(2);
+        (double.parse(widget.newPrice) - discountAmount).toStringAsFixed(2);
     return Column(
       children: [
         Row(
           children: [
             RichText(
               text: TextSpan(
-                text: '₹$newPrice  ',
+                text: '₹${widget.newPrice}  ',
                 style: TTextTheme.lightTextTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
                 children: [
                   TextSpan(
-                    text: '₹$oldPrice',
+                    text: '₹${widget.oldPrice}',
                     style: TTextTheme.lightTextTheme.titleMedium!.copyWith(
                       decoration: TextDecoration.lineThrough,
                       color: Colors.grey,
@@ -174,14 +181,13 @@ class ProductCardSmall extends StatelessWidget {
 
   Widget _buildAddToCartButton(BuildContext context) {
     return SizedBox(
-      height: 40,
-      width: 120,
+      height: 35,
+      width: 110,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 0),
-          //backgroundColor: TColors.primary,
+          padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
         onPressed: () {},
@@ -189,7 +195,7 @@ class ProductCardSmall extends StatelessWidget {
           'Add to Cart',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -218,27 +224,31 @@ class ProductCardSmall extends StatelessWidget {
       ),
     );
   }
-}
 
-Widget _buildWishlistButton() {
-  bool itemInWishList = false;
-  return Container(
-    height: 40,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      shape: BoxShape.circle,
-      border: Border.all(
-        color: Colors.grey.shade400,
-      ),
-    ),
-    child: Center(
-      child: IconButton(
-        icon: Icon(
-          itemInWishList ? Icons.favorite : Icons.favorite_border,
-          color: itemInWishList ? Colors.redAccent : Colors.black,
+  Widget _buildWishlistButton() {
+    return Container(
+      height: 35,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.grey.shade400,
         ),
-        onPressed: () {},
       ),
-    ),
-  );
+      child: Center(
+        child: IconButton(
+          icon: Icon(
+            itemInWishList ? Icons.favorite : Icons.favorite_border,
+            color: itemInWishList ? Colors.redAccent : Colors.black,
+            size: 20,
+          ),
+          onPressed: () {
+            setState(() {
+              itemInWishList = !itemInWishList;
+            });
+          },
+        ),
+      ),
+    );
+  }
 }
