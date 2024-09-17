@@ -1,10 +1,11 @@
 import 'dart:developer';
 import 'package:conquest/core/Controllers/Product_Controller/favorite_controller.dart';
 import 'package:conquest/features/MarketPlace/Products/ProductCard/ProductCardLarge.dart';
+import 'package:conquest/utils/Animation_Loaders/TAnimation_Page.dart';
+import 'package:conquest/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utils/Shimmer/shimmer.dart';
-import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 
 class WishListScreen extends StatelessWidget {
@@ -14,23 +15,18 @@ class WishListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = FavoriteController.instance;
     return Scaffold(
-      backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(
-              Icons.arrow_back_outlined,
-              color: Colors.white,
-            )),
-        backgroundColor: TColors.primary,
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(
+            Icons.arrow_back_outlined,
+            size: 26,
+          ),
+        ),
         title: Text(
           'WishList',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .apply(color: TColors.textWhite),
+          style: TTextTheme.lightTextTheme.headlineMedium,
         ),
-        centerTitle: true,
       ),
       body: Obx(
         () => FutureBuilder(
@@ -50,8 +46,13 @@ class WishListScreen extends StatelessWidget {
                 log('Error: ${snapshot.error}');
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No WishList Found!'),
+                return TAnimationPage(
+                  asset: 'assets/animation/empty_cart.json',
+                  height: 350,
+                  width: 350,
+                  titleText: 'Whoops! Wishlist is Empty...',
+                  buttonText: 'Lets add some',
+                  onPressed: () => Get.back(),
                 );
               }
 
