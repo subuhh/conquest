@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:conquest/core/Controllers/Product_Controller/favorite_controller.dart';
 import 'package:conquest/features/MarketPlace/Products/ProductCard/ProductCardLarge.dart';
 import 'package:conquest/utils/Animation_Loaders/TAnimation_Page.dart';
+import 'package:conquest/utils/constants/colors.dart';
 import 'package:conquest/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,11 +22,14 @@ class WishListScreen extends StatelessWidget {
           icon: Icon(
             Icons.arrow_back_outlined,
             size: 26,
+            color: Colors.white,
           ),
         ),
+        centerTitle: true,
+        backgroundColor: TColors.primary,
         title: Text(
           'WishList',
-          style: TTextTheme.lightTextTheme.headlineMedium,
+          style: TTextTheme.lightTextTheme.titleMedium!.apply(color: Colors.white),
         ),
       ),
       body: Obx(

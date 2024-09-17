@@ -1,5 +1,7 @@
 // import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
 //
+// import '../../../core/Controllers/Product_Controller/product_controller.dart';
 // import '../../../utils/constants/colors.dart';
 // import '../Products/ProductCard/ProductCardLarge.dart';
 //
@@ -8,6 +10,7 @@
 //
 //   @override
 //   Widget build(BuildContext context) {
+//     final controllerP = Get.put(ProductController());
 //     return Scaffold(
 //       backgroundColor: TColors.secondaryBackground,
 //       appBar: AppBar(
@@ -31,11 +34,7 @@
 //         itemCount: 5,
 //         itemBuilder: (context, index) {
 //           return ProductCardLarge(
-//               title: 'Title',
-//               imageUrl: '',
-//               color: 'color',
-//               originalPrice: 50,
-//               discountedPrice: 40);
+//             product: controllerP. ,);
 //         },
 //       ),
 //     );

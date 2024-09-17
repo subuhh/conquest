@@ -1,5 +1,8 @@
+import 'package:conquest/features/MarketPlace/Category/Category%20Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
@@ -23,53 +26,58 @@ class _CategorySectionState extends State<CategorySection> {
         children: [
           widget.isLoading
               ? buildShimmerCategories()
-              : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: widget.categories.map((category) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: TColors.grey,
-                                width: 1.5,
+              : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: widget.categories.map((category) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: GestureDetector(
+                        onTap: () {
+                         // Get.to(CategoryScreen());
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: TColors.grey,
+                                  width: 1.5,
+                                ),
                               ),
-                            ),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 30,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: SvgPicture.asset(
-                                  getSvgAssetForCategory(category['name']),
-                                  fit: BoxFit.contain,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 30,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: SvgPicture.asset(
+                                    getSvgAssetForCategory(category['name']),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: TSizes.sm),
-                          SizedBox(
-                            width: 85,
-                            child: Text(
-                              category['name']!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 12),
-                              textAlign: TextAlign.center,
+                            const SizedBox(height: TSizes.sm),
+                            SizedBox(
+                              width: 85,
+                              child: Text(
+                                category['name']!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(fontSize: 12),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
         ],
       ),

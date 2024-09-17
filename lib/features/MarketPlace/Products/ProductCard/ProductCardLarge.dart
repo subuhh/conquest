@@ -35,8 +35,8 @@ class ProductCardLarge extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
                     product.thumbnail,
-                    height: 100,
-                    width: 80,
+                    height: 120,
+                    width: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -52,7 +52,7 @@ class ProductCardLarge extends StatelessWidget {
                         Flexible(
                           child: Text(
                             product.title,
-                            style: textTheme.titleMedium,
+                            style: textTheme.titleSmall,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -60,9 +60,11 @@ class ProductCardLarge extends StatelessWidget {
                         FavoriteButton(productId: product.id),
                       ],
                     ),
-                    subtitle: Row(
+                    subtitle: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: TSizes.spaceBtwItems/2,),
                         buildPriceText(
                           originalPrice: double.parse(product.price),
                           discountedPrice: double.parse(product.salePrice),
@@ -71,16 +73,18 @@ class ProductCardLarge extends StatelessWidget {
                           originalPrice: double.parse(product.price),
                           discountedPrice: double.parse(product.salePrice),
                         ),
+
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+
             const SizedBox(height: 12),
             Divider(height: 2, color: TColors.grey),
             SizedBox(height: 12),
-            buildMoveToWishlist()
+            buildMoveToCart()
           ],
         ),
       ),
@@ -88,8 +92,8 @@ class ProductCardLarge extends StatelessWidget {
   }
 }
 
-class buildMoveToWishlist extends StatelessWidget {
-  const buildMoveToWishlist({super.key});
+class buildMoveToCart extends StatelessWidget {
+  const buildMoveToCart({super.key});
 
   @override
   Widget build(BuildContext context) {
