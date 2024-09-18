@@ -43,7 +43,7 @@ class ProductCardLarge extends StatelessWidget {
                 const SizedBox(width: 12.0),
                 Expanded(
                   child: ListTile(
-                    contentPadding: EdgeInsets.zero,
+                    //contentPadding: EdgeInsets.,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,

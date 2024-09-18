@@ -8,9 +8,9 @@ class BottomAddToCartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: TSizes.defaultSpace, vertical: TSizes.defaultSpace / 3),
-      color: TColors.primaryBackground,
+      // padding: const EdgeInsets.symmetric(
+      //     horizontal: TSizes.defaultSpace, vertical: TSizes.defaultSpace / 3),
+      //color: TColors.primaryBackground,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -18,9 +18,10 @@ class BottomAddToCartWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(TSizes.sm),
+                //padding: const EdgeInsets.all(TSizes.sm),
                 backgroundColor: TColors.white,
-                side: const BorderSide(color: TColors.darkGrey, width: 1.5),
+                side: const BorderSide(color: TColors.white, width: 1.5),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
               ),
               child: Text(
                 'Buy Now',
@@ -28,16 +29,14 @@ class BottomAddToCartWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            width: TSizes.spaceBtwItems,
-          ),
           Expanded(
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(TSizes.sm),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                //padding: const EdgeInsets.all(TSizes.sm),
                 backgroundColor: TColors.primary,
-                side: const BorderSide(color: TColors.white),
+                side: const BorderSide(color: TColors.primary),
               ),
               child: Text(
                 'Add to Card',

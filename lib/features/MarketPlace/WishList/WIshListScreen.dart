@@ -16,6 +16,7 @@ class WishListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = FavoriteController.instance;
     return Scaffold(
+      backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -37,14 +38,12 @@ class WishListScreen extends StatelessWidget {
             future: controller.favoriteProducts(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Expanded(
-                  child: ListView.separated(
-                    itemCount: 5, // Show 5 shimmer placeholders
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: TSizes.defaultSpace),
-                    itemBuilder: (context, index) =>
-                        TShimmer.singleContainer(60),
-                  ),
+                return ListView.separated(
+                  itemCount: 5, // Show 5 shimmer placeholders
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: TSizes.defaultSpace),
+                  itemBuilder: (context, index) =>
+                      TShimmer.singleContainer(60),
                 );
               } else if (snapshot.hasError) {
                 log('Error: ${snapshot.error}');

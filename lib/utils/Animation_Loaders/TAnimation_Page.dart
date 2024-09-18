@@ -35,18 +35,18 @@ class TAnimationPage extends StatelessWidget {
             ),
             Text(
               titleText,
-              style: TTextTheme.lightTextTheme.headlineSmall,
+              style: TTextTheme.lightTextTheme.titleMedium,
             ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: THelperFunctions.screenWidth(context) * 0.6,
-              child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.black87),
-                onPressed: onPressed,
-                child: Text(buttonText),
-              ),
-            ),
+            // const SizedBox(height: 30),
+            // SizedBox(
+            //   width: THelperFunctions.screenWidth(context) * 0.6,
+            //   child: ElevatedButton(
+            //     style:
+            //         ElevatedButton.styleFrom(backgroundColor: Colors.black87),
+            //     onPressed: onPressed,
+            //     child: Text(buttonText),
+            //   ),
+            // ),
           ],
         ),
       ),
