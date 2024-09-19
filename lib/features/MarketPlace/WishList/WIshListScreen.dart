@@ -30,7 +30,8 @@ class WishListScreen extends StatelessWidget {
         backgroundColor: TColors.primary,
         title: Text(
           'WishList',
-          style: TTextTheme.lightTextTheme.titleMedium!.apply(color: Colors.white),
+          style:
+              TTextTheme.lightTextTheme.titleMedium!.apply(color: Colors.white),
         ),
       ),
       body: Obx(
@@ -38,12 +39,15 @@ class WishListScreen extends StatelessWidget {
             future: controller.favoriteProducts(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListView.separated(
-                  itemCount: 5, // Show 5 shimmer placeholders
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: TSizes.defaultSpace),
-                  itemBuilder: (context, index) =>
-                      TShimmer.singleContainer(60),
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView.separated(
+                    itemCount: 4, // Show 5 shimmer placeholders
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: TSizes.defaultSpace),
+                    itemBuilder: (context, index) =>
+                        TShimmer.singleContainer(180),
+                  ),
                 );
               } else if (snapshot.hasError) {
                 log('Error: ${snapshot.error}');

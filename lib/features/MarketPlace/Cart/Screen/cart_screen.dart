@@ -1,10 +1,10 @@
-
+import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
+import 'package:conquest/utils/helpers/helper_functions.dart';
+import 'package:conquest/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../utils/Animation_Loaders/TAnimation_Page.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/sizes.dart';
-import '../../../../utils/helpers/helper_functions.dart';
-import '../../Checkout/checkoutScreen.dart';
-import '../LIstForCart/CartList.dart';
 import 'CartItem.dart';
 
 class CartScreen extends StatelessWidget {
@@ -13,13 +13,12 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Access the defined text theme
-    final textTheme = Theme.of(context).textTheme;
+    final controller = CartController.instance;
 
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
         backgroundColor: TColors.primary,
-        centerTitle: true,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -28,54 +27,79 @@ class CartScreen extends StatelessWidget {
           },
         ),
         title: Text('My Cart',
-            style: textTheme.titleLarge?.copyWith(color: Colors.white)),
+            style: TTextTheme.lightTextTheme.titleLarge
+                ?.copyWith(color: Colors.white)),
       ),
-      body: Column(
-        children: [
-          Expanded(
-              child: ListView.builder(
-            itemCount: cartData.length,
-            itemBuilder: (context, index) {
-              final item = cartData[index];
-              return CartItem(
-                title: item['title'],
-                color: item['color'],
-                imageUrl: item['imageUrl'],
-                quantity: item['quantity'],
-                orignalPrice: item['originalPrice'],
-                dicountedPrice: item['discountedPrice'],
-              );
-            },
-          )),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('Total ₹320',
-                    style: textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold)),
+      body: Obx(
+        () {
+          final emptyWidget = TAnimationPage(
+            asset: 'assets/animation/empty_cart.json',
+            height: 350,
+            width: 350,
+            titleText: 'Whoops! Wishlist is Empty...',
+            buttonText: 'Lets add some',
+            onPressed: () => Get.back(),
+          );
 
-                const SizedBox(height: TSizes.spaceBtwItems),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                  onPressed: () {
-                    THelperFunctions.navigateToScreen(
-                        context, Checkoutscreen());
-                  },
-                  child: Text('Order Now',
-                      style:
-                          textTheme.titleMedium?.copyWith(color: Colors.white)),
+          if (controller.cartItems.isEmpty) {
+            return emptyWidget;
+          } else {
+            return ListView.builder(
+              itemCount: controller.cartItems.length,
+              itemBuilder: (context, index) {
+                final item = controller.cartItems[index];
+                return CartItem(
+                  cartItem: item,
+                );
+              },
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '₹320',
+                  style: TTextTheme.lightTextTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                Text(
+                  'your order summary',
+                  style: TTextTheme.lightTextTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.blueAccent),
                 ),
               ],
             ),
-          ),
-        ],
+            SizedBox(
+              width: THelperFunctions.screenWidth(context) * 0.35,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {},
+                child: Center(
+                  child: Text(
+                    'Order Now',
+                    style: TTextTheme.lightTextTheme.titleMedium
+                        ?.copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

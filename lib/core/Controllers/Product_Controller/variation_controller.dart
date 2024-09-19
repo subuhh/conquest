@@ -6,6 +6,8 @@ import '../../../../core/model/product_models/product_variations.dart';
 class VariationController extends GetxController {
   static VariationController get instance => Get.find();
 
+  final imageController = Get.put(ProductImageController());
+
   // Variables
   RxMap<String, String> selectedAttributes = <String, String>{}
       .obs; // Stores selected attributes like {'Color': 'Blue', 'Size': 'M'}
@@ -23,6 +25,8 @@ class VariationController extends GetxController {
     if (product.productType == 'Single') {
       variationPrice.value =
           int.parse(product.salePrice) > 0 ? product.salePrice : product.price;
+      imageController.selectedProductImage.value =
+          product.thumbnail;
     }
 
     if (product.productVariations != null &&
@@ -41,8 +45,12 @@ class VariationController extends GetxController {
       getVariationPrice(product);
       updateSelectedAttributeSummary(product);
       if (firstVariation.images.isNotEmpty) {
-        ProductImageController.instance.selectedProductImage.value =
+        imageController.selectedProductImage.value =
             firstVariation.images[0];
+      } else {
+        // Fallback to product thumbnail if no variation images are present
+        imageController.selectedProductImage.value =
+            product.thumbnail;
       }
 
       errorMessage.value = ''; // Clear any previous errors
@@ -76,7 +84,7 @@ class VariationController extends GetxController {
 
     // Update product image if the variation has images
     if (selectedVariation.value.images.isNotEmpty) {
-      ProductImageController.instance.selectedProductImage.value =
+      imageController.selectedProductImage.value =
           selectedVariation.value.images[0];
     }
   }
@@ -162,7 +170,8 @@ class VariationController extends GetxController {
     // Check if the product is of type 'Single'
     if (product.productType == 'Single') {
       // For single products, no need for variation attributes, so clear summary
-      selectedAttributeSummary.value = ''; // Default empty format for single products
+      selectedAttributeSummary.value =
+          ''; // Default empty format for single products
     } else {
       // For products with variations, format selected attributes
       List<String> selectedValues = [];
@@ -181,7 +190,6 @@ class VariationController extends GetxController {
       selectedAttributeSummary.value = ', ${selectedValues.join(', ')}';
     }
   }
-
 
   // Get the stock status of the selected variation
   void getProductVariationStockStatus() {

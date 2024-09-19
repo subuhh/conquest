@@ -1,10 +1,8 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
-import 'package:conquest/core/Controllers/Product_Controller/product_image_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/common/widgets/section_divider.dart';
 import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
@@ -26,8 +24,7 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   int selectedQuantity = 1;
-  final controller = Get.put(VariationController());
-  final imageController = Get.put(ProductImageController());
+  final controller = VariationController.instance;
 
   void initState() {
     super.initState();
@@ -235,7 +232,7 @@ class _ProductDetailState extends State<ProductDetail> {
         ),
       ),
       // Buy Now and Add to Cart Buttons
-      bottomNavigationBar: const BottomAddToCartWidget(),
+      bottomNavigationBar: BottomAddToCartWidget(product: widget.productModel),
     );
   }
 }

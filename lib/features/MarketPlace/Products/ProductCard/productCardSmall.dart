@@ -1,9 +1,11 @@
+import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
@@ -31,6 +33,7 @@ class ProductCardSmall extends StatefulWidget {
 
 class _ProductCardSmallState extends State<ProductCardSmall> {
   bool itemInWishList = false;
+  final controller = CartController.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -186,22 +189,42 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
     return SizedBox(
       height: 35,
       width: 110,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        onPressed: () {},
-        child: const Text(
-          'Add to Cart',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+      child: Obx(
+        () {
+          final productQuantityInCart =
+              controller.getProductQuantityInCart(widget.productModel.id);
+          return GestureDetector(
+            onTap: () {
+              if (widget.productModel.productType == 'Single') {
+                final cartItem =
+                    controller.convertToCartItem(widget.productModel, 1);
+                controller.addOneToCart(cartItem);
+              } else {}
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color:
+                    productQuantityInCart > 0 ? TColors.primary : TColors.black,
+                // border: Border.all(color: TColors.primary,width: 2),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  productQuantityInCart > 0 ? 'Go to Cart' : 'Add to Cart',
+                  style: TextStyle(
+                    color: productQuantityInCart > 0
+                        ? TColors.white
+                        : Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

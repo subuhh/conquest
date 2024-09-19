@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
       ),
       body: Obx(() {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             children: [
               /// Search Bar
@@ -95,9 +95,8 @@ class HomePage extends StatelessWidget {
                         //   ),
                         // ),
                       ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
                       const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Iconbuttonwithlabel(
                             labelText: 'Workouts',
@@ -118,7 +117,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
+                      const SizedBox(height: TSizes.spaceBtwItems / 2),
 
                       // Cards
                       Column(

@@ -11,7 +11,7 @@ class Searchbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-          vertical: TSizes.spaceBtwInputFields, horizontal: 10),
+          vertical: TSizes.spaceBtwInputFields/1.5, horizontal: 10),
       child: Container(
         height: 50.0, // Adjust the height as needed
         decoration: BoxDecoration(

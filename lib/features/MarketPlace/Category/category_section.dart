@@ -1,8 +1,5 @@
-import 'package:conquest/features/MarketPlace/Category/Category%20Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
@@ -26,17 +23,13 @@ class _CategorySectionState extends State<CategorySection> {
         children: [
           widget.isLoading
               ? buildShimmerCategories()
-              : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: widget.categories.map((category) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: GestureDetector(
-                        onTap: () {
-                         // Get.to(CategoryScreen());
-                        },
+                        onTap: () {},
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -50,7 +43,7 @@ class _CategorySectionState extends State<CategorySection> {
                               ),
                               child: CircleAvatar(
                                 backgroundColor: Colors.white,
-                                radius: 30,
+                                radius: 29,
                                 child: Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: SvgPicture.asset(
@@ -60,7 +53,7 @@ class _CategorySectionState extends State<CategorySection> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: TSizes.sm),
+                            const SizedBox(height: TSizes.sm - 2),
                             SizedBox(
                               width: 85,
                               child: Text(
@@ -78,7 +71,6 @@ class _CategorySectionState extends State<CategorySection> {
                     );
                   }).toList(),
                 ),
-              ),
         ],
       ),
     );

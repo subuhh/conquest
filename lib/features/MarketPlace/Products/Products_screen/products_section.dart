@@ -23,17 +23,15 @@ class _ProductsSectionState extends State<ProductsSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
       child: Column(
         children: [
           // Section Title
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.title,
-                style: Theme.of(context).textTheme.titleMedium
-              ),
+              Text(widget.title,
+                  style: Theme.of(context).textTheme.titleMedium),
               TextButton(
                 onPressed: () {},
                 child: Text(

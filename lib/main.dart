@@ -1,3 +1,4 @@
+import 'package:conquest/bindings/general_bindings.dart';
 import 'package:conquest/features/Drawer/drawer_screen.dart';
 import 'package:conquest/features/SplashScreen/splash_screen.dart';
 import 'package:conquest/utils/theme/theme.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
       darkTheme: TAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
+      initialBinding: GeneralBindings(),
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),

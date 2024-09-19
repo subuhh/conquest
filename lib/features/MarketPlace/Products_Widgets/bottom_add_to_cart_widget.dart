@@ -1,16 +1,19 @@
+// import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
+import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:flutter/material.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/sizes.dart';
 
 class BottomAddToCartWidget extends StatelessWidget {
-  const BottomAddToCartWidget({super.key});
+  const BottomAddToCartWidget({super.key, required this.product});
+
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
+
+    // final controller = CartController.instance;
+
     return Container(
-      // padding: const EdgeInsets.symmetric(
-      //     horizontal: TSizes.defaultSpace, vertical: TSizes.defaultSpace / 3),
-      //color: TColors.primaryBackground,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -21,7 +24,8 @@ class BottomAddToCartWidget extends StatelessWidget {
                 //padding: const EdgeInsets.all(TSizes.sm),
                 backgroundColor: TColors.white,
                 side: const BorderSide(color: TColors.white, width: 1.5),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
               ),
               child: Text(
                 'Buy Now',
@@ -31,15 +35,18 @@ class BottomAddToCartWidget extends StatelessWidget {
           ),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // if(product)
+              },
               style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
                 //padding: const EdgeInsets.all(TSizes.sm),
                 backgroundColor: TColors.primary,
                 side: const BorderSide(color: TColors.primary),
               ),
               child: Text(
-                'Add to Card',
+                'Add to Cart',
                 style: Theme.of(context)
                     .textTheme
                     .headlineSmall!

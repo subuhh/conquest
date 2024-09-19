@@ -22,7 +22,7 @@ class _CarouselSectionState extends State<CarouselSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8),
       child: widget.isLoading
           ? _buildShimmerPlaceholder()
           : CarouselSlider(

@@ -1,42 +1,27 @@
+import 'package:conquest/core/model/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
-
 import '../../../../common/widgets/RoundedContainer.dart';
 import '../../../../common/widgets/product_price_text.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
+import '../../../../utils/theme/customthemes/textThemes.dart';
 
-class CartItem extends StatefulWidget {
-  final String title;
-  final String color;
-  final double orignalPrice;
-  final double dicountedPrice;
-  String? imageUrl = 'https://cdn.shopify.com/s/files/1/0070/7032/files/product-label-design.jpg?v=1680902906';
-  int quantity;
-
+class CartItem extends StatelessWidget {
   CartItem({
     Key? key,
-    required this.title,
-    required this.color,
-    required this.orignalPrice,
-    required this.dicountedPrice,
-    this.imageUrl,
-    this.quantity = 1, // Default quantity set to 1
+    required this.cartItem,
   }) : super(key: key);
 
-  @override
-  State<CartItem> createState() => _CartItemState();
-}
+  final CartItemModel cartItem;
 
-class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
     // Access the defined text theme
-    final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems/3),
+      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems / 3),
       child: Card(
         elevation: 0.25,
         color: Colors.white,
@@ -52,54 +37,98 @@ class _CartItemState extends State<CartItem> {
                   Column(
                     children: [
                       Image.network(
-                        'https://cdn.shopify.com/s/files/1/0070/7032/files/product-label-design.jpg?v=1680902906',
+                        cartItem.image!,
                         height: 100,
                         width: 80,
                         fit: BoxFit.cover,
                       ),
-                      SizedBox(height: TSizes.spaceBtwItems,),
-
-
+                      SizedBox(height: TSizes.spaceBtwItems),
                     ],
                   ),
-
                   const SizedBox(width: 16.0),
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.title, style: textTheme.titleMedium),
-                      Text('Color: ${widget.color}', style: textTheme.bodyMedium?.copyWith(color: Colors.grey)),
-                      SizedBox(height: TSizes.spaceBtwItems/1.5,),
-
+                      Text(cartItem.title,
+                          style: TTextTheme.lightTextTheme.titleMedium),
 
                       /// Price
-                      buildPriceText(widget: widget),
+                      Row(
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: 'MRP ',
+                              style: TTextTheme.lightTextTheme.titleLarge!
+                                  .copyWith(fontWeight: FontWeight.w400)
+                                  .apply(
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                              children: [
+                                TextSpan(
+                                  text: '₹${cartItem.price}',
+                                  style: TTextTheme.lightTextTheme.titleLarge!
+                                      .copyWith(fontWeight: FontWeight.w400)
+                                      .apply(
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          // New Price Tag
+                          ProductPriceText(price: '₹${cartItem.price}'),
+
+                          // Old Price
+
+                          const SizedBox(width: TSizes.spaceBtwItems),
+                          // Discounted Container
+                        ],
+                      ),
                       //Text('₹${widget.price*widget.quantity}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                      buildDiscountRibbon(widget: widget),
-                      SizedBox(height: TSizes.spaceBtwItems/1.5,),
-
-
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: RoundedContainer(
+                          radius: TSizes.sm,
+                          backgroundColor: Colors.green,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: TSizes.sm,
+                            vertical: TSizes.xs,
+                          ),
+                          child: Text(
+                            '₹${cartItem.price}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .apply(color: TColors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: TSizes.spaceBtwItems / 1.5),
                     ],
-
                   ),
                   Spacer(),
-                  IconButton(onPressed: (){
-                    //Remove From List
-                  },icon: SvgPicture.asset('assets/icons/drawerIcons/delete.svg',color:Colors.grey,)),
-
+                  IconButton(
+                      onPressed: () {
+                        //Remove From List
+                      },
+                      icon: SvgPicture.asset(
+                        'assets/icons/drawerIcons/delete.svg',
+                        colorFilter:
+                            ColorFilter.mode(TColors.grey, BlendMode.srcIn),
+                      )),
                 ],
               ),
-              Divider(height: 2,color: TColors.grey,),
-              SizedBox(height: TSizes.spaceBtwItems,),
+              Divider(height: 2, color: TColors.grey),
+              SizedBox(height: TSizes.spaceBtwItems),
               Row(
                 children: [
                   ///Quantity Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       Container(
                         decoration: BoxDecoration(
                           color: TColors.primary,
@@ -120,13 +149,7 @@ class _CartItemState extends State<CartItem> {
                             Iconsax.minus,
                             color: TColors.white,
                           ),
-                          onPressed: () {
-                            setState(() {
-                              if (widget.quantity > 1) {
-                                widget.quantity--;
-                              }
-                            });
-                          },
+                          onPressed: () {},
                         ),
                       ),
 
@@ -145,7 +168,7 @@ class _CartItemState extends State<CartItem> {
                           ),
                         ),
                         child: Text(
-                          '${widget.quantity}', // Quantity number
+                          '${cartItem.quantity}', // Quantity number
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ),
@@ -169,145 +192,41 @@ class _CartItemState extends State<CartItem> {
                           padding: EdgeInsets.zero,
                           icon: const Icon(
                             Iconsax.add,
-                            color: TColors.
-                            white,
+                            color: TColors.white,
                           ),
-                          onPressed: () {
-                            // Handle plus button
-                            setState(() {
-                              if (widget.quantity < 6) {
-                                widget.quantity++;
-                              }
-                            });
-                          },
+                          onPressed: () {},
                         ),
                       )
                     ],
                   ),
-                  Expanded(child: GestureDetector(
-                      onTap: (){
-                        //Remove From Cart
-                        //Move to WishList
-                      },
-                      child: buildMoveToWhishList()))
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: TSizes.spaceBtwItems),
+                        child: Container(
+                          height: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: TColors.grey, width: 1.5),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Move To WishList',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],
           ),
         ),
       ),
-    );
-  }
-}
-class buildMoveToWhishList extends StatefulWidget {
-  const buildMoveToWhishList({super.key});
-
-  @override
-  State<buildMoveToWhishList> createState() => _buildMoveToWhishListState();
-}
-
-class _buildMoveToWhishListState extends State<buildMoveToWhishList> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: TSizes.spaceBtwItems),
-      child: Container(
-        height: 30,
-       decoration: BoxDecoration(
-         border: Border.all(color: TColors.grey,width: 1.5),
-         borderRadius: BorderRadius.circular(5)
-         
-       ),
-        child: Center(child: Text('Move To WishList',style: Theme.of(context).textTheme.bodyMedium,)),
-      ),
-    );
-  }
-}
-
-
-class buildDiscountRibbon extends StatelessWidget {
-  const buildDiscountRibbon({
-    super.key,
-    required this.widget,
-  });
-
-  final CartItem widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: RoundedContainer(
-        radius: TSizes.sm,
-        backgroundColor: Colors.green,
-        padding: const EdgeInsets.symmetric(
-          horizontal: TSizes.sm,
-          vertical: TSizes.xs,
-        ),
-        child: Text(
-          '${((widget.orignalPrice-widget.dicountedPrice)/widget.orignalPrice * 100).toInt()}% OFF',
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .apply(color: TColors.white),
-        ),
-      ),
-    );
-  }
-}
-
-class buildPriceText extends StatelessWidget {
-  const buildPriceText({
-    super.key,
-    required this.widget,
-  });
-
-  final CartItem widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        RichText(
-          text: TextSpan(
-            text: 'MRP ',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontWeight: FontWeight.w400)
-                .apply(
-              decoration: TextDecoration.lineThrough,
-            ),
-
-            children: [
-              TextSpan(
-                text: '₹${widget.orignalPrice*widget.quantity}',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(fontWeight: FontWeight.w400)
-                    .apply(
-                  decoration: TextDecoration.lineThrough,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        // New Price Tag
-        ProductPriceText(
-          price: '${widget.dicountedPrice*widget.quantity}',
-        ),
-
-
-        // Old Price
-
-        const SizedBox(width: TSizes.spaceBtwItems),
-        // Discounted Container
-
-      ],
     );
   }
 }
