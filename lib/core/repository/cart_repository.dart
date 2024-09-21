@@ -16,8 +16,11 @@ class CartRepository {
   // Add item to Firebase cart
   Future<void> addItemToCart(CartItemModel cartItem) async {
     try {
-      if (cartItem.variationId.isNotEmpty && cartItem.selectedVariation != null) {
-        await userCartCollection.doc(cartItem.variationId).set(cartItem.toMap());
+      if (cartItem.variationId.isNotEmpty &&
+          cartItem.selectedVariation != null) {
+        await userCartCollection
+            .doc(cartItem.variationId)
+            .set(cartItem.toMap());
       } else {
         await userCartCollection.doc(cartItem.productId).set(cartItem.toMap());
       }

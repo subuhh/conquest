@@ -36,9 +36,9 @@ class _ProductDetailState extends State<ProductDetail> {
     controller.initializeSelectedAttributes(widget.productModel);
     // cartController.productQuantityInCart.value = 1;
     cartController.updateAlreadyAddedProductCount(widget.productModel);
-    if (cartController.productQuantityInCart == 0) {
-      cartController.productQuantityInCart.value = 1;
-    }
+    // if (cartController.productQuantityInCart == 0) {
+    //   cartController.productQuantityInCart.value = 1;
+    // }
   }
 
   @override
@@ -128,10 +128,10 @@ class _ProductDetailState extends State<ProductDetail> {
                               color: TColors.black,
                             ),
                             onPressed: () =>
-                                cartController.productQuantityInCart.value < 2
+                                cartController.productQuantity.value <= 1
                                     ? null
                                     : cartController
-                                        .productQuantityInCart.value -= 1,
+                                        .productQuantity.value -= 1,
                           ),
                         ),
 
@@ -150,7 +150,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             ),
                           ),
                           child: Text(
-                            cartController.productQuantityInCart.value
+                            cartController.productQuantity.value
                                 .toString(), // Quantity number
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
@@ -178,7 +178,7 @@ class _ProductDetailState extends State<ProductDetail> {
                               color: TColors.black,
                             ),
                             onPressed: () =>
-                                cartController.productQuantityInCart += 1,
+                                cartController.productQuantity += 1,
                           ),
                         ),
                       ],
@@ -203,7 +203,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 right: TSizes.defaultSpace,
               ),
               child: ReadMoreText(
-                widget.productModel.description!,
+                widget.productModel.description,
                 trimLines: 7,
                 trimMode: TrimMode.Line,
                 trimCollapsedText: ' Show more',

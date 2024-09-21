@@ -19,6 +19,7 @@ class CartController extends GetxController {
   RxInt noOfCartItems = 0.obs;
   RxDouble totalCartPrice = 0.0.obs;
   RxInt productQuantityInCart = 0.obs;
+  RxInt productQuantity = 1.obs;
   RxList<CartItemModel> cartItems = <CartItemModel>[].obs;
 
   CartController() {
@@ -28,7 +29,7 @@ class CartController extends GetxController {
 
   void addToCart(ProductModel product) {
     // Quantity Check
-    if (productQuantityInCart < 0) {
+    if (productQuantity < 0) {
       TLoaders.customToast(message: 'Select Quantity');
       return;
     }
@@ -53,8 +54,17 @@ class CartController extends GetxController {
       }
     }
 
+    final count;
+
+    if (product.productType == 'Single') {
+      count = getProductQuantityInCart(product.id);
+    } else {
+      count = getVariationQuantityInCart(
+          product.id, variationController.selectedVariation.value.vid);
+    }
+
     final selectedCartItem =
-        convertToCartItem(product, productQuantityInCart.value);
+        convertToCartItem(product, count + productQuantity.value);
 
     int index = cartItems.indexWhere((cartItem) =>
         cartItem.productId == selectedCartItem.productId &&
@@ -201,6 +211,7 @@ class CartController extends GetxController {
   }
 
   void updateAlreadyAddedProductCount(ProductModel product) {
+    productQuantity.value = 1;
     if (product.productType == 'Single') {
       productQuantityInCart.value = getProductQuantityInCart(product.id);
     } else {
@@ -277,6 +288,7 @@ class CartController extends GetxController {
 
   void clearCart() {
     productQuantityInCart.value = 0;
+    productQuantity.value = 0;
     cartItems.clear();
     updateCart();
   }

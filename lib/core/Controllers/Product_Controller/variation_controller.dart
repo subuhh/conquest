@@ -31,9 +31,8 @@ class VariationController extends GetxController {
       imageController.selectedProductImage.value = product.thumbnail;
     }
 
-    if (product.productVariations != null &&
-        product.productVariations!.isNotEmpty) {
-      ProductVariationModel firstVariation = product.productVariations![0];
+    if (product.productVariations.isNotEmpty) {
+      ProductVariationModel firstVariation = product.productVariations[0];
       log('First Variation : ${firstVariation}');
       log('First Variation ID: ${firstVariation.vid}');
 
@@ -90,8 +89,9 @@ class VariationController extends GetxController {
 
     if (selectedVariation.value.vid.isNotEmpty) {
       final cartController = CartController.instance;
-      cartController.productQuantityInCart.value = cartController
-          .getVariationQuantityInCart(product.id, selectedVariation.value.vid);
+      cartController.productQuantity.value = 1;
+      // cartController.productQuantityInCart.value = cartController
+      //     .getVariationQuantityInCart(product.id, selectedVariation.value.vid);
     }
 
     // Update the summary text
@@ -103,7 +103,7 @@ class VariationController extends GetxController {
   // Adjust other attributes to find a valid variation when an invalid combination is selected
   void _adjustOtherAttributesToValidVariation(ProductModel product,
       String selectedAttributeName, String selectedAttributeValue) {
-    for (ProductVariationModel variation in product.productVariations!) {
+    for (ProductVariationModel variation in product.productVariations) {
       if (variation.attributeValues[selectedAttributeName] ==
           selectedAttributeValue) {
         // Automatically adjust the other attributes to the valid values of this variation
@@ -124,7 +124,7 @@ class VariationController extends GetxController {
       ProductModel product, String attributeName) {
     Set<String> availableValues = {};
 
-    for (ProductVariationModel variation in product.productVariations!) {
+    for (ProductVariationModel variation in product.productVariations) {
       availableValues.add(variation.attributeValues[attributeName]!);
     }
 
@@ -133,7 +133,7 @@ class VariationController extends GetxController {
 
   // Find matching variation based on selected attributes
   ProductVariationModel? _findMatchingVariation(ProductModel product) {
-    for (ProductVariationModel variation in product.productVariations!) {
+    for (ProductVariationModel variation in product.productVariations) {
       log('Variation id in matching: ${variation.vid}');
       bool isMatch = true;
 
