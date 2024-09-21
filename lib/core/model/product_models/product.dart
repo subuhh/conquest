@@ -5,36 +5,36 @@ import 'package:conquest/core/model/product_models/product_variations.dart';
 class ProductModel {
   String id;
   String stock;
-  String? sku;
+  String sku;
   String price;
   String title;
   DateTime? date;
   String salePrice;
   String thumbnail;
   List<String> images;
-  bool? isFeatured;
-  String? description;
-  String? categoryId;
+  bool isFeatured;
+  String description;
+  String categoryId;
   String productType;
-  List<ProductAttributeModel>? productAttributes;
-  List<ProductVariationModel>? productVariations;
+  List<ProductAttributeModel> productAttributes;
+  List<ProductVariationModel> productVariations;
 
   ProductModel({
     required this.id,
     required this.stock,
-    this.sku,
+    required this.sku,
     required this.price,
     required this.title,
     this.date,
     required this.salePrice,
     required this.thumbnail,
     required this.images,
-    this.isFeatured,
-    this.description,
-    this.categoryId,
+    required this.isFeatured,
+    required this.description,
+    required this.categoryId,
     required this.productType,
-    this.productAttributes,
-    this.productVariations,
+    required this.productAttributes,
+    required this.productVariations,
   });
 
   factory ProductModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -53,14 +53,14 @@ class ProductModel {
       description: data['description'],
       categoryId: data['categoryId'],
       productType: data['productType'] ?? '',
-      // Ensure that productAttributes is handled correctly as a List
       productAttributes: (data['productAttributes'] as List<dynamic>?)
-          ?.map((e) => ProductAttributeModel.fromFirestore(e))
-          .toList(),
-      // Ensure that productVariations is handled correctly as a List
+          ?.map((attr) => ProductAttributeModel.fromFirestore(attr))
+          .toList() ??
+          [],
       productVariations: (data['productVariations'] as List<dynamic>?)
-          ?.map((e) => ProductVariationModel.fromFirestore(e, id))
-          .toList(),
+          ?.map((varItem) => ProductVariationModel.fromFirestore(varItem))
+          .toList() ??
+          [],
     );
   }
 
@@ -78,8 +78,8 @@ class ProductModel {
       'description': description,
       'categoryId': categoryId,
       'productType': productType,
-      'productAttributes': productAttributes?.map((e) => e.toMap()).toList(),
-      'productVariations': productVariations?.map((e) => e.toMap()).toList(),
+      'productAttributes': productAttributes.map((e) => e.toMap()).toList(),
+      'productVariations': productVariations.map((e) => e.toMap()).toList(),
     };
   }
 }

@@ -20,7 +20,6 @@ class MarketplaceScreen extends StatelessWidget {
     final controllerP = Get.put(ProductController());
     final controller = Get.put(MarketplaceController());
 
-
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(

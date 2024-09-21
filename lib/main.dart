@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'core/services/auth_service.dart';
 import 'features/BottomNavBar/bottom_nav_bar.dart';
 import 'features/HomePage/homepage.dart';
-import 'features/MarketPlace/Cart/Screen/cart_screen.dart';
+import 'features/MarketPlace/Cart/cart_screen.dart';
 import 'features/Profile/screen/profile_screen.dart';
 import 'firebase_options.dart';
 

@@ -1,36 +1,32 @@
 class ProductVariationModel {
-  final String id;
-  String? sku;
-  String? description;
-  String? price;
+  String vid;
+  String sku;
+  String price;
   String? salePrice;
-  String? stock;
-  Map<String, String> attributeValues;
-  List<String> images; // New field to hold image URLs for each variation
+  String stock;
+  Map<String, String> attributeValues; // Attribute values such as Color, Size
+  List<String>? images; // Images related to variation
 
   ProductVariationModel({
-    required this.id,
-    this.sku,
-    this.description,
-    this.price,
+    required this.vid,
+    required this.sku,
+    required this.price,
     this.salePrice,
-    this.stock,
+    required this.stock,
     required this.attributeValues,
-    required this.images, // Initialize this in the constructor
+    this.images,
   });
 
-  static ProductVariationModel empty() =>
-      ProductVariationModel(id: '', attributeValues: {}, images: []);
+  static ProductVariationModel empty() => ProductVariationModel(
+      vid: '', attributeValues: {}, sku: '', price: '', stock: '');
 
-  factory ProductVariationModel.fromFirestore(
-      Map<String, dynamic> data, String id) {
+  factory ProductVariationModel.fromFirestore(Map<String, dynamic> data) {
     return ProductVariationModel(
-      id: id,
-      sku: data['sku'] ?? '',
-      description: data['description'],
-      price: data['price']?.toString() ?? '',
-      salePrice: data['salePrice']?.toString() ?? '',
-      stock: data['stock']?.toString() ?? '',
+      vid: data['vid'] as String,
+      sku: data['sku'] as String,
+      price: data['price'] as String,
+      salePrice: data['salePrice'] as String,
+      stock: data['stock'] ?? '',
       attributeValues: Map<String, String>.from(data['attributeValues'] ?? {}),
       images: List<String>.from(data['images'] ?? []),
     );
@@ -38,13 +34,13 @@ class ProductVariationModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'vid': vid,
       'sku': sku,
-      'description': description,
       'price': price,
       'salePrice': salePrice,
       'stock': stock,
       'attributeValues': attributeValues,
-      'images': images, // Include images in the map
+      'images': images,
     };
   }
 }

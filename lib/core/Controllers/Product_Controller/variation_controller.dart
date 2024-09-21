@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
 import 'package:conquest/core/Controllers/Product_Controller/product_image_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:get/get.dart';
@@ -25,33 +28,32 @@ class VariationController extends GetxController {
     if (product.productType == 'Single') {
       variationPrice.value =
           int.parse(product.salePrice) > 0 ? product.salePrice : product.price;
-      imageController.selectedProductImage.value =
-          product.thumbnail;
+      imageController.selectedProductImage.value = product.thumbnail;
     }
 
     if (product.productVariations != null &&
         product.productVariations!.isNotEmpty) {
       ProductVariationModel firstVariation = product.productVariations![0];
+      log('First Variation : ${firstVariation}');
+      log('First Variation ID: ${firstVariation.vid}');
 
       // Set selectedAttributes to the first variation's attribute values
       selectedAttributes.value =
           Map<String, String>.from(firstVariation.attributeValues);
 
+      log('First Variation Attributes: ${firstVariation.attributeValues}');
+
       // Set the first variation as the selected variation
       selectedVariation.value = firstVariation;
+
+      if (firstVariation.images!.isNotEmpty) {
+        imageController.selectedProductImage.value = firstVariation.images![0];
+      }
 
       // Update product image and stock status
       getProductVariationStockStatus();
       getVariationPrice(product);
       updateSelectedAttributeSummary(product);
-      if (firstVariation.images.isNotEmpty) {
-        imageController.selectedProductImage.value =
-            firstVariation.images[0];
-      } else {
-        // Fallback to product thumbnail if no variation images are present
-        imageController.selectedProductImage.value =
-            product.thumbnail;
-      }
 
       errorMessage.value = ''; // Clear any previous errors
     } else {
@@ -77,16 +79,25 @@ class VariationController extends GetxController {
       _adjustOtherAttributesToValidVariation(
           product, attributeName, attributeValue);
     }
+
+    // Update product image if the variation has images
+    if (selectedVariation.value.images!.isNotEmpty) {
+      imageController.selectedProductImage.value =
+          selectedVariation.value.images![0];
+    }
+
+    log('Product Variations ID: ${selectedVariation.value.vid}');
+
+    if (selectedVariation.value.vid.isNotEmpty) {
+      final cartController = CartController.instance;
+      cartController.productQuantityInCart.value = cartController
+          .getVariationQuantityInCart(product.id, selectedVariation.value.vid);
+    }
+
     // Update the summary text
     getVariationPrice(product);
     updateSelectedAttributeSummary(product);
     getProductVariationStockStatus();
-
-    // Update product image if the variation has images
-    if (selectedVariation.value.images.isNotEmpty) {
-      imageController.selectedProductImage.value =
-          selectedVariation.value.images[0];
-    }
   }
 
   // Adjust other attributes to find a valid variation when an invalid combination is selected
@@ -123,6 +134,7 @@ class VariationController extends GetxController {
   // Find matching variation based on selected attributes
   ProductVariationModel? _findMatchingVariation(ProductModel product) {
     for (ProductVariationModel variation in product.productVariations!) {
+      log('Variation id in matching: ${variation.vid}');
       bool isMatch = true;
 
       selectedAttributes.forEach((key, value) {
@@ -132,6 +144,7 @@ class VariationController extends GetxController {
       });
 
       if (isMatch) {
+        // log('Variation id in matching: ${variation.id}');
         return variation;
       }
     }
@@ -145,8 +158,7 @@ class VariationController extends GetxController {
           int.parse(product.salePrice) > 0 ? product.salePrice : product.price;
     } else {
       // Check if the selectedVariation exists and has valid prices
-      if (selectedVariation.value.id.isEmpty ||
-          selectedVariation.value.price == null) {
+      if (selectedVariation.value.vid.isEmpty) {
         // Return a default message or price if no valid variation is selected
         variationPrice.value = 'No Price Available';
       }
@@ -156,13 +168,8 @@ class VariationController extends GetxController {
           int.parse(selectedVariation.value.salePrice!) > 0) {
         // Return salePrice if available and greater than 0
         variationPrice.value = selectedVariation.value.salePrice!;
-      } else if (selectedVariation.value.price != null) {
-        // Return price if salePrice is not available or invalid
-        variationPrice.value = selectedVariation.value.price!;
-      } else {
-        // If neither price nor salePrice is available, return a default message
-        variationPrice.value = product.salePrice;
-      }
+      } else // Return price if salePrice is not available or invalid
+        variationPrice.value = selectedVariation.value.price;
     }
   }
 
@@ -193,10 +200,10 @@ class VariationController extends GetxController {
 
   // Get the stock status of the selected variation
   void getProductVariationStockStatus() {
-    if (selectedVariation.value.id.isEmpty) {
+    if (selectedVariation.value.vid.isEmpty) {
       variationStockStatus.value = 'No Variation Selected';
     } else {
-      int stock = int.parse(selectedVariation.value.stock!);
+      int stock = int.parse(selectedVariation.value.stock);
       variationStockStatus.value = stock > 0 ? 'In Stock' : 'Out of Stock';
     }
   }

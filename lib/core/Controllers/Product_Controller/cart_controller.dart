@@ -1,24 +1,29 @@
 import 'dart:developer';
-
 import 'package:conquest/core/Controllers/Product_Controller/variation_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/core/model/cart_item.dart';
+import 'package:conquest/utils/constants/colors.dart';
 import 'package:conquest/utils/local_storage/storage_utility.dart';
 import 'package:conquest/utils/popups/loaders.dart';
 import 'package:get/get.dart';
+import '../../repository/cart_repository.dart';
 
 class CartController extends GetxController {
   static CartController get instance => Get.find();
+
+  // Dependencies
+  final CartRepository _cartRepository = CartRepository();
+  final variationController = VariationController.instance;
 
   // Variables
   RxInt noOfCartItems = 0.obs;
   RxDouble totalCartPrice = 0.0.obs;
   RxInt productQuantityInCart = 0.obs;
   RxList<CartItemModel> cartItems = <CartItemModel>[].obs;
-  final variationController = VariationController.instance;
 
   CartController() {
     loadCartItem();
+    syncFirebaseCart();
   }
 
   void addToCart(ProductModel product) {
@@ -30,14 +35,14 @@ class CartController extends GetxController {
 
     // Variation Selected
     if (product.productType == 'Variation' &&
-        variationController.selectedVariation.value.id.isEmpty) {
+        variationController.selectedVariation.value.vid.isEmpty) {
       TLoaders.customToast(message: 'Select Variation');
       return;
     }
 
     // Out of Stock Status
     if (product.productType == 'Variation') {
-      if (int.parse(variationController.selectedVariation.value.stock!) < 1) {
+      if (int.parse(variationController.selectedVariation.value.stock) < 1) {
         TLoaders.warningSnackBar(
             title: 'Oh Snap!', message: 'Selected Variation is out of stock');
       }
@@ -52,17 +57,30 @@ class CartController extends GetxController {
         convertToCartItem(product, productQuantityInCart.value);
 
     int index = cartItems.indexWhere((cartItem) =>
-        cartItem.price == selectedCartItem.productId &&
+        cartItem.productId == selectedCartItem.productId &&
         cartItem.variationId == selectedCartItem.variationId);
 
     if (index >= 0) {
       cartItems[index].quantity = selectedCartItem.quantity;
+      TLoaders.customToast(message: 'Your Product Quantity has been updated.');
+      if (product.productType == 'Single') {
+        _cartRepository.updateCartItemQuantity(
+            selectedCartItem.productId, cartItems[index].quantity);
+      } else {
+        _cartRepository.updateCartItemQuantity(
+            selectedCartItem.variationId, cartItems[index].quantity);
+      }
     } else {
       cartItems.add(selectedCartItem);
+      TLoaders.customToast(message: 'Your Product has been added to Cart.');
+      // if (product.productType == 'Single') {
+      _cartRepository.addItemToCart(selectedCartItem);
+      // } else {
+      //   _cartRepository.addItemToCart(selectedCartItem);
+      // }
     }
 
     updateCart();
-    TLoaders.customToast(message: 'Your Product has been added to Cart.');
   }
 
   // Convert product model into cart item model
@@ -72,11 +90,11 @@ class CartController extends GetxController {
     }
 
     final variation = variationController.selectedVariation.value;
-    final isVariation = variation.id.isNotEmpty;
+    final isVariation = variation.vid.isNotEmpty;
     final price = isVariation
         ? int.parse(variation.salePrice!) > 0
             ? variation.salePrice!
-            : variation.price!
+            : variation.price
         : int.parse(product.salePrice) > 0
             ? product.salePrice
             : product.price;
@@ -86,8 +104,12 @@ class CartController extends GetxController {
       price: price,
       productId: product.id,
       quantity: quantity,
-      variationId: variation.id,
-      image: isVariation ? variation.images[0] : product.thumbnail,
+      variationId: variation.vid,
+      image: isVariation
+          ? variation.images!.isNotEmpty
+              ? variation.images![0]
+              : product.thumbnail
+          : product.thumbnail,
       selectedVariation: isVariation ? variation.attributeValues : null,
     );
   }
@@ -98,8 +120,17 @@ class CartController extends GetxController {
         cartItem.variationId == item.variationId);
     if (index >= 0) {
       cartItems[index].quantity += 1;
+      if (item.variationId.isNotEmpty && item.selectedVariation != null) {
+        _cartRepository.updateCartItemQuantity(
+            item.variationId, cartItems[index].quantity);
+      } else {
+        _cartRepository.updateCartItemQuantity(
+            item.productId, cartItems[index].quantity);
+      }
     } else {
       cartItems.add(item);
+      _cartRepository.addItemToCart(item);
+      TLoaders.customToast(message: 'Your Product has been added to Cart.');
     }
     updateCart();
   }
@@ -111,27 +142,76 @@ class CartController extends GetxController {
     if (index >= 0) {
       if (cartItems[index].quantity > 1) {
         cartItems[index].quantity -= 1;
+        if (item.variationId.isNotEmpty && item.selectedVariation != null) {
+          _cartRepository.updateCartItemQuantity(
+              item.variationId, cartItems[index].quantity);
+        } else {
+          _cartRepository.updateCartItemQuantity(
+              item.productId, cartItems[index].quantity);
+        }
       } else {
         cartItems[index].quantity == 1
-            ? removeCartItemDialog(index)
+            ? removeCartItemDialog(index, item)
             : cartItems.removeAt(index);
+        // removeCartItem(index);
       }
       updateCart();
     }
   }
 
-  void removeCartItemDialog(int index) {
+  void removeCartItem(int index, CartItemModel item) {
+    removeCartItemDialog(index, item);
+    updateCart();
+  }
+
+  // Remove product from cart by product ID
+  void removeProductFromCart(CartItemModel cartItem) {
+    if (cartItem.variationId.isNotEmpty && cartItem.selectedVariation != null) {
+      cartItems.removeWhere((item) => item.variationId == cartItem.variationId);
+      _cartRepository.removeItemFromCart(cartItem.variationId);
+    } else {
+      cartItems.removeWhere((item) => item.productId == cartItem.productId);
+      _cartRepository.removeItemFromCart(cartItem.productId);
+    }
+
+    updateCart();
+    TLoaders.customToast(message: 'Product added in Wishlist.');
+  }
+
+  void removeCartItemDialog(int index, CartItemModel item) {
     Get.defaultDialog(
+      confirmTextColor: TColors.white,
+      buttonColor: TColors.primary,
       title: 'Remove Product',
       middleText: 'Are you sure you want to remove this product?',
       onConfirm: () {
         cartItems.removeAt(index);
+        if (item.variationId.isNotEmpty && item.selectedVariation != null) {
+          _cartRepository.removeItemFromCart(item.variationId);
+        } else {
+          _cartRepository.removeItemFromCart(item.productId);
+        }
+
         updateCart();
         TLoaders.customToast(message: 'Product removed from the Cart.');
         Get.back();
       },
       onCancel: () => () => Get.back(),
     );
+  }
+
+  void updateAlreadyAddedProductCount(ProductModel product) {
+    if (product.productType == 'Single') {
+      productQuantityInCart.value = getProductQuantityInCart(product.id);
+    } else {
+      final variationId = variationController.selectedVariation.value.vid;
+      if (variationId.isNotEmpty) {
+        productQuantityInCart.value =
+            getVariationQuantityInCart(product.id, variationId);
+      } else {
+        productQuantityInCart.value = 0;
+      }
+    }
   }
 
   //  Update Cart Value
@@ -143,16 +223,15 @@ class CartController extends GetxController {
   }
 
   void updateCartTotals() {
-    double calculatedTotalPrice = 0.0;
+    int calculatedTotalPrice = 0;
     int calculatedNoOfItems = 0;
 
     for (var item in cartItems) {
-      calculatedTotalPrice =
-          double.parse(item.price) * item.quantity.toDouble();
+      calculatedTotalPrice += int.parse(item.price) * item.quantity.toInt();
       calculatedNoOfItems += item.quantity;
     }
 
-    totalCartPrice.value = calculatedTotalPrice;
+    totalCartPrice.value = calculatedTotalPrice.toDouble();
     log('Total Cart Price: ${totalCartPrice.value}');
     noOfCartItems.value = calculatedNoOfItems;
     log('No of items in Cart: ${noOfCartItems.value}');
@@ -161,8 +240,6 @@ class CartController extends GetxController {
   void saveCartItems() {
     final cartItemStrings = cartItems.map((item) => item.toMap()).toList();
     TLocalStorage.instance().writeData('cartItems', cartItemStrings);
-    log('save cart called storage is written');
-    log('local storage called ${TLocalStorage.instance().readData<List<dynamic>>('cartItems')}');
   }
 
   void loadCartItem() {
@@ -189,6 +266,13 @@ class CartController extends GetxController {
             item.productId == productId && item.variationId == variationId,
         orElse: () => CartItemModel.empty());
     return foundItem.quantity;
+  }
+
+  Future<void> syncFirebaseCart() async {
+    final firebaseCartItems = await _cartRepository.getCartItems();
+    cartItems.assignAll(firebaseCartItems);
+    updateCartTotals();
+    saveCartItems(); // Save in local storage after syncing with Firebase
   }
 
   void clearCart() {

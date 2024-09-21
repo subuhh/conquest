@@ -1,3 +1,4 @@
+import 'package:conquest/utils/constants/colors.dart';
 import 'package:conquest/utils/helpers/helper_functions.dart';
 import 'package:conquest/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
@@ -37,16 +38,16 @@ class TAnimationPage extends StatelessWidget {
               titleText,
               style: TTextTheme.lightTextTheme.titleMedium,
             ),
-            // const SizedBox(height: 30),
-            // SizedBox(
-            //   width: THelperFunctions.screenWidth(context) * 0.6,
-            //   child: ElevatedButton(
-            //     style:
-            //         ElevatedButton.styleFrom(backgroundColor: Colors.black87),
-            //     onPressed: onPressed,
-            //     child: Text(buttonText),
-            //   ),
-            // ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: THelperFunctions.screenWidth(context) * 0.6,
+              child: ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: TColors.primary),
+                onPressed: onPressed,
+                child: Text(buttonText),
+              ),
+            ),
           ],
         ),
       ),

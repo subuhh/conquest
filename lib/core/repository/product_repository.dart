@@ -53,7 +53,6 @@ class ProductRepository extends GetxController {
   Future<List<ProductModel>> getFavoriteProducts(
       List<String> productsId) async {
     try {
-
       // Check if the productsId list is empty
       if (productsId.isEmpty) {
         return []; // Return an empty list if no products are in the favorites

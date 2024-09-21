@@ -1,5 +1,6 @@
 import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
+import 'package:conquest/features/MarketPlace/Cart/cart_screen.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 
@@ -39,14 +40,7 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetail(
-              productModel: widget.productModel,
-            ),
-          ),
-        );
+        Get.to(() => ProductDetail(productModel: widget.productModel));
       },
       child: Card(
         color: Colors.white,
@@ -195,11 +189,18 @@ class _ProductCardSmallState extends State<ProductCardSmall> {
               controller.getProductQuantityInCart(widget.productModel.id);
           return GestureDetector(
             onTap: () {
-              if (widget.productModel.productType == 'Single') {
+              if (productQuantityInCart > 0) {
+                Get.to(() => CartScreen());
+              } else if (widget.productModel.productType == 'Single') {
                 final cartItem =
                     controller.convertToCartItem(widget.productModel, 1);
                 controller.addOneToCart(cartItem);
-              } else {}
+                // controller.addToCart(widget.productModel);
+              } else {
+                Get.to(
+                  () => ProductDetail(productModel: widget.productModel),
+                );
+              }
             },
             child: Container(
               decoration: BoxDecoration(

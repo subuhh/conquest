@@ -36,8 +36,8 @@ class ProductImageController extends GetxController {
     if (product.productVariations != null &&
         product.productVariations!.isNotEmpty) {
       for (var variation in product.productVariations!) {
-        if (variation.images.isNotEmpty) {
-          images.addAll(variation.images);
+        if (variation.images!.isNotEmpty) {
+          images.addAll(variation.images!);
         }
       }
     }

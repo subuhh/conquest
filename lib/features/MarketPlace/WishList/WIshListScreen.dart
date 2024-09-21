@@ -15,6 +15,7 @@ class WishListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = FavoriteController.instance;
+
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
@@ -34,46 +35,59 @@ class WishListScreen extends StatelessWidget {
               TTextTheme.lightTextTheme.titleMedium!.apply(color: Colors.white),
         ),
       ),
-      body: Obx(
-        () => FutureBuilder(
-            future: controller.favoriteProducts(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView.separated(
-                    itemCount: 4, // Show 5 shimmer placeholders
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: TSizes.defaultSpace),
-                    itemBuilder: (context, index) =>
-                        TShimmer.singleContainer(180),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                log('Error: ${snapshot.error}');
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return TAnimationPage(
-                  asset: 'assets/animation/empty_cart.json',
-                  height: 350,
-                  width: 350,
-                  titleText: 'Whoops! Wishlist is Empty...',
-                  buttonText: 'Lets add some',
-                  onPressed: () => Get.back(),
-                );
-              }
+      body: Obx(() {
+        // If there are no favorite products
+        if (controller.favorites.isEmpty) {
+          return TAnimationPage(
+            asset: 'assets/animation/empty_cart.json',
+            height: 350,
+            width: 350,
+            titleText: 'Whoops! Wishlist is Empty...',
+            buttonText: 'Lets add some',
+            onPressed: () => Get.back(),
+          );
+        }
 
-              final products = snapshot.data;
-
-              return ListView.builder(
-                itemCount: products!.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return ProductCardLarge(product: product);
-                },
+        return FutureBuilder(
+          future: controller.favoriteProducts(), // Fetch products
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView.separated(
+                  itemCount: 4, // Show shimmer placeholders
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: TSizes.defaultSpace),
+                  itemBuilder: (context, index) =>
+                      TShimmer.singleContainer(180),
+                ),
               );
-            }),
-      ),
+            } else if (snapshot.hasError) {
+              log('Error: ${snapshot.error}');
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return TAnimationPage(
+                asset: 'assets/animation/empty_cart.json',
+                height: 350,
+                width: 350,
+                titleText: 'Whoops! Wishlist is Empty...',
+                buttonText: 'Lets add some',
+                onPressed: () => Get.back(),
+              );
+            }
+
+            final products = snapshot.data;
+
+            return ListView.builder(
+              itemCount: products!.length,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return ProductCardLarge(product: product);
+              },
+            );
+          },
+        );
+      }),
     );
   }
 }

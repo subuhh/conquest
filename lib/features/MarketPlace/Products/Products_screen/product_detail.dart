@@ -1,8 +1,11 @@
 import 'package:conquest/common/widgets/SectionHeading.dart';
+import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
 import 'package:conquest/common/widgets/section_divider.dart';
+import 'package:conquest/features/MarketPlace/Products_Widgets/cart_counter_icon.dart';
 import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
@@ -25,11 +28,17 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
   int selectedQuantity = 1;
   final controller = VariationController.instance;
+  final cartController = CartController.instance;
 
   void initState() {
     super.initState();
     controller.resetSelectedAttributes();
     controller.initializeSelectedAttributes(widget.productModel);
+    // cartController.productQuantityInCart.value = 1;
+    cartController.updateAlreadyAddedProductCount(widget.productModel);
+    if (cartController.productQuantityInCart == 0) {
+      cartController.productQuantityInCart.value = 1;
+    }
   }
 
   @override
@@ -60,21 +69,9 @@ class _ProductDetailState extends State<ProductDetail> {
             isDecoration: false,
             productId: widget.productModel.id,
           ),
-          // IconButton(
-          //   onPressed: () {}, //Navigator.pop(context),
-          //   icon: const Icon(
-          //     Iconsax.heart,
-          //     color: Colors.white,
-          //   ),
-          // ),
           // Cart Button
-          IconButton(
-            onPressed: () => Navigator.pushNamed(context, '/cart'),
-            icon: const Icon(
-              Iconsax.shopping_cart,
-              color: Colors.white,
-            ),
-          ),
+          CartCounterIcon(isDecorated: true),
+          const SizedBox(width: 10),
         ],
       ),
       body: SingleChildScrollView(
@@ -93,106 +90,101 @@ class _ProductDetailState extends State<ProductDetail> {
             const SectionDivider(),
 
             // Product Quantity
-            Padding(
-              padding: const EdgeInsets.only(
-                left: TSizes.defaultSpace,
-                right: TSizes.defaultSpace,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Sectionheading(
-                    title: 'Quantity',
-                    showActionButton: false,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Minus button
-                      Container(
-                        decoration: BoxDecoration(
-                          color: TColors.grey.withOpacity(0.7),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(8.0),
-                            bottomLeft: Radius.circular(8.0),
-                          ),
-                          border: Border.all(
-                            color: TColors.black,
-                            width: 1.0,
-                          ),
-                        ),
-                        width: 40,
-                        height: 40,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: const Icon(
-                            Iconsax.minus,
-                            color: TColors.black,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              if (selectedQuantity > 1) {
-                                selectedQuantity--;
-                              }
-                            });
-                          },
-                        ),
-                      ),
-
-                      // Quantity box
-                      Container(
-                        width: 50,
-                        height: 40,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                          color: TColors.white,
-                          border: Border.symmetric(
-                            horizontal: BorderSide(
+            Obx(
+              () => Padding(
+                padding: const EdgeInsets.only(
+                  left: TSizes.defaultSpace,
+                  right: TSizes.defaultSpace,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Sectionheading(
+                      title: 'Quantity',
+                      showActionButton: false,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Minus button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: TColors.grey.withOpacity(0.7),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(8.0),
+                              bottomLeft: Radius.circular(8.0),
+                            ),
+                            border: Border.all(
                               color: TColors.black,
                               width: 1.0,
                             ),
                           ),
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(
+                              Iconsax.minus,
+                              color: TColors.black,
+                            ),
+                            onPressed: () =>
+                                cartController.productQuantityInCart.value < 2
+                                    ? null
+                                    : cartController
+                                        .productQuantityInCart.value -= 1,
+                          ),
                         ),
-                        child: Text(
-                          '$selectedQuantity', // Quantity number
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      ),
 
-                      // Plus button
-                      Container(
-                        decoration: BoxDecoration(
-                          color: TColors.grey.withOpacity(0.7),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(8.0),
-                            bottomRight: Radius.circular(8.0),
+                        // Quantity box
+                        Container(
+                          width: 50,
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: TColors.white,
+                            border: Border.symmetric(
+                              horizontal: BorderSide(
+                                color: TColors.black,
+                                width: 1.0,
+                              ),
+                            ),
                           ),
-                          border: Border.all(
-                            color: TColors.black,
-                            width: 1.0,
+                          child: Text(
+                            cartController.productQuantityInCart.value
+                                .toString(), // Quantity number
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ),
-                        width: 40,
-                        height: 40,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: const Icon(
-                            Iconsax.add,
-                            color: TColors.black,
+
+                        // Plus button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: TColors.grey.withOpacity(0.7),
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(8.0),
+                              bottomRight: Radius.circular(8.0),
+                            ),
+                            border: Border.all(
+                              color: TColors.black,
+                              width: 1.0,
+                            ),
                           ),
-                          onPressed: () {
-                            // Handle plus button
-                            setState(() {
-                              if (selectedQuantity < 6) {
-                                selectedQuantity++;
-                              }
-                            });
-                          },
+                          width: 40,
+                          height: 40,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(
+                              Iconsax.add,
+                              color: TColors.black,
+                            ),
+                            onPressed: () =>
+                                cartController.productQuantityInCart += 1,
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             const SectionDivider(),

@@ -1,24 +1,32 @@
+import 'dart:developer';
+
+import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
+import 'package:conquest/core/Controllers/Product_Controller/favorite_controller.dart';
 import 'package:conquest/core/model/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/widgets/RoundedContainer.dart';
-import '../../../../common/widgets/product_price_text.dart';
-import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/sizes.dart';
-import '../../../../utils/theme/customthemes/textThemes.dart';
+import '../../../common/widgets/RoundedContainer.dart';
+import '../../../common/widgets/product_price_text.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/sizes.dart';
+import '../../../utils/theme/customthemes/textThemes.dart';
 
 class CartItem extends StatelessWidget {
   CartItem({
-    Key? key,
+    super.key,
     required this.cartItem,
-  }) : super(key: key);
+    required this.index,
+  });
 
   final CartItemModel cartItem;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    // Access the defined text theme
+    final textTheme = Theme.of(context).textTheme;
+    final controller = CartController.instance;
+    final wishListController = FavoriteController.instance;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems / 3),
@@ -34,98 +42,103 @@ class CartItem extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    children: [
-                      Image.network(
-                        cartItem.image!,
-                        height: 100,
-                        width: 80,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(height: TSizes.spaceBtwItems),
-                    ],
+                  Image.network(
+                    cartItem.image!,
+                    height: 100,
+                    width: 80,
+                    fit: BoxFit.cover,
                   ),
                   const SizedBox(width: 16.0),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(cartItem.title,
-                          style: TTextTheme.lightTextTheme.titleMedium),
-
-                      /// Price
-                      Row(
+                  Expanded(
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'MRP ',
-                              style: TTextTheme.lightTextTheme.titleLarge!
-                                  .copyWith(fontWeight: FontWeight.w400)
-                                  .apply(
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                              children: [
-                                TextSpan(
-                                  text: '₹${cartItem.price}',
-                                  style: TTextTheme.lightTextTheme.titleLarge!
-                                      .copyWith(fontWeight: FontWeight.w400)
-                                      .apply(
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                ),
-                              ],
+                          Flexible(
+                            child: Text(
+                              cartItem.title,
+                              style: textTheme.titleMedium,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 5),
-                          // New Price Tag
-                          ProductPriceText(price: '₹${cartItem.price}'),
-
-                          // Old Price
-
-                          const SizedBox(width: TSizes.spaceBtwItems),
-                          // Discounted Container
+                          IconButton(
+                            onPressed: () {
+                              controller.removeCartItem(index, cartItem);
+                            },
+                            icon: SvgPicture.asset(
+                              'assets/icons/drawerIcons/delete.svg',
+                              colorFilter: ColorFilter.mode(
+                                  TColors.grey, BlendMode.srcIn),
+                            ),
+                          ),
                         ],
                       ),
-                      //Text('₹${widget.price*widget.quantity}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: RoundedContainer(
-                          radius: TSizes.sm,
-                          backgroundColor: Colors.green,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: TSizes.sm,
-                            vertical: TSizes.xs,
+                      subtitle: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // if (cartItem.selectedVariation != null)
+                          Text.rich(
+                            TextSpan(
+                              children: (cartItem.selectedVariation ?? {})
+                                  .entries
+                                  .map(
+                                    (e) => TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '${e.value} ',
+                                          style: textTheme.titleSmall,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
                           ),
-                          child: Text(
-                            '₹${cartItem.price}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .apply(color: TColors.white),
+                          Row(
+                            children: [
+                              ProductPriceText(price: '${cartItem.price}'),
+                              const SizedBox(width: 5),
+                              Text(
+                                ' ₹${cartItem.price}',
+                                style: TTextTheme.lightTextTheme.titleLarge!
+                                    .copyWith(fontWeight: FontWeight.w400)
+                                    .apply(
+                                        decoration: TextDecoration.lineThrough),
+                              ),
+                              const SizedBox(width: 5),
+                              RoundedContainer(
+                                radius: TSizes.sm,
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: TSizes.sm,
+                                  vertical: TSizes.xs,
+                                ),
+                                child: Text(
+                                  '20% OFF',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .apply(color: TColors.white),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ],
                       ),
-                      SizedBox(height: TSizes.spaceBtwItems / 1.5),
-                    ],
+                    ),
                   ),
-                  Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        //Remove From List
-                      },
-                      icon: SvgPicture.asset(
-                        'assets/icons/drawerIcons/delete.svg',
-                        colorFilter:
-                            ColorFilter.mode(TColors.grey, BlendMode.srcIn),
-                      )),
                 ],
               ),
               Divider(height: 2, color: TColors.grey),
               SizedBox(height: TSizes.spaceBtwItems),
               Row(
                 children: [
-                  ///Quantity Button
+                  // Quantity Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -149,7 +162,7 @@ class CartItem extends StatelessWidget {
                             Iconsax.minus,
                             color: TColors.white,
                           ),
-                          onPressed: () {},
+                          onPressed: () => controller.removeOneToCart(cartItem),
                         ),
                       ),
 
@@ -194,14 +207,21 @@ class CartItem extends StatelessWidget {
                             Iconsax.add,
                             color: TColors.white,
                           ),
-                          onPressed: () {},
+                          onPressed: () => controller.addOneToCart(cartItem),
                         ),
                       )
                     ],
                   ),
+
+                  // Move To WishList Button
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                          log('Favorite Variation Id: ${cartItem.variationId}');
+                          wishListController
+                              .showMoveToFavoriteDialog(cartItem);
+
+                      },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: TSizes.spaceBtwItems),

@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CartCounterIcon extends StatelessWidget {
-  const CartCounterIcon({super.key});
+  const CartCounterIcon({super.key, this.isDecorated = false});
+  final bool isDecorated;
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +16,18 @@ class CartCounterIcon extends StatelessWidget {
       children: [
         IconButton(
           onPressed: () => Navigator.pushNamed(context, '/cart'),
-          icon: const Icon(Iconsax.shopping_cart),
+          icon: Icon(
+            Iconsax.shopping_cart,
+            color: isDecorated ? Colors.white : null,
+          ),
         ),
-        // if (controller.noOfCartItems.value > 0)
         Positioned(
           right: 0,
           child: Container(
-            width: 18,
-            height: 18,
+            width: isDecorated ? 16 : 18,
+            height: isDecorated ? 16 : 18,
             decoration: BoxDecoration(
-              color: Colors.red,
+              color: isDecorated ? Colors.white : Colors.red,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -32,8 +35,8 @@ class CartCounterIcon extends StatelessWidget {
                 () => Text(
                   controller.noOfCartItems.value.toString(),
                   style: TTextTheme.lightTextTheme.labelLarge!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    color: isDecorated ? Colors.red : Colors.white,
+                    fontWeight: isDecorated ? FontWeight.w700 : FontWeight.w500,
                   ),
                 ),
               ),

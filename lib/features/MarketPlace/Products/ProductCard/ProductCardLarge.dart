@@ -1,6 +1,11 @@
+import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
+import 'package:conquest/core/Controllers/Product_Controller/favorite_controller.dart';
+import 'package:conquest/features/MarketPlace/Cart/cart_screen.dart';
+import 'package:conquest/features/MarketPlace/Products/Products_screen/product_detail.dart';
 import 'package:conquest/features/MarketPlace/Products_Widgets/favorite_button.dart';
 import 'package:conquest/utils/theme/customthemes/textThemes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../../common/widgets/RoundedContainer.dart';
 import '../../../../core/model/Product_Models/product.dart';
 import '../../../../utils/constants/colors.dart';
@@ -17,6 +22,8 @@ class ProductCardLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final favoriteController = FavoriteController.instance;
+    final cartController = CartController.instance;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems / 2),
@@ -64,7 +71,9 @@ class ProductCardLarge extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: TSizes.spaceBtwItems/2,),
+                        SizedBox(
+                          height: TSizes.spaceBtwItems / 2,
+                        ),
                         buildPriceText(
                           originalPrice: double.parse(product.price),
                           discountedPrice: double.parse(product.salePrice),
@@ -73,70 +82,72 @@ class ProductCardLarge extends StatelessWidget {
                           originalPrice: double.parse(product.price),
                           discountedPrice: double.parse(product.salePrice),
                         ),
-
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
             Divider(height: 2, color: TColors.grey),
             SizedBox(height: 12),
-            buildMoveToCart()
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: TColors.grey, width: 1.5),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Buy Now',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: TSizes.spaceBtwItems,
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      favoriteController.toggleFavoriteProduct(product.id);
+                      if (product.productType == 'Single') {
+                        final item =
+                            cartController.convertToCartItem(product, 1);
+                        cartController.addOneToCart(item);
+                        Get.to(() => CartScreen());
+                      } else {
+                        Get.to(() => ProductDetail(productModel: product));
+                      }
+                    },
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: TColors.primary, width: 1.5),
+                        borderRadius: BorderRadius.circular(5),
+                        color: TColors.primary,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Move To Cart',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .apply(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
-    );
-  }
-}
-
-class buildMoveToCart extends StatelessWidget {
-  const buildMoveToCart({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(color: TColors.grey, width: 1.5),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Center(
-              child: Text(
-                'Buy Now',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: TSizes.spaceBtwItems,
-        ),
-        Expanded(
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(color: TColors.primary, width: 1.5),
-              borderRadius: BorderRadius.circular(5),
-              color: TColors.primary,
-            ),
-            child: Center(
-              child: Text(
-                'Move To Cart',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .apply(color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
