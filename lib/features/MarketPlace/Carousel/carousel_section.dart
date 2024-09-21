@@ -38,10 +38,11 @@ class _CarouselSectionState extends State<CarouselSection> {
                 return Builder(
                   builder: (BuildContext context) {
                     return GestureDetector(
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        banner.onTapScreen,
-                      ),
+                      // onTap: () => Navigator.pushNamed(
+                      //   context,
+                      //   banner.onTapScreen,
+                      // ),
+                      onTap: () {},
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         margin: const EdgeInsets.symmetric(horizontal: 5.0),
