@@ -29,6 +29,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   get_storage: ^2.1.1
   lottie: ^3.1.2
+  image_picker: ^1.1.2
 
   # Location & Address
   geocoding: ^3.0.0

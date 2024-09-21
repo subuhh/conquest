@@ -4,10 +4,9 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../utils/constants/colors.dart';
 
-
 class TRatingBarIndicator extends StatelessWidget {
   const TRatingBarIndicator({super.key, required this.rating});
-final double rating;
+  final double rating;
   @override
   Widget build(BuildContext context) {
     return RatingBarIndicator(
@@ -15,7 +14,7 @@ final double rating;
         Iconsax.star1,
         color: TColors.primary,
       ),
-      itemSize: 20,
+      itemSize: 16,
       rating: rating,
     );
   }

@@ -8,7 +8,7 @@ import '../../../../../../core/services/firestore_service.dart';
 
 class ProfileController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
-  final auth = Get.put(AuthService());
+  final auth =AuthService.instance;
 
   var isLoading = true.obs;
   var isEdited = false.obs;

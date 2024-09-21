@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
+import '../../../../core/Controllers/Product_Controller/review_controller.dart';
 import '../../../../core/Controllers/Product_Controller/variation_controller.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
@@ -29,6 +30,7 @@ class _ProductDetailState extends State<ProductDetail> {
   int selectedQuantity = 1;
   final controller = VariationController.instance;
   final cartController = CartController.instance;
+  final reviewController = Get.put(ReviewController());
 
   void initState() {
     super.initState();
@@ -218,8 +220,8 @@ class _ProductDetailState extends State<ProductDetail> {
             const SectionDivider(),
 
             // Reviews
-            const ProductReviewsScreen(),
-            const SectionDivider(isUpperSizedBox: false),
+            ProductReviewsScreen(productId: widget.productModel.id,),
+            const SizedBox(height: TSizes.spaceBtwItems),
           ],
         ),
       ),

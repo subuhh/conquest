@@ -74,4 +74,17 @@ class ProductRepository extends GetxController {
       throw 'Something went wrong. Please try again';
     }
   }
+
+  // Fetch products by id
+  Future<ProductModel?> getProductById(String productId) async {
+    try {
+      final snapshot = await _db.collection('products').doc(productId).get();
+      if (snapshot.exists) {
+        return ProductModel.fromFirestore(snapshot.data()!, snapshot.id);
+      }
+    } catch (e) {
+      log('Failed to fetch product by ID: $e');
+    }
+    return null;
+  }
 }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:conquest/core/Controllers/Product_Controller/cart_controller.dart';
 import 'package:conquest/core/Controllers/Product_Controller/product_image_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
@@ -33,14 +31,10 @@ class VariationController extends GetxController {
 
     if (product.productVariations.isNotEmpty) {
       ProductVariationModel firstVariation = product.productVariations[0];
-      log('First Variation : ${firstVariation}');
-      log('First Variation ID: ${firstVariation.vid}');
 
       // Set selectedAttributes to the first variation's attribute values
       selectedAttributes.value =
           Map<String, String>.from(firstVariation.attributeValues);
-
-      log('First Variation Attributes: ${firstVariation.attributeValues}');
 
       // Set the first variation as the selected variation
       selectedVariation.value = firstVariation;
@@ -84,8 +78,6 @@ class VariationController extends GetxController {
       imageController.selectedProductImage.value =
           selectedVariation.value.images![0];
     }
-
-    log('Product Variations ID: ${selectedVariation.value.vid}');
 
     if (selectedVariation.value.vid.isNotEmpty) {
       final cartController = CartController.instance;
@@ -134,7 +126,6 @@ class VariationController extends GetxController {
   // Find matching variation based on selected attributes
   ProductVariationModel? _findMatchingVariation(ProductModel product) {
     for (ProductVariationModel variation in product.productVariations) {
-      log('Variation id in matching: ${variation.vid}');
       bool isMatch = true;
 
       selectedAttributes.forEach((key, value) {
@@ -144,7 +135,6 @@ class VariationController extends GetxController {
       });
 
       if (isMatch) {
-        // log('Variation id in matching: ${variation.id}');
         return variation;
       }
     }

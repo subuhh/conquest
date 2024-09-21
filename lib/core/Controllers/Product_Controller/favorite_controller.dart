@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:conquest/core/model/Product_Models/product.dart';
-import 'package:conquest/core/model/cart_item.dart';
+import 'package:conquest/core/model/product_models/cart_item.dart';
 import 'package:conquest/core/repository/product_repository.dart';
 import 'package:conquest/utils/local_storage/storage_utility.dart';
 import 'package:conquest/utils/popups/loaders.dart';

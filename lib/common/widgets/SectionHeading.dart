@@ -5,10 +5,10 @@ import '../../utils/constants/sizes.dart';
 class Sectionheading extends StatelessWidget {
   final Color? textColor;
   final bool showActionButton;
-  final String title, buttonTitle;
-  final void Function()? onPressed;
+  final String title;
   final bool isPadding;
   final bool isHeader;
+  final Widget widgetActionButton;
 
   const Sectionheading({
     super.key,
@@ -16,9 +16,8 @@ class Sectionheading extends StatelessWidget {
     this.isPadding = false,
     this.showActionButton = true,
     required this.title,
-    this.buttonTitle = 'View all',
-    this.onPressed,
     this.isHeader = false,
+    this.widgetActionButton = const SizedBox(),
   });
 
   @override
@@ -72,8 +71,7 @@ class Sectionheading extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          if (showActionButton)
-            TextButton(onPressed: onPressed, child: Text(buttonTitle))
+          if (showActionButton) widgetActionButton
         ],
       ),
     );

@@ -102,11 +102,12 @@ class CartScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    width: THelperFunctions.screenWidth(context) * 0.35,
+                    width: THelperFunctions.screenWidth(context) * 0.4,
+                    height: 45,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.red,
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

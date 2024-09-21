@@ -1,7 +1,6 @@
-import 'dart:developer';
 import 'package:conquest/core/Controllers/Product_Controller/variation_controller.dart';
 import 'package:conquest/core/model/Product_Models/product.dart';
-import 'package:conquest/core/model/cart_item.dart';
+import 'package:conquest/core/model/product_models/cart_item.dart';
 import 'package:conquest/utils/constants/colors.dart';
 import 'package:conquest/utils/local_storage/storage_utility.dart';
 import 'package:conquest/utils/popups/loaders.dart';
@@ -227,7 +226,6 @@ class CartController extends GetxController {
 
   //  Update Cart Value
   void updateCart() {
-    log('Update cart called');
     updateCartTotals();
     saveCartItems();
     cartItems.refresh();
@@ -243,9 +241,7 @@ class CartController extends GetxController {
     }
 
     totalCartPrice.value = calculatedTotalPrice.toDouble();
-    log('Total Cart Price: ${totalCartPrice.value}');
     noOfCartItems.value = calculatedNoOfItems;
-    log('No of items in Cart: ${noOfCartItems.value}');
   }
 
   void saveCartItems() {
