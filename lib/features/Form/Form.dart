@@ -11,6 +11,15 @@ class FormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:ElevatedButton(
+            onPressed: () {
+              // Perform the next action
+              controller.nextQuestion();
+            },
+            child: Text('Next')),
+      ),
       backgroundColor: TColors.softGrey, // Background color
       body: SafeArea(
         child: Padding(
@@ -58,7 +67,8 @@ class FormScreen extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
-                      .apply(fontSizeFactor: 0.75),
+                      .apply(fontSizeFactor: 0.75,),
+                  textAlign: TextAlign.center,
                 ),
               )),
 

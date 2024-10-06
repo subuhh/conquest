@@ -11,16 +11,17 @@ class FoodCategoryGrid extends StatefulWidget {
 class _FoodCategoryGridState extends State<FoodCategoryGrid> {
   final List<Map<String, dynamic>> foodCategories = [
     {
-      'icon': 'https://www.svgrepo.com/show/427742/meat.svg',
+      'icon': 'assets/icons/FoodCategory/NonVeg.svg',
       'label': 'Non-veg'
     },
-    {'icon': 'https://www.svgrepo.com/show/410224/egg.svg', 'label': 'Poultry'},
+    {'icon': 'assets/icons/FoodCategory/Poultry.svg',
+      'label': 'Poultry'},
     {
-      'icon': 'https://www.svgrepo.com/show/427751/cheese-wedge.svg',
+      'icon': 'assets/icons/FoodCategory/Vegeterian.svg',
       'label': 'Vegeterian'
     },
     {
-      'icon': 'https://www.svgrepo.com/show/447186/smoothie-organic.svg',
+      'icon': 'assets/icons/FoodCategory/vegan.svg',
       'label': 'Vegan'
     },
   ];
@@ -37,31 +38,34 @@ class _FoodCategoryGridState extends State<FoodCategoryGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16.0,
-        mainAxisSpacing: 16.0,
-        childAspectRatio: 1.2,
+    return SizedBox(
+      height: 400,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+          childAspectRatio: 1.2,
+        ),
+        padding: const EdgeInsets.all(15.0),
+        itemCount: foodCategories.length,
+        itemBuilder: (context, index) {
+          final category = foodCategories[index];
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                // Toggle the selection state on tap
+                isSelectedList[index] = !isSelectedList[index];
+              });
+            },
+            child: FoodCategoryCard(
+              iconUrl: category['icon'],
+              label: category['label'],
+              isSelected: isSelectedList[index], // Use the selection state
+            ),
+          );
+        },
       ),
-      padding: const EdgeInsets.all(16.0),
-      itemCount: foodCategories.length,
-      itemBuilder: (context, index) {
-        final category = foodCategories[index];
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              // Toggle the selection state on tap
-              isSelectedList[index] = !isSelectedList[index];
-            });
-          },
-          child: FoodCategoryCard(
-            iconUrl: category['icon'],
-            label: category['label'],
-            isSelected: isSelectedList[index], // Use the selection state
-          ),
-        );
-      },
     );
   }
 }
@@ -81,7 +85,7 @@ class FoodCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5.0, // Adjust the elevation as needed
+      elevation: 1.0, // Adjust the elevation as needed
       shape: RoundedRectangleBorder(
         borderRadius:
             BorderRadius.circular(16.0), // Same borderRadius as before
@@ -90,18 +94,17 @@ class FoodCategoryCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.network(
+          SvgPicture.asset(
             iconUrl,
             height: 40,
             colorFilter: ColorFilter.mode(
                 isSelected ? Colors.white : Colors.black, BlendMode.srcIn),
-            placeholderBuilder: (context) => CircularProgressIndicator(),
           ),
           SizedBox(height: 10),
           Text(
             label,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
               color: isSelected ? Colors.white : Colors.black,
             ),

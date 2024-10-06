@@ -73,16 +73,7 @@ class _HeightPickerScreenState extends State<HeightPickerScreen> {
             ),
           ],
         ),
-        SizedBox(height: TSizes.spaceBtwSections),
-        SizedBox(
-          width: 300,
-          child: ElevatedButton(
-              onPressed: () {
-                // Perform the next action
-                widget.controller.nextQuestion();
-              },
-              child: Text('Next')),
-        )
+
       ],
     );
   }

@@ -78,6 +78,7 @@ flutter:
     - assets/icons/drawerIcons/
     - assets/icons/bottomNavbaricons/InactiveIcons/
     - assets/icons/bottomNavbaricons/activeIcons/
+    - assets/icons/FoodCategory/
 
 
 

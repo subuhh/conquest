@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/Controllers/Form_Controller/FormControllr.dart';
 import '../../../utils/constants/sizes.dart';
 
-class GoalQuestion extends StatelessWidget {
-  GoalQuestion({super.key, required this.controller});
 
-  final FormController controller;
+class Howmuchworkout extends StatelessWidget {
+  const Howmuchworkout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class GoalQuestion extends StatelessWidget {
 
                 },
                 child: Text(
-                  "Lose Weight",
+                  "Daily",
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
@@ -49,7 +47,7 @@ class GoalQuestion extends StatelessWidget {
 
                 },
                 child: Text(
-                  "Gain Muscles",
+                  "Weekly",
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
@@ -72,7 +70,7 @@ class GoalQuestion extends StatelessWidget {
 
                 },
                 child: Text(
-                  "Build Strength",
+                  "Not regular",
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
