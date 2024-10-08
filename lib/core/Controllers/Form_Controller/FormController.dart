@@ -1,19 +1,21 @@
-import 'package:conquest/features/Form/Widgets/howMuchWorkout.dart';
+import 'package:conquest/features/Form/Widgets/GoalWeight.dart';
+import 'package:conquest/features/Form/Widgets/HowMuchWorkout.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../features/Form/Widgets/GoalQuestion.dart';
-import '../../../features/Form/Widgets/HeightPIcker.dart';
-import '../../../features/Form/Widgets/WeightQuestion.dart';
-import '../../../features/Form/Widgets/foodcategoryGrid.dart';
+import '../../../features/Form/Widgets/HowMuchHeight.dart';
+import '../../../features/Form/Widgets/HowMuchWeight.dart';
+import '../../../features/Form/Widgets/DietPreference.dart';
 
 class FormController extends GetxController {
+  static FormController get instance => Get.find();
   // Questions and corresponding SVG images
   final List<String> questions = [
     "What is your Goal?",
     "What is your Height?",
     "How much do you weight?",
     "What is you Goal Weight",
-    "How often do you workout",
+    "Select how often you engage in workout",
     "Select your Diet Preferences",
   ];
 
@@ -26,8 +28,27 @@ class FormController extends GetxController {
     'assets/images/AnimeQuestion4.png',
   ];
 
-  // Observable state
+  /// Observable state ///
+
+  // Question Index
   RxInt currentQuestionIndex = 0.obs;
+  // Goal Question
+  RxList<String> selectedGoals = <String>[].obs;
+  // Height Question
+  RxInt selectedFeet = 5.obs;
+  RxInt selectedInches = 7.obs;
+  // Weight Question
+  RxInt currentWeightInteger = 60.obs;
+  RxInt currentWeightFraction = 5.obs;
+  RxString currentWeightUnit = 'Kg'.obs;
+  // Goal Weight Question
+  RxInt goalWeightInteger = 60.obs;
+  RxInt goalWeightFraction = 5.obs;
+  RxString goalWeightUnit = 'Kg'.obs;
+  // Workout Frequency Question
+  RxString selectedWorkoutFrequency = ''.obs;
+  // Diet Preference Question
+  RxList<String> selectedDietPreferences = <String>[].obs;
 
   // Getter for current question and image
   String get currentQuestion => questions[currentQuestionIndex.value];
@@ -56,21 +77,21 @@ class FormController extends GetxController {
   Widget get currentWidget {
     switch (currentQuestionIndex.value) {
       case 0:
-        return GoalQuestion(controller: this);
+        return GoalQuestion();
       case 1:
-        return HeightPickerScreen(controller: this);
+        return HeightPickerScreen();
 
       case 2:
-        return  WeightPickerScreen(controller: this);
+        return  HowMuchWeightScreen();
 
       case 3:
-        return WeightPickerScreen(controller: this);
+        return GoalWeightScreen();
 
       case 4:
-        return Howmuchworkout();
+        return HowMuchWorkout();
 
       case 5:
-        return FoodCategoryGrid();
+        return DietPreference();
       default:
         return Container(); // Fallback
     }

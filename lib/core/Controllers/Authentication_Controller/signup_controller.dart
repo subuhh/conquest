@@ -33,14 +33,15 @@ class SignUpController extends GetxController {
 
   // Sign-up function
   Future<void> signUp() async {
-    if (!isChecked.value) {
-      showSnackBar('Error', 'Please agree to the terms and conditions.',
-          isError: true);
-      return;
-    }
-
     if (formKey.currentState!.validate()) {
       isLoading.value = true;
+
+      if (!isChecked.value) {
+        showSnackBar('Error', 'Please agree to the terms and conditions.',
+            isError: true);
+        return;
+      }
+
       try {
         await _auth.registerWithEmailAndPassword(
           emailController.text,

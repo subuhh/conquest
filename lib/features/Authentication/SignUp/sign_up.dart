@@ -205,7 +205,7 @@ class SignUpScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: controller.isChecked.value
                               ? () => controller.signUp()
-                              : () {},
+                              : null,
                           child: controller.isLoading.value
                               ? const CircularProgressIndicator(
                             color: Colors.white,

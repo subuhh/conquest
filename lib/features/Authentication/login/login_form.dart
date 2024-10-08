@@ -1,5 +1,4 @@
 import 'package:conquest/features/Authentication/ForgotPassword/forgot_password.dart';
-import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -135,26 +134,6 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                 ),
               ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-
-              ///Create Account Button
-              SizedBox(
-                width: double.maxFinite,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpScreen(),
-                      ),
-                    );
-                  },
-                  // onPressed: ()=> Get.to(()=>const SignUpScreen()),
-                  child: const Text(
-                    TTexts.createAccount,
-                  ),
-                ),
-              )
             ],
           ),
         ));

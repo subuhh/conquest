@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/constants/sizes.dart';
 
-
 class loginHeader extends StatelessWidget {
   const loginHeader({
     super.key,
@@ -29,9 +28,11 @@ class loginHeader extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: TSizes.spaceBtwSections,),
+        const SizedBox(
+          height: TSizes.spaceBtwSections,
+        ),
         Text(
-         'Welcome',
+          'Welcome',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         // const SizedBox(

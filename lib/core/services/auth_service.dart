@@ -55,7 +55,7 @@ class AuthService extends GetxController {
       firebaseUser.value = user; // Update the user state
 
       Get.to(
-        GenderSelectionScreen(
+        () => GenderSelectionScreen(
           user: user!,
           phoneNumber: phoneNumber,
           email: email,
