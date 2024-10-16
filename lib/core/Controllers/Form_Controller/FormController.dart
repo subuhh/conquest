@@ -49,6 +49,8 @@ class FormController extends GetxController {
   RxString selectedWorkoutFrequency = ''.obs;
   // Diet Preference Question
   RxList<String> selectedDietPreferences = <String>[].obs;
+  // Gender
+  RxString selectedGender = ''.obs;
 
   // Getter for current question and image
   String get currentQuestion => questions[currentQuestionIndex.value];

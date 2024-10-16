@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../core/Controllers/Form_Controller/FormController.dart';
 import '../../core/Controllers/Onboarding_Controller/OnboardingController.dart';
 import '../../utils/constants/sizes.dart';
 import 'Widgets/BottomNavigationButtons.dart';
 import 'Widgets/PageIndicator.dart';
 import 'Widgets/Pageview.dart';
-
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   // Ensure the controller is initialized in initState
   OnboardingController? controller;
+  final FormController formController = Get.put(FormController());
 
   @override
   void initState() {
@@ -48,33 +50,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
               children: [
                 buildPage(
-                  image: 'assets/images/AnimeComunity.png',
-                  title: 'Welcome',
-                  description: 'Welcome to our app. Let\'s get started!',
-                  height: 400
-                ),
+                    image: 'assets/images/AnimeComunity.png',
+                    title: 'Welcome',
+                    description: 'Welcome to our app. Let\'s get started!',
+                    height: 400),
                 buildPage(
-                  image: 'assets/images/AnimeWorkout1.png',
-                  title: 'Stay Connected',
-                  description: 'Stay connected with your loved ones.',
-                  height: 300
-                ),
+                    image: 'assets/images/AnimeWorkout1.png',
+                    title: 'Stay Connected',
+                    description: 'Stay connected with your loved ones.',
+                    height: 300),
                 buildPage(
-                  image: 'assets/images/AnimeDietRecomendation.png',
-                  title: 'Get Best Diet \nRecomendations',
-                  description: '',
-                  height: 300
-                ),
+                    image: 'assets/images/AnimeDietRecomendation.png',
+                    title: 'Get Best Diet \nRecomendations',
+                    description: '',
+                    height: 300),
               ],
             ),
           ),
           buildPageIndicator(controller),
-          SizedBox(height: TSizes.spaceBtwSections,),
+          SizedBox(
+            height: TSizes.spaceBtwSections,
+          ),
         ],
       ),
       bottomNavigationBar: buildBottomNavigationBarButtons(context),
     );
   }
-
 }
-

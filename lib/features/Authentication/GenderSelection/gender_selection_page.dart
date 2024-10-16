@@ -1,27 +1,12 @@
-import 'package:conquest/features/Authentication/Login/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
+import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/widgets/custom_snackbar.dart';
-import '../../../core/model/user.dart';
-import '../../../core/services/firestore_service.dart';
 import '../../../utils/constants/colors.dart';
 
-String? selectedGender;
-
 class GenderSelectionScreen extends StatefulWidget {
-  final User user;
-  final String email;
-  final String username;
-  final String name;
-  final String phoneNumber;
   const GenderSelectionScreen({
     super.key,
-    required this.user,
-    required this.email,
-    required this.username,
-    required this.name,
-    required this.phoneNumber,
   });
 
   @override
@@ -30,6 +15,7 @@ class GenderSelectionScreen extends StatefulWidget {
 
 class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
   bool isLoading = false;
+  final controller = FormController.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +43,14 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                         height: 50,
                         child: Text(
                           'Male',
-                          style:
-                              Theme.of(context).textTheme.headlineMedium!.apply(
-                                    color: selectedGender == 'Male'
-                                        ? TColors.primary
-                                        : TColors.grey,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .apply(
+                                color: controller.selectedGender.value == 'Male'
+                                    ? TColors.primary
+                                    : TColors.grey,
+                              ),
                         ),
                       ),
                       SizedBox(
@@ -70,11 +58,9 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                         child: MaleGenderButton(
                           onTap: () {
                             setState(() {
-                              selectedGender = 'Male';
+                              controller.selectedGender.value = 'Male';
                             });
                           },
-                          avatarImage: const AssetImage(
-                              'assets/female_avatar.jpg'), // Add your image
                         ),
                       ),
                       const SizedBox(
@@ -96,7 +82,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                         child: FemaleGenderButton(
                           onTap: () {
                             setState(() {
-                              selectedGender = 'Female';
+                              controller.selectedGender.value = 'Female';
                             });
                           },
                         ),
@@ -105,12 +91,15 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                         height: 50,
                         child: Text(
                           'Female',
-                          style:
-                              Theme.of(context).textTheme.headlineMedium!.apply(
-                                    color: selectedGender == 'Female'
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .apply(
+                                color:
+                                    controller.selectedGender.value == 'Female'
                                         ? TColors.primary
                                         : TColors.grey,
-                                  ),
+                              ),
                         ),
                       )
                     ],
@@ -128,14 +117,14 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
-                onPressed: _genderSelection,
+                onPressed: () => Get.to(() => SignUpScreen()),
                 child: isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
                           color: Colors.white,
                         ),
                       )
-                    : const Text('Continue'),
+                    : const Text('Next'),
               ),
             ),
           )
@@ -144,46 +133,36 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
     );
   }
 
-  Future<void> _genderSelection() async {
-    try {
-      setState(() => isLoading = true);
-      if (selectedGender!.isNotEmpty) {
-        final userModel = UserModel(
-          id: widget.user.uid,
-          userName: widget.username,
-          name: widget.name,
-          email: widget.email,
-          phoneNumber: widget.phoneNumber,
-          gender: selectedGender,
-        );
+  // Future<void> _genderSelection() async {
+  //   try {
+  //     setState(() => isLoading = true);
+  //     // if (selectedGender!.isNotEmpty) {
+  //     //   final userModel = UserModel(
+  //     //     id: widget.user!.uid,
+  //     //     userName: widget.username!,
+  //     //     name: widget.name!,
+  //     //     email: widget.email!,
+  //     //     phoneNumber: widget.phoneNumber!,
+  //     //     gender: selectedGender,
+  //     //   );
+  //
+  //     // Save user data in Firestore
+  //     // await FirestoreService().createUserDocument(userModel);
+  //
+  //     Get.offAll(() => const SignUpScreen());
+  //     // showSnackBar('Success', 'Account created successfully. Please log in.');
+  //     // } else {
+  //     //   showSnackBar('Error', 'Please Select Gender!');
+  //     // }
+  //   } catch (e) {
+  //     setState(() => isLoading = false);
+  //     showSnackBar('Error', 'Something Error Occurred. Please Try Again.');
+  //   } finally {
+  //     setState(() => isLoading = false);
+  //   }
+  // }
 
-        // Save user data in Firestore
-        await FirestoreService().createUserDocument(userModel);
-
-        Get.offAll(() =>const LoginScreen());
-        showSnackBar('Success', 'Account created successfully. Please log in.');
-      } else {
-        showSnackBar('Error', 'Please Select Gender!');
-      }
-    } catch (e) {
-      setState(() => isLoading = false);
-      showSnackBar('Error', 'Something Error Occurred. Please Try Again.');
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-}
-
-class FemaleGenderButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const FemaleGenderButton({
-    super.key,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget FemaleGenderButton({required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -193,8 +172,9 @@ class FemaleGenderButton extends StatelessWidget {
             top: -25,
             child: Icon(
               Icons.female,
-              color:
-                  selectedGender == 'Female' ? TColors.primary : TColors.grey,
+              color: controller.selectedGender.value == 'Female'
+                  ? TColors.primary
+                  : TColors.grey,
               size: 300, // Icon size
             ),
           ),
@@ -202,9 +182,9 @@ class FemaleGenderButton extends StatelessWidget {
             top: 0,
             child: CircleAvatar(
               radius: 85, // Adjust size accordingly
-              //backgroundColor: isSelected ? Colors.blue : Colors.white,
-              backgroundColor:
-                  selectedGender == 'Female' ? TColors.primary : TColors.grey,
+              backgroundColor: controller.selectedGender.value == 'Female'
+                  ? TColors.primary
+                  : TColors.grey,
               child: const CircleAvatar(
                 radius: 70,
                 backgroundImage: NetworkImage(
@@ -216,20 +196,8 @@ class FemaleGenderButton extends StatelessWidget {
       ),
     );
   }
-}
 
-class MaleGenderButton extends StatelessWidget {
-  final VoidCallback onTap;
-  final AssetImage avatarImage;
-
-  const MaleGenderButton({
-    super.key,
-    required this.onTap,
-    required this.avatarImage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget MaleGenderButton({required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -240,7 +208,9 @@ class MaleGenderButton extends StatelessWidget {
             top: 0,
             child: Icon(
               Icons.north_east,
-              color: selectedGender == 'Male' ? TColors.primary : TColors.grey,
+              color: controller.selectedGender.value == 'Male'
+                  ? TColors.primary
+                  : TColors.grey,
               size: 200, // Icon size
             ),
           ),
@@ -248,9 +218,9 @@ class MaleGenderButton extends StatelessWidget {
             bottom: 0,
             child: CircleAvatar(
               radius: 85, // Adjust size accordingly
-              //backgroundColor: isSelected ? Colors.blue : Colors.white,
-              backgroundColor:
-                  selectedGender == 'Male' ? TColors.primary : TColors.grey,
+              backgroundColor: controller.selectedGender.value == 'Male'
+                  ? TColors.primary
+                  : TColors.grey,
               child: const CircleAvatar(
                 radius: 70,
                 backgroundImage: NetworkImage(

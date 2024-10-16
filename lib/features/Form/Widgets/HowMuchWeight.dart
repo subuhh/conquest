@@ -18,11 +18,6 @@ class HowMuchWeightScreen extends StatefulWidget {
 class _HowMuchWeightScreenState extends State<HowMuchWeightScreen> {
   final controller = FormController.instance;
 
-  // // Default selected values
-  // int selectedInteger = 60;
-  // int selectedFraction = 5;
-  // String selectedUnit = 'Kg'; // Kg or Lbs
-
   // Conversion methods
   double get weightInKg =>
       controller.currentWeightInteger.value +
@@ -110,17 +105,18 @@ class _HowMuchWeightScreenState extends State<HowMuchWeightScreen> {
               height: THelperFunctions.screenHeight(context) * 0.28,
               child: Obx(
                 () => CupertinoPicker(
+                  looping: true,
                   scrollController: FixedExtentScrollController(
                     initialItem: controller.currentWeightUnit.value == 'Kg'
-                        ? controller.currentWeightInteger.value - 50
-                        : controller.currentWeightInteger.value - 110,
+                        ? controller.currentWeightInteger.value - 40
+                        : controller.currentWeightInteger.value - 88,
                   ), // Starts at 50 kg or 110 lbs
                   itemExtent: 40.0,
                   onSelectedItemChanged: (int index) {
                     controller.currentWeightInteger.value =
                         controller.currentWeightUnit.value == 'Kg'
-                            ? index + 50
-                            : index + 110;
+                            ? index + 40
+                            : index + 88;
 
                     // setState(() {
                     //   if (selectedUnit == 'Kg') {
@@ -134,8 +130,8 @@ class _HowMuchWeightScreenState extends State<HowMuchWeightScreen> {
                     return Center(
                       child: Text(
                         controller.currentWeightUnit.value == 'Kg'
-                            ? (index + 50).toString()
-                            : (index + 110).toString(),
+                            ? (index + 40).toString()
+                            : (index + 88).toString(),
                         style: TextStyle(fontSize: 24),
                       ),
                     );
@@ -149,6 +145,7 @@ class _HowMuchWeightScreenState extends State<HowMuchWeightScreen> {
               height: THelperFunctions.screenHeight(context) * 0.28,
               child: Obx(
                 () => CupertinoPicker(
+                  looping: true,
                   scrollController: FixedExtentScrollController(
                     initialItem: controller.currentWeightFraction.value,
                   ),

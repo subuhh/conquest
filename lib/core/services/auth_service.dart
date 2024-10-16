@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
-import 'package:conquest/features/Authentication/GenderSelection/gender_selection_page.dart';
+import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
+import 'package:conquest/core/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-// import '../model/user.dart';
 import 'firestore_service.dart';
 
 class AuthService extends GetxController {
@@ -54,17 +54,53 @@ class AuthService extends GetxController {
       User? user = result.user;
       firebaseUser.value = user; // Update the user state
 
-      Get.to(
-        () => GenderSelectionScreen(
-          user: user!,
-          phoneNumber: phoneNumber,
-          email: email,
-          username: username,
-          name: name,
-        ),
-      );
+      if (user != null) {
+        final controller = FormController.instance;
 
-      return user;
+        double convertHeightToCm() {
+          int feet = controller.selectedFeet.value;
+          int inches = controller.selectedInches.value;
+          return (feet * 30.48) + (inches * 2.54);
+        }
+
+        double convertWeightToDouble(
+            int weightInteger, int weightFraction, String unit) {
+          // Combine integer and fractional weight
+          double weightInKg = weightInteger + (weightFraction / 10.0);
+
+          if (unit == 'Lbs') {
+            // Convert lbs to kg (1 lb = 0.453592 kg)
+            return weightInKg * 2.20462;
+          }
+
+          return weightInKg;
+        }
+
+        final userModel = UserModel(
+          id: user.uid,
+          userName: username,
+          email: email,
+          name: name,
+          phoneNumber: phoneNumber,
+          fitnessGoal: controller.selectedGoals,
+          gender: controller.selectedGender.value,
+          height: convertHeightToCm(),
+          weight: convertWeightToDouble(
+              controller.currentWeightInteger.value,
+              controller.currentWeightFraction.value,
+              controller.currentWeightUnit.value),
+          weightGoal: convertWeightToDouble(
+              controller.goalWeightInteger.value,
+              controller.goalWeightFraction.value,
+              controller.goalWeightUnit.value),
+          workoutFrequency: controller.selectedWorkoutFrequency.value,
+          dietPreference: controller.selectedDietPreferences,
+        );
+        await FirestoreService().createUserDocument(userModel);
+        return user;
+      }
+
+      return null;
 
       // return null;
     } on FirebaseAuthException catch (e) {

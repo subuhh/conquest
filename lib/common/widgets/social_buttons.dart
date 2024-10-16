@@ -1,8 +1,10 @@
+import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:conquest/features/Authentication/FirstTimeLogin/first_time_login_by_google.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/services/auth_service.dart';
+import '../../features/Form/Form.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
@@ -45,6 +47,7 @@ class _SocialButtonState extends State<SocialButton> {
 
   Future<void> _handleGoogleSignIn() async {
     final result = await AuthService().signInWithGoogle();
+    final formController = FormController.instance;
 
     if (result != null) {
       final user = result['user'] as User?;
@@ -55,9 +58,12 @@ class _SocialButtonState extends State<SocialButton> {
           // User document exists, navigate to the homepage
           Get.offAllNamed('/btmnav');
         } else {
-          // User document does not exist, navigate to the info entry screen
-
-          Get.off(() => FirstTimeLogin(user: user));
+          if (formController.selectedGender.value.isNotEmpty) {
+            // All Field are done go with first time login
+            Get.off(() => FirstTimeLogin(user: user));
+          } else {
+            Get.to(() => FormScreen());
+          }
         }
       }
     } else {

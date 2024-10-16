@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Form_Controller/FormController.dart';
+
 class FirstTimeLoginController extends GetxController with WidgetsBindingObserver {
   final User? user;
 
@@ -62,13 +64,47 @@ class FirstTimeLoginController extends GetxController with WidgetsBindingObserve
         log('isAvaiable: $isUsernameAvailable');
 
         if (isUsernameAvailable) {
+
+          final controller = FormController.instance;
+
+          double convertHeightToCm() {
+            int feet = controller.selectedFeet.value;
+            int inches = controller.selectedInches.value;
+            return (feet * 30.48) + (inches * 2.54);
+          }
+
+          double convertWeightToDouble(
+              int weightInteger, int weightFraction, String unit) {
+            // Combine integer and fractional weight
+            double weightInKg = weightInteger + (weightFraction / 10.0);
+
+            if (unit == 'Lbs') {
+              // Convert lbs to kg (1 lb = 0.453592 kg)
+              return weightInKg * 2.20462;
+            }
+
+            return weightInKg;
+          }
+
           final userModel = UserModel(
             id: user!.uid,
             userName: userNameController.text,
             name: nameController.text,
             email: user!.email!,
             phoneNumber: phoneController.text,
-          );
+            fitnessGoal: controller.selectedGoals,
+            gender: controller.selectedGender.value,
+            height: convertHeightToCm(),
+            weight: convertWeightToDouble(
+                controller.currentWeightInteger.value,
+                controller.currentWeightFraction.value,
+                controller.currentWeightUnit.value),
+            weightGoal: convertWeightToDouble(
+                controller.goalWeightInteger.value,
+                controller.goalWeightFraction.value,
+                controller.goalWeightUnit.value),
+            workoutFrequency: controller.selectedWorkoutFrequency.value,
+            dietPreference: controller.selectedDietPreferences,          );
 
           await FirestoreService().createUserDocument(userModel);
 

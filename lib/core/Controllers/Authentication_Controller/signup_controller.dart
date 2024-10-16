@@ -43,13 +43,20 @@ class SignUpController extends GetxController {
       }
 
       try {
-        await _auth.registerWithEmailAndPassword(
+        final userCredential = await _auth.registerWithEmailAndPassword(
           emailController.text,
           passwordController.text,
           userNameController.text,
           nameController.text,
           phoneController.text,
         );
+
+        if (userCredential != null) {
+          Get.offAllNamed('/btmnav');
+        } else {
+          showSnackBar('Error', 'Something went wrong. Please try again.',
+              isError: true);
+        }
       } catch (e) {
         showSnackBar('Error', 'Something went wrong. Please try again.',
             isError: true);

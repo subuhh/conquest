@@ -106,6 +106,7 @@ class _GoalWeightScreenState extends State<GoalWeightScreen> {
               height: THelperFunctions.screenHeight(context) * 0.28,
               child: Obx(
                 () => CupertinoPicker(
+                  looping: true,
                   scrollController: FixedExtentScrollController(
                     initialItem: controller.goalWeightUnit.value == 'Kg'
                         ? controller.goalWeightInteger.value - 50
@@ -137,6 +138,7 @@ class _GoalWeightScreenState extends State<GoalWeightScreen> {
               height: THelperFunctions.screenHeight(context) * 0.28,
               child: Obx(
                 () => CupertinoPicker(
+                  looping: true,
                   scrollController: FixedExtentScrollController(
                       initialItem: controller.goalWeightFraction.value),
                   itemExtent: 40.0,

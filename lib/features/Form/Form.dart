@@ -1,13 +1,13 @@
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
-import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
+import '../Authentication/GenderSelection/gender_selection_page.dart';
 
 class FormScreen extends StatelessWidget {
   // Controller initialized using GetX
-  final FormController controller = Get.put(FormController());
+  final controller = FormController.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class FormScreen extends StatelessWidget {
                   ? () {
                       if (controller.currentQuestionIndex.value == 5) {
                         // Navigate to SummaryScreen
-                        Get.to(() => SignUpScreen());
+                        Get.to(() => GenderSelectionScreen());
                       } else {
                         controller.nextQuestion();
                       }

@@ -4,6 +4,7 @@ import 'package:conquest/features/SplashScreen/splash_screen.dart';
 import 'package:conquest/utils/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'core/services/auth_service.dart';
 import 'features/BottomNavBar/bottom_nav_bar.dart';
@@ -15,6 +16,13 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+      statusBarBrightness: Brightness.dark, // For iOS (dark icons)
+    )
+  );
 
   // Initialize GetX dependencies here
   Get.put(AuthService()); // Inject AuthService as a GetX controller

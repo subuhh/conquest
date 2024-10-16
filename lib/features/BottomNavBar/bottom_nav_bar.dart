@@ -1,3 +1,4 @@
+import 'package:conquest/features/Nutrition/NutritionHomePage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,7 +62,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             children: const [
               HomePage(),
               Center(child: Text('Workouts')),
-              Center(child: Text('Nutrition')),
+              NutritionHomePage(),
               Center(child: Text('Community')),
               MarketplaceScreen(),
             ],

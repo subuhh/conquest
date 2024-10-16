@@ -27,7 +27,7 @@ Widget buildBottomNavigationBarButtons(context) {
         },
         child: Text.rich(
           TextSpan(
-            text: 'Already a member, ', // Regular text
+            text: 'Already a member? ', // Regular text
             style: Theme.of(context)
                 .textTheme
                 .titleSmall!, // Apply your theme's text style
