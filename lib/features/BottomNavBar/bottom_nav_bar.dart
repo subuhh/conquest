@@ -19,23 +19,31 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   final inActiveIconList = <String>[
     'assets/icons/bottomNavbaricons/InactiveIcons/home.svg',
-    'assets/icons/bottomNavbaricons/InactiveIcons/shop.svg',
     'assets/icons/bottomNavbaricons/InactiveIcons/workout.svg',
-    'assets/icons/bottomNavbaricons/InactiveIcons/settings.svg',
+    'assets/icons/appicons/nutrition-outline.svg',
+    'assets/icons/drawerIcons/community.svg',
+    'assets/icons/bottomNavbaricons/InactiveIcons/shop.svg',
+
   ];
 
   final activeIconList = <String>[
     'assets/icons/bottomNavbaricons/activeIcons/home.svg',
-    'assets/icons/bottomNavbaricons/activeIcons/shop.svg',
     'assets/icons/bottomNavbaricons/activeIcons/workout.svg',
-    'assets/icons/bottomNavbaricons/activeIcons/settings.svg',
+    'assets/icons/appicons/nutrition-outline.svg',
+    'assets/icons/drawerIcons/community.svg',
+    'assets/icons/bottomNavbaricons/activeIcons/shop.svg',
+
+   // 'assets/icons/bottomNavbaricons/activeIcons/settings.svg',
   ];
 
   final itemLabel = <String>[
     'Home',
-    'Shop',
     'Workouts',
-    'Settings',
+    'Nutrition',
+    'Community',
+    'Shop',
+
+    //'Settings',
   ];
 
   @override
@@ -52,9 +60,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
             },
             children: const [
               HomePage(),
+              Center(child: Text('Workouts')),
+              Center(child: Text('Nutrition')),
+              Center(child: Text('Community')),
               MarketplaceScreen(),
-              Center(child: Text('Workout Tracking')),
-              Center(child: Text('Settings Page')),
             ],
           ),
           // CurvedNavigationBar
@@ -91,7 +100,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         BlendMode.srcIn,
                       ),
                     ),
-                    Text(itemLabel[index],style: TextStyle(color: Colors.white),)
+                    Text(itemLabel[index],style: TextStyle(color: Colors.white,fontSize: 12),)
                   ],
                 );
               }),
