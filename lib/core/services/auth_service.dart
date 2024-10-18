@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:conquest/common/widgets/calorie_count/calorie_count.dart';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:conquest/core/model/user.dart';
@@ -76,6 +77,18 @@ class AuthService extends GetxController {
           return weightInKg;
         }
 
+        final calorie = CalorieCalculator.calculateCalorieRequirement(
+          age: controller.selectedAge.value,
+          gender: controller.selectedGender.value,
+          heightCm: convertHeightToCm(),
+          weightKg: convertWeightToDouble(
+              controller.currentWeightInteger.value,
+              controller.currentWeightFraction.value,
+              controller.currentWeightUnit.value),
+          activityLevel: controller.selectedWorkoutFrequency.value,
+          goals: controller.selectedGoals,
+        );
+
         final userModel = UserModel(
           id: user.uid,
           userName: username,
@@ -95,6 +108,8 @@ class AuthService extends GetxController {
               controller.goalWeightUnit.value),
           workoutFrequency: controller.selectedWorkoutFrequency.value,
           dietPreference: controller.selectedDietPreferences,
+          age: controller.selectedAge.value,
+          calorieGoal: calorie,
         );
         await FirestoreService().createUserDocument(userModel);
         return user;

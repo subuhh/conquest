@@ -1,5 +1,6 @@
 import 'package:conquest/features/Form/Widgets/GoalWeight.dart';
 import 'package:conquest/features/Form/Widgets/HowMuchWorkout.dart';
+import 'package:conquest/features/Form/Widgets/age_question.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../features/Form/Widgets/GoalQuestion.dart';
@@ -17,6 +18,7 @@ class FormController extends GetxController {
     "What is you Goal Weight",
     "Select how often you engage in workout",
     "Select your Diet Preferences",
+    "Enter your age",
   ];
 
   final List<String> pictures = [
@@ -26,6 +28,7 @@ class FormController extends GetxController {
     'assets/images/AnimeQuestionGoalWeight.png',
     'assets/images/AnimeQuestionHowMunchWorkout.png',
     'assets/images/AnimeQuestion4.png',
+    'assets/images/age_male_bg.png',
   ];
 
   /// Observable state ///
@@ -49,6 +52,8 @@ class FormController extends GetxController {
   RxString selectedWorkoutFrequency = ''.obs;
   // Diet Preference Question
   RxList<String> selectedDietPreferences = <String>[].obs;
+  // Age
+  RxInt selectedAge = 0.obs;
   // Gender
   RxString selectedGender = ''.obs;
 
@@ -84,7 +89,7 @@ class FormController extends GetxController {
         return HeightPickerScreen();
 
       case 2:
-        return  HowMuchWeightScreen();
+        return HowMuchWeightScreen();
 
       case 3:
         return GoalWeightScreen();
@@ -94,6 +99,10 @@ class FormController extends GetxController {
 
       case 5:
         return DietPreference();
+
+      case 6:
+        return AgeQuestion();
+
       default:
         return Container(); // Fallback
     }

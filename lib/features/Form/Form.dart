@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
-import '../Authentication/GenderSelection/gender_selection_page.dart';
+import 'Widgets/gender_selection_page.dart';
 
 class FormScreen extends StatelessWidget {
   // Controller initialized using GetX
@@ -17,7 +17,7 @@ class FormScreen extends StatelessWidget {
         child: Obx(() => ElevatedButton(
               onPressed: _isNextButtonEnabled()
                   ? () {
-                      if (controller.currentQuestionIndex.value == 5) {
+                      if (controller.currentQuestionIndex.value == 6) {
                         // Navigate to SummaryScreen
                         Get.to(() => GenderSelectionScreen());
                       } else {
@@ -118,6 +118,7 @@ class FormScreen extends StatelessWidget {
     if (index == 0) return controller.selectedGoals.isNotEmpty;
     if (index == 4) return controller.selectedWorkoutFrequency.isNotEmpty;
     if (index == 5) return controller.selectedDietPreferences.isNotEmpty;
+    if (index == 6) return controller.selectedAge.value != 0;
     return true;
   }
 }

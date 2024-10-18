@@ -14,20 +14,21 @@ class NutritionHomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text('Nutrition'),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-            vertical: TSizes.spaceBtwSections,
+            vertical: TSizes.spaceBtwSections/2,
             horizontal: TSizes.spaceBtwItems),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DietTracker(),
-              SizedBox(height: TSizes.spaceBtwSections),
+              SizedBox(height: TSizes.spaceBtwSections/2),
               DailyRecommendedMeal(),
-              SizedBox(height: TSizes.spaceBtwSections),
+              SizedBox(height: TSizes.spaceBtwSections/2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

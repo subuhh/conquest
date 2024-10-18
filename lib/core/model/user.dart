@@ -16,6 +16,7 @@ class UserModel {
   final List<String>? workoutHistory;
   final List<String>? dietPreference;
   final String? defaultAddressId;
+  final double? calorieGoal;
 
   UserModel(
       {required this.id,
@@ -34,7 +35,8 @@ class UserModel {
       this.workoutFrequency,
       this.workoutHistory,
       this.dietPreference,
-      this.defaultAddressId});
+      this.defaultAddressId,
+      this.calorieGoal});
 
   // Factory constructor to create a UserModel instance from Firestore document
   factory UserModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -56,6 +58,7 @@ class UserModel {
       workoutHistory: List<String>.from(data['workoutHistory'] ?? []),
       dietPreference: List<String>.from(data['dietPreference'] ?? []),
       defaultAddressId: data['defaultAddressId'] ?? '',
+      calorieGoal: data['calorieGoal'] ?? 0.0,
     );
   }
 
@@ -77,7 +80,8 @@ class UserModel {
       'workoutFrequency': workoutFrequency,
       'workoutHistory': workoutHistory,
       'dietPreference': dietPreference,
-      'defaultAddressId': defaultAddressId
+      'defaultAddressId': defaultAddressId,
+      'calorieGoal': calorieGoal,
     };
   }
 }

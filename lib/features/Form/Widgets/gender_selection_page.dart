@@ -133,35 +133,6 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
     );
   }
 
-  // Future<void> _genderSelection() async {
-  //   try {
-  //     setState(() => isLoading = true);
-  //     // if (selectedGender!.isNotEmpty) {
-  //     //   final userModel = UserModel(
-  //     //     id: widget.user!.uid,
-  //     //     userName: widget.username!,
-  //     //     name: widget.name!,
-  //     //     email: widget.email!,
-  //     //     phoneNumber: widget.phoneNumber!,
-  //     //     gender: selectedGender,
-  //     //   );
-  //
-  //     // Save user data in Firestore
-  //     // await FirestoreService().createUserDocument(userModel);
-  //
-  //     Get.offAll(() => const SignUpScreen());
-  //     // showSnackBar('Success', 'Account created successfully. Please log in.');
-  //     // } else {
-  //     //   showSnackBar('Error', 'Please Select Gender!');
-  //     // }
-  //   } catch (e) {
-  //     setState(() => isLoading = false);
-  //     showSnackBar('Error', 'Something Error Occurred. Please Try Again.');
-  //   } finally {
-  //     setState(() => isLoading = false);
-  //   }
-  // }
-
   Widget FemaleGenderButton({required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,

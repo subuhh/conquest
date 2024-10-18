@@ -1,3 +1,4 @@
+import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -11,11 +12,25 @@ class DietTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userController = UserController.instance;
+
+    // double calculateProgress() {
+    //   final consumedCalories = userController.userModel.value?.calorie?.round() ?? 0;
+    //   final calorieGoal = userController.userModel.value?.calorieGoal?.round() ?? 0;
+    //   if (calorieGoal > 0) {
+    //     return consumedCalories / calorieGoal;
+    //   } else {
+    //     return 0.0; // Or any default value if calorieGoal is 0
+    //   }
+    // }
+
     return GestureDetector(
       onTap: () => Get.to(() => DietTrackerPage()),
       child: Container(
         width: double.maxFinite,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15), color: Colors.white),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -34,7 +49,7 @@ class DietTracker extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "1500 out of 2000",
+                  "0 out of ${userController.userModel.value?.calorieGoal?.round()}",
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
