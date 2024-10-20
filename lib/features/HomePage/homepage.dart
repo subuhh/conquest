@@ -1,6 +1,7 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
 import 'package:conquest/core/Controllers/homepage_controller.dart';
+import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -23,44 +24,15 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       /// AppBar
       backgroundColor: TColors.secondaryBackground,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/drawer');
-          },
-          icon: const Icon(
-            Icons.menu,
-            size: TSizes.iconLg,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/logos/conquest-icon.png',
-              height: TSizes.iconLg + 15,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Image.asset(
-              'assets/logos/conquest-string.png',
-              height: TSizes.iconLg + 80,
-            ),
-          ],
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Iconsax.notification,
-                size: TSizes.iconLg,
-              )),
-        ],
-      ),
+      appBar: CustomAppBar(actions: [
+        IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Iconsax.notification,
+              size: TSizes.iconLg,
+            )),
+      ],),
+
       body: Obx(() {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),

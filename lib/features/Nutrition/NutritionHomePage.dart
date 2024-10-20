@@ -1,4 +1,7 @@
+import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:conquest/features/Nutrition/DailyRecomendedMeal/DailyRecommendedMeal.dart';
+import 'package:conquest/features/Nutrition/DaySelector/DaySelector.dart';
+import 'package:conquest/features/Nutrition/MealPlans/RecomendedMeals/RecomendedMeals.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
@@ -13,10 +16,7 @@ class NutritionHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Nutrition'),
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(
             vertical: TSizes.spaceBtwSections/2,
@@ -25,14 +25,18 @@ class NutritionHomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              DaySelector(),
+              SizedBox(height: TSizes.spaceBtwSections,),
               DietTracker(),
               SizedBox(height: TSizes.spaceBtwSections/2),
-              DailyRecommendedMeal(),
+              Recomendedmeals(),
+
+              //DailyRecommendedMeal(),
               SizedBox(height: TSizes.spaceBtwSections/2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  NewMealFromScratch(),
+                  MealPlanContainerWidget(),
                   WhatsInYourFridge(),
                 ],
               ),

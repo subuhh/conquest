@@ -1,5 +1,6 @@
 import 'package:conquest/core/Controllers/marketplace_controller.dart';
 import 'package:conquest/core/Controllers/Product_Controller/product_controller.dart';
+import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:conquest/features/MarketPlace/Products_Widgets/cart_counter_icon.dart';
 import 'package:conquest/features/MarketPlace/WishList/WIshListScreen.dart';
 import 'package:flutter/material.dart';
@@ -22,45 +23,15 @@ class MarketplaceScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/drawer');
-          },
-          icon: const Icon(
-            Icons.menu,
-            size: TSizes.iconLg,
-          ),
+      appBar: CustomAppBar(actions: [
+        IconButton(
+          onPressed: () => Get.to(() => WishListScreen()),
+          icon: const Icon(Iconsax.heart),
         ),
-        automaticallyImplyLeading: false,
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/logos/conquest-icon.png',
-              height: TSizes.iconLg + 15,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Image.asset(
-              'assets/logos/conquest-string.png',
-              height: TSizes.iconLg + 80,
-            ),
-          ],
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => Get.to(() => WishListScreen()),
-            icon: const Icon(Iconsax.heart),
-          ),
-          // Cart Button
-          CartCounterIcon(),
-          const SizedBox(width: 12)
-        ],
-      ),
+        // Cart Button
+        CartCounterIcon(),
+        const SizedBox(width: 12)
+      ],),
       body: Column(
         children: [
           const Searchbar(),
