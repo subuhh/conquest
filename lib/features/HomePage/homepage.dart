@@ -5,9 +5,6 @@ import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-
-import '../../core/Controllers/Chat_Gpt_Controller/chat_gpt_controller.dart';
-import '../../core/Controllers/user_controller.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/helpers/helper_functions.dart';
@@ -18,22 +15,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    Get.put(UserController());
-    Get.put(RecipeRecommendationChatGptController());
-
-    final HomePageController controller = Get.put(HomePageController());
+    final controller = Get.put(HomePageController());
     return Scaffold(
       /// AppBar
       backgroundColor: TColors.secondaryBackground,
-      appBar: CustomAppBar(actions: [
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Iconsax.notification,
-              size: TSizes.iconLg,
-            )),
-      ],),
+      appBar: CustomAppBar(
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Iconsax.notification,
+                size: TSizes.iconLg,
+              )),
+        ],
+      ),
 
       body: Obx(() {
         return Padding(

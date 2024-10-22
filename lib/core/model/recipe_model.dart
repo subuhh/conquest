@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class RecipeModel {
   final String title;
   final String description;
@@ -7,8 +11,10 @@ class RecipeModel {
   final String recipeTime;
   final NutritionValue nutritionValue;
   final String imageUrl;
-  final List<String> dietPreference;
+  final String dietPreference;
   final String mealType;
+  final String hash;
+  final FieldValue createdAt;
 
   RecipeModel({
     required this.title,
@@ -21,6 +27,8 @@ class RecipeModel {
     required this.imageUrl,
     required this.dietPreference,
     required this.mealType,
+    required this.hash,
+    required this.createdAt,
   });
 
   // Convert to JSON for Firestore
@@ -36,25 +44,34 @@ class RecipeModel {
       'imageUrl': imageUrl,
       'dietPreference': dietPreference,
       'mealType': mealType,
+      'hash': hash,
+      'createdAt': createdAt
     };
   }
 
   // Convert from JSON (Firestore data)
   factory RecipeModel.fromJson(Map<String, dynamic> json) {
-    return RecipeModel(
-      title: json['title'],
-      description: json['description'],
-      ingredients: (json['ingredients'] as List)
-          .map((e) => Ingredient.fromJson(e))
-          .toList(),
-      steps: List<String>.from(json['steps']),
-      calories: json['calories'],
-      recipeTime: json['recipeTime'],
-      nutritionValue: NutritionValue.fromJson(json['nutritionValue']),
-      imageUrl: json['imageUrl'],
-      dietPreference: List<String>.from(json['dietPreference']),
-      mealType: json['mealType'],
-    );
+    try {
+      return RecipeModel(
+        title: json['title'] as String,
+        description: json['description'] as String,
+        ingredients: (json['ingredients'] as List<dynamic>)
+            .map((ingredientItem) => Ingredient.fromJson(ingredientItem as Map<String, dynamic>))
+            .toList(),
+        steps: List<String>.from(json['steps'] as List<dynamic>),
+        calories: json['calories'] as double,
+        recipeTime: json['recipeTime'] as String,
+        nutritionValue: NutritionValue.fromJson(json['nutritionValue'] as Map<String, dynamic>),
+        imageUrl: json['imageUrl'] as String,
+        dietPreference: json['dietPreference'] as String,
+        mealType: json['mealType'] as String,
+        hash: json['hash'] as String,
+        createdAt: json['createdAt'] as FieldValue,
+      );
+    } catch (e) {
+      log('Error in RecipeModel.fromJson: $e');
+      throw e;
+    }
   }
 
   RecipeModel copyWith({
@@ -71,6 +88,8 @@ class RecipeModel {
       dietPreference: dietPreference,
       mealType: mealType,
       imageUrl: imageUrl ?? this.imageUrl,
+      hash: hash,
+      createdAt: createdAt,
     );
   }
 }

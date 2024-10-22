@@ -32,6 +32,8 @@ dependencies:
   image_picker: ^1.1.2
   flutter_secure_storage: ^9.2.2
   flutter_dotenv: ^5.2.1
+  crypto: ^3.0.6
+  path_provider: ^2.1.4
 
   # Location & Address
   geocoding: ^3.0.0

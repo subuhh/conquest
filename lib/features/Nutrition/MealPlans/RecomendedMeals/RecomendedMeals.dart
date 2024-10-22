@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../core/Controllers/Chat_Gpt_Controller/chat_gpt_controller.dart';
+import '../../../../core/Controllers/Nutrition_Controller/Chat_Gpt_Controller/chat_gpt_controller.dart';
 import '../../../../utils/constants/sizes.dart';
 import 'Widgets/RecomendedMealCardWidget.dart';
 

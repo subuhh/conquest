@@ -9,7 +9,7 @@ class WhatsInYourFridge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (ctx)=>Whatsinyourfridgepage())),
+      onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (ctx)=>WhatsInYourFridgePage())),
       child: Container(
         height: 175,
         width: 175,

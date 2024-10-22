@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:conquest/core/Controllers/Chat_Gpt_Controller/chat_gpt_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/Controllers/Nutrition_Controller/Chat_Gpt_Controller/chat_gpt_controller.dart';
 import '../../../utils/constants/sizes.dart';
 import '../Widgets/MealNutritionIndicator/MealNutritionIndicator.dart';
 
@@ -35,6 +35,10 @@ class MealRecipesPage extends StatelessWidget {
                       width: double.maxFinite,
                       height: 250,
                       fit: BoxFit.fitWidth,
+                      placeholder: (context, url) =>
+                          Image.asset('assets/images/recipe_image_error.png'),
+                      errorWidget: (context, url, error) =>
+                          Image.asset('assets/images/recipe_image_error.png'),
                     ),
                   ),
                   Positioned(
@@ -51,17 +55,17 @@ class MealRecipesPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.favorite_border,
-                        color: Colors.black,
-                      ),
-                    ),
-                  )
+                  // Positioned(
+                  //   top: 10,
+                  //   right: 10,
+                  //   child: CircleAvatar(
+                  //     backgroundColor: Colors.white,
+                  //     child: Icon(
+                  //       Icons.favorite_border,
+                  //       color: Colors.black,
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
               SizedBox(height: TSizes.spaceBtwItems),

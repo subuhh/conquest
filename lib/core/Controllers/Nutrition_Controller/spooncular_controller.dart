@@ -1,6 +1,6 @@
 import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:get/get.dart';
-import '../services/spooncular_service.dart';
+import '../../services/spooncular_service.dart';
 
 class MealRecommendationController extends GetxController {
   var isLoading = true.obs;
