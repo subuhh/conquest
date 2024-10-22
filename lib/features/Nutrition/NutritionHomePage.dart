@@ -1,7 +1,7 @@
 import 'package:conquest/features/AppBar/AppBar.dart';
-import 'package:conquest/features/Nutrition/DailyRecomendedMeal/DailyRecommendedMeal.dart';
 import 'package:conquest/features/Nutrition/DaySelector/DaySelector.dart';
 import 'package:conquest/features/Nutrition/MealPlans/RecomendedMeals/RecomendedMeals.dart';
+import 'package:conquest/features/Nutrition/WaterIntakeWidget/water_intake.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
@@ -14,25 +14,28 @@ class NutritionHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(
-            vertical: TSizes.spaceBtwSections/2,
-            horizontal: TSizes.spaceBtwItems),
+          vertical: TSizes.spaceBtwSections / 2,
+          horizontal: TSizes.spaceBtwItems,
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DaySelector(),
-              SizedBox(height: TSizes.spaceBtwSections,),
+              SizedBox(height: TSizes.spaceBtwSections / 1.5),
+              WaterIntake(currentWaterIntake: 1.5, waterGoal: 7.0),
+              SizedBox(height: TSizes.spaceBtwSections / 1.5),
               DietTracker(),
-              SizedBox(height: TSizes.spaceBtwSections/2),
-              Recomendedmeals(),
-
-              //DailyRecommendedMeal(),
-              SizedBox(height: TSizes.spaceBtwSections/2),
+              SizedBox(height: TSizes.spaceBtwSections / 2),
+              RecommendedMeals(),
+              // DailyRecommendedMeal(),
+              SizedBox(height: TSizes.spaceBtwSections / 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -40,6 +43,7 @@ class NutritionHomePage extends StatelessWidget {
                   WhatsInYourFridge(),
                 ],
               ),
+              SizedBox(height: TSizes.spaceBtwSections * 3),
             ],
           ),
         ),

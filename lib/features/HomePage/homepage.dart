@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../core/Controllers/Chat_Gpt_Controller/chat_gpt_controller.dart';
 import '../../core/Controllers/user_controller.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
@@ -19,6 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Get.put(UserController());
+    Get.put(RecipeRecommendationController());
 
     final HomePageController controller = Get.put(HomePageController());
     return Scaffold(

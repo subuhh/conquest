@@ -7,6 +7,7 @@ class CircularCalorieIndicator extends StatelessWidget {
   final double carbPercentage;
   final double fatPercentage;
   final double proteinPercentage;
+  final double fiberPercentage;
 
   const CircularCalorieIndicator({
     Key? key,
@@ -14,6 +15,7 @@ class CircularCalorieIndicator extends StatelessWidget {
     required this.carbPercentage,
     required this.fatPercentage,
     required this.proteinPercentage,
+    required this.fiberPercentage,
   }) : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class CircularCalorieIndicator extends StatelessWidget {
               carbPercentage: carbPercentage,
               fatPercentage: fatPercentage,
               proteinPercentage: proteinPercentage,
+              fiberPercentage: fiberPercentage,
             ),
           ),
         ),
@@ -54,11 +57,13 @@ class MultiSegmentPainter extends CustomPainter {
   final double carbPercentage;
   final double fatPercentage;
   final double proteinPercentage;
+  final double fiberPercentage;
 
   MultiSegmentPainter({
     required this.carbPercentage,
     required this.fatPercentage,
     required this.proteinPercentage,
+    required this.fiberPercentage,
   });
 
   @override
@@ -66,7 +71,7 @@ class MultiSegmentPainter extends CustomPainter {
     final rect = Rect.fromLTWH(0, 0, size.width, size.height);
     final startAngle = -pi / 2;
 
-    final totalPercentage = carbPercentage + fatPercentage + proteinPercentage;
+    final totalPercentage = carbPercentage + fatPercentage + proteinPercentage + fiberPercentage;
 
     // Colors for segments
     final carbPaint = Paint()
@@ -74,25 +79,32 @@ class MultiSegmentPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8;
 
-    final fatPaint = Paint()
-      ..color = Colors.orange
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 12;
-
     final proteinPaint = Paint()
       ..color = Colors.purple
       ..style = PaintingStyle.stroke
       ..strokeWidth = 10;
 
+    final fatPaint = Paint()
+      ..color = Colors.orange
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 12;
+
+    final fiberPaint = Paint()
+      ..color = Colors.yellow
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 14;
+
     // Calculate angles for each segment
     final carbAngle = 2 * pi * (carbPercentage / totalPercentage);
     final fatAngle = 2 * pi * (fatPercentage / totalPercentage);
     final proteinAngle = 2 * pi * (proteinPercentage / totalPercentage);
+    final fiberAngle = 2 * pi * (fiberPercentage / totalPercentage);
 
     // Draw each segment
     canvas.drawArc(rect, startAngle, carbAngle, false, carbPaint);
     canvas.drawArc(rect, startAngle + carbAngle, fatAngle, false, fatPaint);
     canvas.drawArc(rect, startAngle + carbAngle + fatAngle, proteinAngle, false, proteinPaint);
+    canvas.drawArc(rect, startAngle + carbAngle + fatAngle + proteinAngle, fiberAngle, false, fiberPaint);
   }
 
   @override

@@ -10,7 +10,7 @@ class MealPlanContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){Navigator.push(context, MaterialPageRoute(builder: (ctx)=>Mealplanspage()));},
+      onTap: (){Navigator.push(context, MaterialPageRoute(builder: (ctx)=>MealPlansPage()));},
       child: Container(
         height: 175,
         width: 175,

@@ -1,116 +1,130 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:conquest/core/Controllers/Chat_Gpt_Controller/chat_gpt_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../../utils/constants/sizes.dart';
-import '../WIdgets/MealNutritionIndicator/MealNutritionIndicator.dart';
-
-final List<String> directions = [
-  "Heat a large skillet over medium-high heat. Add oil to the pan and swirl to coat. Add beef and cook, turning occasionally until browned on all sides, 6–8 minutes.",
-  "Spoon beef into a 6-quart slow cooker. Stir in chicken stock, onion, garlic, chili powder, chipotles, salt, beans and tomatoes. Cover and cook on low until beef and beans are tender, 7–8 hours.",
-  "Ladle chili evenly into bowls. Top with sour cream, radishes, green onions and cilantro."
-];
+import '../Widgets/MealNutritionIndicator/MealNutritionIndicator.dart';
 
 class MealRecipesPage extends StatelessWidget {
-  const MealRecipesPage({super.key});
+  const MealRecipesPage(
+      {super.key,
+      required this.recipe,
+      required this.controller,
+      required this.url});
+
+  final Map<String, dynamic> recipe;
+  final RecipeRecommendationController controller;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(20)),
-              child: Image.network(
-                'https://www.eatingwell.com/thmb/QYZnBgF72TIKI6-A--NyoPa6avY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/greek-salmon-bowl-f681500cbe054bb1adb607ff55094075.jpeg',
-                width: double.maxFinite,
-                height: 250,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            SizedBox(
-              height: TSizes.spaceBtwItems,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: TSizes.spaceBtwItems),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
                 children: [
-                  Text(
-                    'Chicken Vegies',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .apply(fontWeightDelta: 2),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(20),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: url,
+                      width: double.maxFinite,
+                      height: 250,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
-                  SizedBox(
-                    height: TSizes.spaceBtwSections / 2,
-                  ),
-                  Text(
-                    'Nutrition per Serving',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(
-                    height: TSizes.spaceBtwItems,
-                  ),
-                  Mealnutritionindicatorwidget(),
-                  SizedBox(
-                    height: TSizes.spaceBtwSections,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Ingredients',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      SizedBox(height: TSizes.spaceBtwItems),
-                      Text(
-                        '1 1/2 tablespoon canola oil\n'
-                        '1 1/2 pound beef stew meat, cut into 3/4-inch pieces\n'
-                        '5 cup unsalted chicken stock\n'
-                        '2 cup chopped onion\n',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Text(
-                        'Description',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: directions.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  children: [
-                                    TextSpan(
-                                      text: '${index + 1}. ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                    TextSpan(text: directions[index]),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: IconButton(
+                        onPressed: () => Get.back(),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
                         ),
-                      )
-                    ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: Colors.black,
+                      ),
+                    ),
                   )
                 ],
               ),
-            )
-          ],
+              SizedBox(height: TSizes.spaceBtwItems),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: TSizes.spaceBtwItems),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      recipe['title'],
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .apply(fontWeightDelta: 2),
+                    ),
+                    SizedBox(height: TSizes.spaceBtwSections / 2),
+                    Text(
+                      'Nutrition per ${recipe['nutritionValue']['servings'] ?? '1'} Serving',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.left,
+                    ),
+                    SizedBox(height: TSizes.spaceBtwItems),
+                    MealNutritionIndicatorWidget(recipe: recipe),
+                    SizedBox(
+                      height: TSizes.spaceBtwSections,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Ingredients',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        ...recipe['ingredients'].map<Widget>((ingredientItem) {
+                          final ingredient = ingredientItem['ingredient'];
+                          final quantity = ingredientItem['quantity'];
+                          return Text(
+                            '• $ingredient: $quantity',
+                            style: const TextStyle(fontSize: 16),
+                          );
+                        }).toList(),
+                        SizedBox(height: TSizes.spaceBtwItems),
+                        // Recipe Steps
+                        const Text(
+                          'Steps',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        ...recipe['steps'].map<Widget>((step) {
+                          return Text(
+                              '${recipe['steps'].indexOf(step) + 1}. ${step['instruction']}',
+                              style: const TextStyle(fontSize: 16));
+                        }).toList(),
+                        SizedBox(height: TSizes.spaceBtwItems * 2),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

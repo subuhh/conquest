@@ -3,8 +3,8 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import 'RecomendedMeals/RecomendedMeals.dart';
 
-class Mealplanspage extends StatelessWidget {
-  const Mealplanspage({super.key});
+class MealPlansPage extends StatelessWidget {
+  const MealPlansPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +20,23 @@ class Mealplanspage extends StatelessWidget {
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),
-                Recomendedmeals(MealTime: "for BreakFast",),
+                RecommendedMeals(MealTime: "for BreakFast",),
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),
-                Recomendedmeals(MealTime: "for Morning Snax",),
+                RecommendedMeals(MealTime: "for Morning Snax",),
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),
-                Recomendedmeals(MealTime: "for Lunch",),
+                RecommendedMeals(MealTime: "for Lunch",),
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),
-                Recomendedmeals(MealTime: "for Evening Snack",),
+                RecommendedMeals(MealTime: "for Evening Snack",),
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),
-                Recomendedmeals(MealTime: "for Dinner",),
+                RecommendedMeals(MealTime: "for Dinner",),
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),
