@@ -3,6 +3,7 @@
 *.log
 *.pyc
 *.swp
+.env
 .DS_Store
 .atom/
 .buildlog/
@@ -12,9 +13,6 @@ migrate_working_dir/
 
 # Ignore file in lib/core/api_key/google_api_key.dart
 lib/core/api_key/google_api_key.dart
-
-# Env Variable
-.env
 
 # IntelliJ related
 *.iml
