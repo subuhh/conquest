@@ -9,7 +9,7 @@ import "../../../MealRecipes/MealRecipePage.dart";
 Widget RecommendedMealCardSmall(
   BuildContext context,
   Map<String, dynamic> recipeJson,
-  RecipeRecommendationController controller,
+    RecipeRecommendationChatGptController controller,
   String url,
 ) {
   return Padding(

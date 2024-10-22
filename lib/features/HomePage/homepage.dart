@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Get.put(UserController());
-    Get.put(RecipeRecommendationController());
+    Get.put(RecipeRecommendationChatGptController());
 
     final HomePageController controller = Get.put(HomePageController());
     return Scaffold(

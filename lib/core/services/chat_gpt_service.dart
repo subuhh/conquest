@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class RecipeService {
+class ChatGptRecipeService {
   final String apiKey =
       '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';
 

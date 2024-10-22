@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import '../../services/chat_gpt_service.dart';
 import '../user_controller.dart';
 
-class RecipeRecommendationController extends GetxController {
-  static RecipeRecommendationController get instance => Get.find();
+class RecipeRecommendationChatGptController extends GetxController {
+  static RecipeRecommendationChatGptController get instance => Get.find();
   final _formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get formKey => _formKey;
 
@@ -51,7 +51,7 @@ class RecipeRecommendationController extends GetxController {
     }
   }
 
-  final RecipeService _recipeService = RecipeService();
+  final ChatGptRecipeService _recipeService = ChatGptRecipeService();
 
   Map<String, dynamic> parseRecipeJson(String recipe) {
     return jsonDecode(recipe);

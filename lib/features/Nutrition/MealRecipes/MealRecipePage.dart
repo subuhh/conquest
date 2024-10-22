@@ -13,7 +13,7 @@ class MealRecipesPage extends StatelessWidget {
       required this.url});
 
   final Map<String, dynamic> recipe;
-  final RecipeRecommendationController controller;
+  final RecipeRecommendationChatGptController controller;
   final String url;
 
   @override

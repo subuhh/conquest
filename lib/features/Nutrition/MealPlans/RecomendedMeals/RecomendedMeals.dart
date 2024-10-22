@@ -13,7 +13,7 @@ class RecommendedMeals extends StatelessWidget {
   final String MealTime;
   @override
   Widget build(BuildContext context) {
-    final recipeController = RecipeRecommendationController.instance;
+    final recipeController = RecipeRecommendationChatGptController.instance;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
