@@ -47,9 +47,9 @@ class NutritionHomePage extends StatelessWidget {
             children: [
               DaySelector(),
               SizedBox(height: TSizes.spaceBtwSections / 1.5),
-              WaterIntake(currentWaterIntake: 1.5, waterGoal: 7.0),
-              SizedBox(height: TSizes.spaceBtwSections / 1.5),
               DietTracker(),
+              SizedBox(height: TSizes.spaceBtwSections / 1.5),
+              WaterIntake(currentWaterIntake: 1.5, waterGoal: 7.0),
               SizedBox(height: TSizes.spaceBtwSections / 2),
               RecommendedMeals(),
               // DailyRecommendedMeal(),

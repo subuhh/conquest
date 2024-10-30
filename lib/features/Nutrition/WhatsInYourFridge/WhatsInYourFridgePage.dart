@@ -11,19 +11,22 @@ class WhatsInYourFridgePage extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () => Get.back(),
+          child: Container(
+            child: Icon(Icons.arrow_back),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Container(
-                  child: Icon(Icons.arrow_back),
-                ),
-              ),
+
               const SizedBox(height: 15),
               GestureDetector(
                 onTap: () {

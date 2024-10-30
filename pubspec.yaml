@@ -85,6 +85,8 @@ flutter:
     - assets/icons/bottomNavbaricons/activeIcons/
     - assets/icons/FoodCategory/
     - .env
+    - assets/icons/Workout/
+    - assets/TempImages/
 
 
 

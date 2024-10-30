@@ -17,7 +17,7 @@ class _HowMuchWorkoutState extends State<HowMuchWorkout> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      //mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: TSizes.spaceBtwItems),
