@@ -1,17 +1,19 @@
 import 'dart:developer';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
+import 'package:conquest/common/widgets/water_intake/water_intake_calculate.dart';
 import 'package:conquest/core/model/user.dart';
+import 'package:conquest/core/services/auth_service.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../common/widgets/calorie_count/calorie_count.dart';
 import '../Form_Controller/FormController.dart';
 
-class FirstTimeLoginController extends GetxController with WidgetsBindingObserver {
-  final User? user;
-
-  FirstTimeLoginController(this.user);
+class FirstTimeLoginController extends GetxController
+    with WidgetsBindingObserver {
+  FirstTimeLoginController();
 
   final formKey = GlobalKey<FormState>();
   final userNameController = TextEditingController();
@@ -38,7 +40,8 @@ class FirstTimeLoginController extends GetxController with WidgetsBindingObserve
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
       logoutUser();
     }
   }
@@ -58,14 +61,26 @@ class FirstTimeLoginController extends GetxController with WidgetsBindingObserve
 
     try {
       if (formKey.currentState!.validate()) {
-        bool isUsernameAvailable = await FirestoreService()
-            .checkUsernameAvailability(userNameController.text);
+        // Check username availability
+        bool isUsernameAvailable;
+        try {
+          isUsernameAvailable = await FirestoreService()
+              .checkUsernameAvailability(userNameController.text);
+        } catch (e) {
+          showSnackBar(
+            'Error',
+            'Failed to check username availability. Please try again.',
+            isError: true,
+          );
+          log('Username check error: $e');
+          return;
+        }
 
-        log('isAvaiable: $isUsernameAvailable');
+        log('isAvailable: $isUsernameAvailable');
 
         if (isUsernameAvailable) {
-
           final controller = FormController.instance;
+          final User? user;
 
           double convertHeightToCm() {
             int feet = controller.selectedFeet.value;
@@ -75,22 +90,54 @@ class FirstTimeLoginController extends GetxController with WidgetsBindingObserve
 
           double convertWeightToDouble(
               int weightInteger, int weightFraction, String unit) {
-            // Combine integer and fractional weight
             double weightInKg = weightInteger + (weightFraction / 10.0);
 
             if (unit == 'Lbs') {
-              // Convert lbs to kg (1 lb = 0.453592 kg)
               return weightInKg * 2.20462;
             }
 
             return weightInKg;
           }
 
+          final calorie = CalorieCalculator.calculateCalorieRequirement(
+            age: controller.selectedAge.value,
+            gender: controller.selectedGender.value,
+            heightCm: convertHeightToCm(),
+            weightKg: convertWeightToDouble(
+                controller.currentWeightInteger.value,
+                controller.currentWeightFraction.value,
+                controller.currentWeightUnit.value),
+            activityLevel: controller.selectedWorkoutFrequency.value,
+            goals: controller.selectedGoals,
+          );
+
+          final waterGoal = WaterIntakeCalCul().calculateWaterIntakeGoal(
+            convertWeightToDouble(
+                controller.currentWeightInteger.value,
+                controller.currentWeightFraction.value,
+                controller.currentWeightUnit.value),
+            controller.selectedWorkoutFrequency.value,
+          );
+
+          // Complete Firebase sign-in after form submission
+          try {
+            user = await AuthService()
+                .completeFirebaseSignIn(controller.googleUser!);
+          } catch (e) {
+            showSnackBar(
+              'Error',
+              'Failed to complete sign-in. Please try again.',
+              isError: true,
+            );
+            log('Sign-in completion error: $e');
+            return;
+          }
+
           final userModel = UserModel(
             id: user!.uid,
             userName: userNameController.text,
             name: nameController.text,
-            email: user!.email!,
+            email: user.email!,
             phoneNumber: phoneController.text,
             fitnessGoal: controller.selectedGoals,
             gender: controller.selectedGender.value,
@@ -104,17 +151,41 @@ class FirstTimeLoginController extends GetxController with WidgetsBindingObserve
                 controller.goalWeightFraction.value,
                 controller.goalWeightUnit.value),
             workoutFrequency: controller.selectedWorkoutFrequency.value,
-            dietPreference: controller.selectedDietPreferences,          );
+            dietPreference: controller.selectedDietPreferences,
+            age: controller.selectedAge.value,
+            profileImageUrl: user.photoURL ?? '',
+            calorieGoal: calorie,
+            waterGoal: waterGoal,
+          );
 
-          await FirestoreService().createUserDocument(userModel);
-
-          Get.offAllNamed('/btmnav');
+          // Create user document
+          try {
+            await FirestoreService().createUserDocument(userModel);
+            Get.offAllNamed('/btmnav');
+          } catch (e) {
+            showSnackBar(
+              'Error',
+              'Failed to create user profile. Please try again.',
+              isError: true,
+            );
+            log('Document creation error: $e');
+            return;
+          }
         } else {
-          showSnackBar('Error', 'Username is already taken. Please choose another one.', isError: true);
+          showSnackBar(
+            'Error',
+            'Username is already taken. Please choose another one.',
+            isError: true,
+          );
         }
       }
     } catch (e) {
-      showSnackBar('Error', 'Something went wrong. Please try again.', isError: true);
+      showSnackBar(
+        'Error',
+        'Something went wrong. Please try again.',
+        isError: true,
+      );
+      log('General error in handleSignUp: $e');
     } finally {
       isLoading.value = false;
     }

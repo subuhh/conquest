@@ -26,7 +26,6 @@ class WhatsInYourFridgePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const SizedBox(height: 15),
               GestureDetector(
                 onTap: () {

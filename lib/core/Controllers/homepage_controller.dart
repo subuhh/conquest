@@ -1,8 +1,8 @@
+import 'package:conquest/core/Controllers/Nutrition_Controller/recipe_controller.dart';
 import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:conquest/core/model/banner.dart';
 import 'package:get/get.dart';
 import '../services/firestore_service.dart';
-import 'Nutrition_Controller/Chat_Gpt_Controller/chat_gpt_controller.dart';
 
 class HomePageController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -21,7 +21,7 @@ class HomePageController extends GetxController {
       final userController = UserController();
       return userController;
     });
-    Get.put(RecipeRecommendationChatGptController());
+    Get.put(RecipeController());
   }
 
   Future<void> fetchHomePageData() async {

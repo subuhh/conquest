@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conquest/core/Controllers/drawer_controller.dart';
 import 'package:conquest/features/MarketPlace/Products/OrderHIstory/MyOrders.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +56,17 @@ class DrawerScreen extends StatelessWidget {
           CircleAvatar(
             radius: 35,
             backgroundColor: TColors.primary.withOpacity(0.9),
-            child: Text(
-              userModel?.name[0].toUpperCase() ?? 'G',
-              style: const TextStyle(fontSize: 32, color: Colors.white),
-            ),
+            child: userModel!.profileImageUrl != null &&
+                    userModel.profileImageUrl!.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(35),
+                    child: CachedNetworkImage(
+                        imageUrl: userModel.profileImageUrl!),
+                  )
+                : Text(
+                    userModel.name[0].toUpperCase(),
+                    style: const TextStyle(fontSize: 32, color: Colors.white),
+                  ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -66,11 +74,11 @@ class DrawerScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  userModel?.name ?? '',
+                  userModel.name,
                   style: TTextTheme.lightTextTheme.headlineMedium,
                 ),
                 Text(
-                  userModel?.email ?? '',
+                  userModel.email,
                   style: TTextTheme.lightTextTheme.bodyMedium!
                       .copyWith(fontWeight: FontWeight.w500),
                 ),

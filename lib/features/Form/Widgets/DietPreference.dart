@@ -1,4 +1,5 @@
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
+import 'package:conquest/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -16,7 +17,7 @@ class _DietPreferenceState extends State<DietPreference> {
   final List<Map<String, dynamic>> foodCategories = [
     {
       'icon': 'assets/icons/FoodCategory/Vegeterian.svg',
-      'label': 'Vegeterian',
+      'label': 'Vegetarian',
       'subtitle': 'Plant-based but may include dairy and eggs.'
     },
     {
@@ -69,6 +70,7 @@ class _DietPreferenceState extends State<DietPreference> {
         ),
         padding: const EdgeInsets.all(15.0),
         itemCount: foodCategories.length,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final category = foodCategories[index];
           return GestureDetector(
@@ -79,7 +81,14 @@ class _DietPreferenceState extends State<DietPreference> {
                     .contains(category['label'])) {
                   controller.selectedDietPreferences.remove(category['label']);
                 } else {
-                  controller.selectedDietPreferences.add(category['label']);
+                  if (controller.selectedDietPreferences.length < 2) {
+                    controller.selectedDietPreferences.add(category['label']);
+                  } else {
+                    // Show a snack bar or a dialog to inform the user
+                    TLoaders.errorSnackBar(
+                      title: 'You can only select up to 2 diet preferences.',
+                    );
+                  }
                 }
               });
             },
@@ -112,36 +121,38 @@ Widget FoodCategoryCard({
       borderRadius: BorderRadius.circular(12.0), // Same borderRadius as before
     ),
     color: isSelected ? TColors.primary : Colors.grey[200],
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          iconUrl,
-          height: 35,
-          colorFilter: ColorFilter.mode(
-              isSelected ? Colors.white : Colors.black, BlendMode.srcIn),
-        ),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : Colors.black,
+    child: Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            iconUrl,
+            height: 32,
+            colorFilter: ColorFilter.mode(
+                isSelected ? Colors.white : Colors.black, BlendMode.srcIn),
           ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          subtitle,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w400,
-            color: isSelected ? Colors.white : Colors.black,
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.white : Colors.black,
+            ),
           ),
-        ),
-      ],
+          SizedBox(height: 2),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

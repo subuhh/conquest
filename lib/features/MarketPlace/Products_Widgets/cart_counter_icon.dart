@@ -15,7 +15,7 @@ class CartCounterIcon extends StatelessWidget {
     return Stack(
       children: [
         IconButton(
-          onPressed: () => Navigator.pushNamed(context, '/cart'),
+          onPressed: () => Get.toNamed('/cart'),
           icon: Icon(
             Iconsax.shopping_cart,
             color: isDecorated ? Colors.white : null,

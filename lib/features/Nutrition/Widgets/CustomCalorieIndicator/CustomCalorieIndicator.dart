@@ -108,7 +108,11 @@ class MultiSegmentPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant MultiSegmentPainter oldDelegate) {
+    return oldDelegate.carbPercentage != carbPercentage ||
+        oldDelegate.fatPercentage != fatPercentage ||
+        oldDelegate.proteinPercentage != proteinPercentage ||
+        oldDelegate.fiberPercentage != fiberPercentage;
   }
+
 }

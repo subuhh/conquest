@@ -1,12 +1,16 @@
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
+import 'package:conquest/features/Authentication/FirstTimeLogin/first_time_login_by_google.dart';
 import 'package:conquest/features/Authentication/SignUp/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utils/constants/colors.dart';
 
 class GenderSelectionScreen extends StatefulWidget {
+  final bool isFromGoogle;
+
   const GenderSelectionScreen({
     super.key,
+    this.isFromGoogle = false,
   });
 
   @override
@@ -117,7 +121,11 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
-                onPressed: () => Get.to(() => SignUpScreen()),
+                onPressed: () {
+                  widget.isFromGoogle
+                      ? Get.to(() => FirstTimeLogin())
+                      : Get.to(() => SignUpScreen());
+                },
                 child: isLoading
                     ? const Center(
                         child: CircularProgressIndicator(

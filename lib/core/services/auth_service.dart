@@ -6,6 +6,8 @@ import 'package:conquest/core/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../common/widgets/water_intake/water_intake_calculate.dart';
+import '../../features/Form/Form.dart';
 import 'firestore_service.dart';
 
 class AuthService extends GetxController {
@@ -89,6 +91,14 @@ class AuthService extends GetxController {
           goals: controller.selectedGoals,
         );
 
+        final waterGoal = WaterIntakeCalCul().calculateWaterIntakeGoal(
+          convertWeightToDouble(
+              controller.currentWeightInteger.value,
+              controller.currentWeightFraction.value,
+              controller.currentWeightUnit.value),
+          controller.selectedWorkoutFrequency.value,
+        );
+
         final userModel = UserModel(
           id: user.uid,
           userName: username,
@@ -110,6 +120,7 @@ class AuthService extends GetxController {
           dietPreference: controller.selectedDietPreferences,
           age: controller.selectedAge.value,
           calorieGoal: calorie,
+          waterGoal: waterGoal,
         );
         await FirestoreService().createUserDocument(userModel);
         return user;
@@ -168,36 +179,98 @@ class AuthService extends GetxController {
   }
 
   // Sign in with Google
-  Future<Map<String, dynamic>?> signInWithGoogle() async {
+  // Future<Map<String, dynamic>?> signInWithGoogle() async {
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  //     if (googleUser != null) {
+  //       final GoogleSignInAuthentication googleAuth =
+  //           await googleUser.authentication;
+  //       final AuthCredential credential = GoogleAuthProvider.credential(
+  //         accessToken: googleAuth.accessToken,
+  //         idToken: googleAuth.idToken,
+  //       );
+  //       final UserCredential result =
+  //           await FirebaseAuth.instance.signInWithCredential(credential);
+  //
+  //       // Check if user document exists in Firestore
+  //       final isDocumentExist =
+  //           await FirestoreService().checkUserDocumentExists(result.user!.uid);
+  //
+  //       firebaseUser.value = result.user;
+  //
+  //       // Return a map with the user and document existence status
+  //       return {
+  //         'user': result.user,
+  //         'isDocumentExist': isDocumentExist,
+  //       };
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     log('Error signing in with Google: $error');
+  //     return null;
+  //   }
+  // }
+
+  Future<GoogleSignInAccount?> initiateGoogleSignIn() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        final UserCredential result =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-        // Check if user document exists in Firestore
-        final isDocumentExist =
-            await FirestoreService().checkUserDocumentExists(result.user!.uid);
-
-        firebaseUser.value = result.user;
-
-        // Return a map with the user and document existence status
-        return {
-          'user': result.user,
-          'isDocumentExist': isDocumentExist,
-        };
-      } else {
+      // Check if user cancels the sign-in flow
+      if (googleUser == null) {
+        // Handle cancellation by the user
         return null;
       }
+
+      return googleUser;
     } catch (error) {
-      log('Error signing in with Google: $error');
+      // Handle any sign-in errors
+      print('Error during Google Sign-In: $error');
       return null;
+    }
+  }
+
+  Future<User?> completeFirebaseSignIn(GoogleSignInAccount googleUser) async {
+    try {
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final result =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      return result.user;
+    } catch (error) {
+      print('Error during Firebase sign-in: $error');
+    }
+    return null;
+  }
+
+  Future<void> handleUserGoogleSignIn() async {
+    final googleUser = await initiateGoogleSignIn();
+
+    if (googleUser != null) {
+      // Check if user email already exists in Firestore
+      final isUserExists =
+          await FirestoreService().checkUserEmailExists(googleUser.email);
+
+      if (isUserExists) {
+        // User exists; proceed to complete sign-in
+        await completeFirebaseSignIn(googleUser);
+        // Navigate to the main screen
+        Get.offAllNamed('/btmnav');
+      } else {
+        // New user; navigate to form screen to collect extra information
+        FormController.instance.googleUser = googleUser;
+        Get.to(() => FormScreen(isFromGoogle: true));
+      }
+    } else {
+      // Optional: Handle the case where Google sign-in was canceled
+      print("User canceled Google sign-in");
     }
   }
 

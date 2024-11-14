@@ -3,6 +3,7 @@ import 'package:conquest/features/Form/Widgets/HowMuchWorkout.dart';
 import 'package:conquest/features/Form/Widgets/age_question.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../features/Form/Widgets/GoalQuestion.dart';
 import '../../../features/Form/Widgets/HowMuchHeight.dart';
 import '../../../features/Form/Widgets/HowMuchWeight.dart';
@@ -56,6 +57,8 @@ class FormController extends GetxController {
   RxInt selectedAge = 0.obs;
   // Gender
   RxString selectedGender = ''.obs;
+
+  GoogleSignInAccount? googleUser;
 
   // Getter for current question and image
   String get currentQuestion => questions[currentQuestionIndex.value];

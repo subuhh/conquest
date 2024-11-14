@@ -1,14 +1,8 @@
-import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
-import 'package:conquest/features/Authentication/FirstTimeLogin/first_time_login_by_google.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../core/services/auth_service.dart';
-import '../../features/Form/Form.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
-import 'custom_snackbar.dart';
 
 class SocialButton extends StatefulWidget {
   const SocialButton({
@@ -33,7 +27,9 @@ class _SocialButtonState extends State<SocialButton> {
             borderRadius: BorderRadius.circular(100),
           ),
           child: IconButton(
-            onPressed: _handleGoogleSignIn,
+            onPressed: () async {
+              await AuthService().handleUserGoogleSignIn();
+            },
             icon: const Image(
               width: TSizes.iconMd,
               height: TSizes.iconMd,
@@ -45,31 +41,31 @@ class _SocialButtonState extends State<SocialButton> {
     );
   }
 
-  Future<void> _handleGoogleSignIn() async {
-    final result = await AuthService().signInWithGoogle();
-    final formController = FormController.instance;
-
-    if (result != null) {
-      final user = result['user'] as User?;
-      final isDocumentExist = result['isDocumentExist'] as bool?;
-
-      if (user != null) {
-        if (isDocumentExist != null && isDocumentExist) {
-          // User document exists, navigate to the homepage
-          Get.offAllNamed('/btmnav');
-        } else {
-          if (formController.selectedGender.value.isNotEmpty) {
-            // All Field are done go with first time login
-            Get.off(() => FirstTimeLogin(user: user));
-          } else {
-            Get.to(() => FormScreen());
-          }
-        }
-      }
-    } else {
-      // Handle sign-in failure (e.g., show an error message)
-      showSnackBar('Error', 'Failed to sign in with Google. Please try again.',
-          isError: true);
-    }
-  }
+  // Future<void> _handleGoogleSignIn() async {
+  //   final result = await AuthService().signInWithGoogle();
+  //
+  //   // if (result != null) {
+  //   //   final user = result['user'] as User?;
+  //   //   final isDocumentExist = result['isDocumentExist'] as bool?;
+  //   //
+  //   //   if (user != null) {
+  //   //     if (isDocumentExist != null && isDocumentExist) {
+  //   //       // User document exists, navigate to the homepage
+  //   //       Get.offAllNamed('/btmnav');
+  //   //     } else {
+  //   //       // if (formController.selectedGender.value.isNotEmpty) {
+  //   //       //   // All Field are done go with first time login
+  //   //       // Get.off(() => FirstTimeLogin(user: user));
+  //   //       // } else {
+  //   //       AuthService().signOut();
+  //   //       Get.to(() => FormScreen(isFromGoogle: true));
+  //   //       // }
+  //   //     }
+  //   //   }
+  //   // } else {
+  //   //   // Handle sign-in failure (e.g., show an error message)
+  //   //   showSnackBar('Error', 'Failed to sign in with Google. Please try again.',
+  //   //       isError: true);
+  //   // }
+  // }
 }

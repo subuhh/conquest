@@ -1,31 +1,26 @@
+import 'package:conquest/core/model/Nutrition/recipe_model.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/Controllers/user_controller.dart';
 import '../CustomCalorieIndicator/CustomCalorieIndicator.dart';
 
 class MealNutritionIndicatorWidget extends StatelessWidget {
   const MealNutritionIndicatorWidget({super.key, required this.recipe});
 
-  final Map<String, dynamic> recipe;
+  final RecipeModel recipe;
 
   // Function to calculate the nutrition percentage
   Map<String, double> calculateNutritionPercentage(
-      double totalCalories, Map<String, dynamic> nutrition) {
-    // Convert string values to double after removing 'g'
-    double protein = double.parse(
-        nutrition['protein'].toString().replaceAll('g', '').trim());
-    double fat =
-        double.parse(nutrition['fat'].toString().replaceAll('g', '').trim());
-    double carbohydrates = double.parse(
-        nutrition['carbohydrates'].toString().replaceAll('g', '').trim());
-    double fiber =
-        double.parse(nutrition['fiber'].toString().replaceAll('g', '').trim());
+      double totalCalories, RecipeModel recipe) {
+    // Parse nutrient values from the recipe model
+    double protein = double.parse(recipe.protein!.replaceAll('g', '').trim());
+    double fat = double.parse(recipe.fat!.replaceAll('g', '').trim());
+    double carbohydrates =
+        double.parse(recipe.carbs!.replaceAll('g', '').trim());
+    double fiber = double.parse(recipe.fiber!.replaceAll('g', '').trim());
 
     double proteinCalories = protein * 4; // Protein has 4 calories per gram
     double fatCalories = fat * 9; // Fat has 9 calories per gram
     double carbCalories = carbohydrates * 4; // Carbs have 4 calories per gram
-    double fiberCalories = fiber *
-        2; // Fiber has roughly 2 calories per gram (not always counted, but for simplicity)
+    double fiberCalories = fiber * 2; // Fiber has roughly 2 calories per gram
 
     double totalNutrientCalories =
         proteinCalories + fatCalories + carbCalories + fiberCalories;
@@ -40,22 +35,24 @@ class MealNutritionIndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = UserController.instance;
-    final nutrition = recipe['nutritionValue'];
-
     // Get the total calorie goal
-    double totalCalories =
-        userController.userModel.value!.calorieGoal!.round().toDouble();
+    double totalCalories = double.parse(recipe.calories!);
 
     // Calculate nutrition percentages
     Map<String, double> nutritionPercentages =
-        calculateNutritionPercentage(totalCalories, nutrition);
+        calculateNutritionPercentage(totalCalories, recipe);
+
+    print('Total Calories: $totalCalories');
+    print('Carb Percentage: ${nutritionPercentages['carbohydrates']}');
+    print('Fat Percentage: ${nutritionPercentages['fat']}');
+    print('Protein Percentage: ${nutritionPercentages['protein']}');
+    print('Fiber Percentage: ${nutritionPercentages['fiber']}');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         CircularCalorieIndicator(
-          totalCalories: totalCalories.toInt(),
+          totalCalories: int.parse(recipe.calories!),
           carbPercentage: nutritionPercentages['carbohydrates'] ?? 0,
           fatPercentage: nutritionPercentages['fat'] ?? 0,
           proteinPercentage: nutritionPercentages['protein'] ?? 0,
@@ -71,7 +68,7 @@ class MealNutritionIndicatorWidget extends StatelessWidget {
                   .apply(color: Colors.teal),
             ),
             Text(
-              "${nutrition['protein']}",
+              recipe.protein!,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
@@ -93,7 +90,7 @@ class MealNutritionIndicatorWidget extends StatelessWidget {
                   .apply(color: Colors.teal),
             ),
             Text(
-              "${nutrition['fat']}", // Keep this as a string
+              recipe.fat!,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
@@ -115,7 +112,7 @@ class MealNutritionIndicatorWidget extends StatelessWidget {
                   .apply(color: Colors.teal),
             ),
             Text(
-              "${nutrition['carbohydrates']}", // Keep this as a string
+              recipe.carbs!,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
@@ -137,7 +134,7 @@ class MealNutritionIndicatorWidget extends StatelessWidget {
                   .apply(color: Colors.teal),
             ),
             Text(
-              "${nutrition['fiber']}", // Keep this as a string
+              recipe.fiber!,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!

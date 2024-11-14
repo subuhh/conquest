@@ -17,26 +17,29 @@ class UserModel {
   final List<String>? dietPreference;
   final String? defaultAddressId;
   final double? calorieGoal;
+  final double? waterGoal;
 
-  UserModel(
-      {required this.id,
-      required this.userName, // Renamed userId to userName
-      required this.email,
-      required this.name,
-      required this.phoneNumber,
-      this.profileImageUrl,
-      this.bio,
-      this.age,
-      this.gender,
-      this.height,
-      this.weight,
-      this.weightGoal,
-      this.fitnessGoal,
-      this.workoutFrequency,
-      this.workoutHistory,
-      this.dietPreference,
-      this.defaultAddressId,
-      this.calorieGoal});
+  UserModel({
+    required this.id,
+    required this.userName, // Renamed userId to userName
+    required this.email,
+    required this.name,
+    required this.phoneNumber,
+    this.profileImageUrl,
+    this.bio,
+    this.age,
+    this.gender,
+    this.height,
+    this.weight,
+    this.weightGoal,
+    this.fitnessGoal,
+    this.workoutFrequency,
+    this.workoutHistory,
+    this.dietPreference,
+    this.defaultAddressId,
+    this.calorieGoal,
+    this.waterGoal,
+  });
 
   // Factory constructor to create a UserModel instance from Firestore document
   factory UserModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -59,6 +62,7 @@ class UserModel {
       dietPreference: List<String>.from(data['dietPreference'] ?? []),
       defaultAddressId: data['defaultAddressId'] ?? '',
       calorieGoal: data['calorieGoal'] ?? 0.0,
+      waterGoal: data['waterGoal'] ?? 0.0,
     );
   }
 
@@ -82,6 +86,7 @@ class UserModel {
       'dietPreference': dietPreference,
       'defaultAddressId': defaultAddressId,
       'calorieGoal': calorieGoal,
+      'waterGoal': waterGoal,
     };
   }
 }

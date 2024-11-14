@@ -21,6 +21,7 @@ class UserController extends GetxController {
   }
 
   Future<void> fetchUserData() async {
+    isLoading(true);
     try {
       final user = authService.currentUser;
 

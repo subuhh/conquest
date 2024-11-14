@@ -1,11 +1,17 @@
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
 import 'Widgets/gender_selection_page.dart';
 
 class FormScreen extends StatelessWidget {
+  final bool isFromGoogle;
+
+  // Constructor to accept the isFromGoogle parameter
+  FormScreen({this.isFromGoogle = false});
+
   // Controller initialized using GetX
   final controller = FormController.instance;
 
@@ -19,7 +25,7 @@ class FormScreen extends StatelessWidget {
                   ? () {
                       if (controller.currentQuestionIndex.value == 6) {
                         // Navigate to SummaryScreen
-                        Get.to(() => GenderSelectionScreen());
+                        Get.to(() => GenderSelectionScreen(isFromGoogle: isFromGoogle));
                       } else {
                         controller.nextQuestion();
                       }
@@ -46,7 +52,7 @@ class FormScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-            
+
                 // Animated Picture (Transition)
                 Obx(() => AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
@@ -57,12 +63,12 @@ class FormScreen extends StatelessWidget {
                       child: Image.asset(
                         controller.currentPicture,
                         key: ValueKey<String>(controller.currentPicture),
-                        height: 200,
+                        height: 180,
                       ),
                     )),
-            
+
                 const SizedBox(height: TSizes.spaceBtwSections),
-            
+
                 // Animated Question Text
                 Obx(() => AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
@@ -74,14 +80,14 @@ class FormScreen extends StatelessWidget {
                         controller.currentQuestion,
                         key: ValueKey<String>(controller.currentQuestion),
                         style: Theme.of(context).textTheme.displaySmall!.apply(
-                              fontSizeFactor: 0.75,
+                              fontSizeFactor: 0.72,
                             ),
                         textAlign: TextAlign.center,
                       ),
                     )),
-            
-                const SizedBox(height: TSizes.spaceBtwItems),
-            
+
+                const SizedBox(height: 12),
+
                 // Progress Indicator
                 Obx(() => TweenAnimationBuilder<double>(
                       duration: const Duration(milliseconds: 500),
@@ -95,9 +101,9 @@ class FormScreen extends StatelessWidget {
                         ),
                       ),
                     )),
-            
-                const SizedBox(height: TSizes.spaceBtwSections * 1.5),
-            
+
+                const SizedBox(height: 16),
+
                 // Dynamic Widget (based on current question)
                 Obx(() => AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),

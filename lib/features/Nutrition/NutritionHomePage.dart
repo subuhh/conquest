@@ -1,3 +1,5 @@
+import 'package:conquest/core/Controllers/Nutrition_Controller/water_intake_controller.dart';
+import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:conquest/features/Nutrition/DaySelector/DaySelector.dart';
 import 'package:conquest/features/Nutrition/MealPlans/RecomendedMeals/RecomendedMeals.dart';
@@ -16,8 +18,9 @@ class NutritionHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Get.put(RecipeFavoriteController());
+    Get.put(WaterIntakeController());
+
 
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
@@ -49,19 +52,15 @@ class NutritionHomePage extends StatelessWidget {
               SizedBox(height: TSizes.spaceBtwSections / 1.5),
               DietTracker(),
               SizedBox(height: TSizes.spaceBtwSections / 1.5),
-              WaterIntake(currentWaterIntake: 1.5, waterGoal: 7.0),
+              WaterIntake(
+                // currentWaterIntake: 1.5,
+                // waterGoal: user.userModel.value != null
+                //     ? user.userModel.value!.waterGoal!.toInt().floor() ~/ 1000
+                //     : 7,
+              ),
               SizedBox(height: TSizes.spaceBtwSections / 2),
               RecommendedMeals(),
               // DailyRecommendedMeal(),
-              // SizedBox(height: TSizes.spaceBtwSections / 2),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     MealPlanContainerWidget(),
-              //     WhatsInYourFridge(),
-              //   ],
-              // ),
-              // WhatsInYourFridge(),
               SizedBox(height: TSizes.spaceBtwSections * 4),
             ],
           ),

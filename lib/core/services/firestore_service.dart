@@ -93,6 +93,15 @@ class FirestoreService extends GetxController {
     }
   }
 
+  Future<bool> checkUserEmailExists(String email) async {
+    final querySnapshot = await _firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+    return querySnapshot.docs.isNotEmpty;
+  }
+
   // Check Username Availability
   Future<bool> checkUsernameAvailability(String username) async {
     try {
@@ -159,7 +168,6 @@ class FirestoreService extends GetxController {
       return []; // Return an empty list or handle error case as needed
     }
   }
-
 
   // --- Address ---
 

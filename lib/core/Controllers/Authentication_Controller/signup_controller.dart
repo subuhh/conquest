@@ -1,3 +1,4 @@
+import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/services/auth_service.dart';
@@ -5,6 +6,7 @@ import '../../../../common/widgets/custom_snackbar.dart';
 
 class SignUpController extends GetxController {
   final AuthService _auth = AuthService();
+  final formController = FormController.instance;
 
   // Controllers for text fields
   final userNameController = TextEditingController();

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -8,12 +7,11 @@ import '../../../utils/constants/sizes.dart';
 import '../../../utils/constants/text_strings.dart';
 
 class FirstTimeLogin extends StatelessWidget {
-  final User? user;
-  const FirstTimeLogin({super.key, required this.user});
+  const FirstTimeLogin({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(FirstTimeLoginController(user));
+    final controller = Get.put(FirstTimeLoginController());
 
     return WillPopScope(
       onWillPop: controller.onWillPop,
@@ -125,23 +123,29 @@ class FirstTimeLogin extends StatelessWidget {
                       const SizedBox(height: TSizes.spaceBtwSections),
 
                       ///Sign up button
-                      Obx(() => SizedBox(
-                            width: double.maxFinite,
-                            child: ElevatedButton(
-                              onPressed: controller.isChecked.value
-                                  ? controller.handleSignUp
-                                  : () {},
-                              child: controller.isLoading.value
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const Text(
-                                      TTexts.createAccount,
+                      Obx(
+                        () => SizedBox(
+                          width: double.maxFinite,
+                          child: ElevatedButton(
+                            onPressed: controller.isChecked.value
+                                ? controller.handleSignUp
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: controller.isChecked.value
+                                    ? TColors.primary
+                                    : TColors.primary.withOpacity(0.5)),
+                            child: controller.isLoading.value
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
                                     ),
-                            ),
-                          )),
+                                  )
+                                : const Text(
+                                    TTexts.createAccount,
+                                  ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/widgets/form_divider.dart';
-import '../../../common/widgets/social_buttons.dart';
 import '../../../core/Controllers/Authentication_Controller/signup_controller.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 import '../../../utils/constants/text_strings.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,17 +97,22 @@ class SignUpScreen extends StatelessWidget {
                     TextFormField(
                       controller: controller.phoneController,
                       decoration: const InputDecoration(
-                        labelText: 'Phone no.',
-                        prefixIcon: Icon(Iconsax.call),
-                      ),
+                          labelText: 'Phone no.',
+                          prefixIcon: Icon(Iconsax.call),
+                          prefixText: '+91 '),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a Phone Number';
-                        } else if (!RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
+                        } else if (!RegExp(r'^[6-9]\d{9}$')
+                            .hasMatch(value.replaceFirst('+91 ', ''))) {
+                          // Validate phone number after removing +91 prefix
                           return 'Please enter a valid Phone Number';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                     const SizedBox(height: TSizes.spaceBtwInputFields),
 
@@ -142,7 +149,8 @@ class SignUpScreen extends StatelessWidget {
                           if (!value.contains(RegExp(r'\d'))) {
                             return 'Password must contain at least one digit';
                           }
-                          if (!value.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
+                          if (!value
+                              .contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
                             return 'Password must contain at least one special character';
                           }
                           return null;
@@ -173,9 +181,9 @@ class SignUpScreen extends StatelessWidget {
                                     .textTheme
                                     .bodyMedium!
                                     .apply(
-                                    color: TColors.primary,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: TColors.primary),
+                                        color: TColors.primary,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: TColors.primary),
                               ),
                               TextSpan(
                                 text: '${TTexts.and} ',
@@ -187,9 +195,9 @@ class SignUpScreen extends StatelessWidget {
                                     .textTheme
                                     .bodyMedium!
                                     .apply(
-                                    color: TColors.primary,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: TColors.primary),
+                                        color: TColors.primary,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: TColors.primary),
                               ),
                             ],
                           )),
@@ -208,8 +216,8 @@ class SignUpScreen extends StatelessWidget {
                               : null,
                           child: controller.isLoading.value
                               ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
+                                  color: Colors.white,
+                                )
                               : const Text(TTexts.createAccount),
                         ),
                       );
@@ -219,7 +227,6 @@ class SignUpScreen extends StatelessWidget {
                     // Divider and Social Buttons
                     const FormDivider(divierText: TTexts.orSignUpWith),
                     const SizedBox(height: TSizes.spaceBtwSections),
-                    const SocialButton(),
                   ],
                 ),
               ),

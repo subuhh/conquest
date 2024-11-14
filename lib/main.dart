@@ -19,8 +19,6 @@ void main() async {
   await dotenv.load(fileName: '.env'); // Loads environment variables
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-
-
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
     statusBarBrightness: Brightness.dark, // For iOS (dark icons)
