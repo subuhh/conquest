@@ -12,17 +12,14 @@ class WaterIntake extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access WaterIntakeController
     final waterIntakeController = Get.put(WaterIntakeController());
     final user = UserController.instance;
 
     return Obx(() {
-      // Ensure data is fetched before rendering
       if (waterIntakeController.waterIntake.value == null) {
         return Center(child: CircularProgressIndicator());
       }
 
-      // Fetch current intake and water goal from the controller
       double currentWaterIntake =
           waterIntakeController.waterIntake.value!.totalIntake;
 
@@ -33,7 +30,9 @@ class WaterIntake extends StatelessWidget {
       double progress = (currentWaterIntake / 1000) / waterGoal;
 
       return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          _showWaterGoalDialog(context, waterIntakeController, user);
+        },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -42,8 +41,18 @@ class WaterIntake extends StatelessWidget {
             color: Colors.white,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              CircleAvatar(
+                backgroundColor: TColors.softGrey,
+                child: IconButton(
+                  icon: Icon(Icons.remove,),
+                  onPressed: () {
+                    waterIntakeController
+                        .removeWaterEntry(user.userModel.value!.id);
+                  },
+                ),
+              ),
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -79,33 +88,14 @@ class WaterIntake extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
-              Container(
-                height: 40,
-                width: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.blueAccent,
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.remove, color: Colors.white),
-                      onPressed: () {
-                        // Add water intake
-                        waterIntakeController
-                            .removeWaterEntry(user.userModel.value!.id);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add, color: Colors.white),
-                      onPressed: () {
-                        // Add water intake
-                        waterIntakeController.addWaterEntry(
-                            user.userModel.value!.id, 200);
-                      },
-                    ),
-                  ],
+              CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: IconButton(
+                  icon: Icon(Icons.add, color: Colors.white),
+                  onPressed: () {
+                    waterIntakeController.addWaterEntry(
+                        user.userModel.value!.id, 200);
+                  },
                 ),
               ),
             ],
@@ -114,4 +104,105 @@ class WaterIntake extends StatelessWidget {
       );
     });
   }
-}
+
+  void _showWaterGoalDialog(BuildContext context,
+      WaterIntakeController waterIntakeController, UserController user) {
+    final TextEditingController goalController = TextEditingController(
+      text: "${(user.userModel.value?.waterGoal ?? 2000) / 1000}", // Default in liters
+    );
+
+    String selectedUnit = "L";
+    final units = ["ml", "L", "oz"];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Set Daily Water Goal"),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Icon(
+                        Icons.local_drink,
+                        color: Colors.blueAccent,
+                        size: 50,
+                      ),],
+                    ),
+                  ),
+                  SizedBox(height: TSizes.spaceBtwItems,),
+                  TextField(
+                    controller: goalController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: "Water Goal",
+                      suffixText: selectedUnit,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  DropdownButton<String>(
+                    value: selectedUnit,
+                    items: units.map((unit) {
+                      return DropdownMenuItem(
+                        value: unit,
+                        child: Text(unit),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedUnit = value!;
+                      });
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, padding: EdgeInsets.all(12)),
+              onPressed: () {
+                double enteredGoal = double.tryParse(goalController.text) ?? 0;
+
+                // Convert input to liters for validation
+                if (selectedUnit == "ml") {
+                  enteredGoal /= 1000; // Convert milliliters to liters
+                } else if (selectedUnit == "oz") {
+                  enteredGoal *= 0.0295735; // Convert ounces to liters
+                }
+
+                // Validate the goal
+                if (enteredGoal < 2 || enteredGoal > 5) {
+                  Get.snackbar(
+                    "Invalid Goal",
+                    "Please enter a value between 2L and 5L.",
+                    backgroundColor: Colors.redAccent,
+                    colorText: Colors.white,
+                  );
+                  return;
+                }
+
+                // Convert goal back to milliliters before saving
+                int newGoal = (enteredGoal * 1000).toInt();
+                //user.updateWaterGoal(newGoal);
+                Navigator.of(context).pop();
+              },
+              child: Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  }
