@@ -1,3 +1,4 @@
+import 'package:conquest/common/widgets/social_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -226,7 +227,8 @@ class SignUpScreen extends StatelessWidget {
 
                     // Divider and Social Buttons
                     const FormDivider(divierText: TTexts.orSignUpWith),
-                    const SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwSections / 1.5),
+                    SocialButton(),
                   ],
                 ),
               ),

@@ -12,15 +12,15 @@ class DietTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = UserController.instance;
+    final userController = UserController.instance.userModel.value;
 
-    double calculateProgress(double consumed, double goal) {
-      if (goal > 0) {
-        return consumed / goal;
-      } else {
-        return 0.0; // Or any default value if goal is 0
-      }
-    }
+    // double calculateProgress(double consumed, double goal) {
+    //   if (goal > 0) {
+    //     return consumed / goal;
+    //   } else {
+    //     return 0.0; // Or any default value if goal is 0
+    //   }
+    // }
 
     return GestureDetector(
       onTap: () => Get.to(() => DietTrackerPage()),
@@ -36,11 +36,12 @@ class DietTracker extends StatelessWidget {
               children: [
                 CircularProgressWithCenterWidget(
                   ProgressColor: Colors.deepOrangeAccent,
-                  progress: 0.75, // Set the progress value
+                  progress: 0.0, // Set the progress value
                   centerWidget: SvgPicture.asset(
-                      'assets/icons/nutrition/fork-knife.svg',
-                      height: 30,
-                      width: 30),
+                    'assets/icons/nutrition/fork-knife.svg',
+                    height: 30,
+                    width: 30,
+                  ),
                 ),
                 SizedBox(width: TSizes.spaceBtwItems),
                 Column(
@@ -48,18 +49,20 @@ class DietTracker extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "0 out of ${userController.userModel.value?.calorieGoal?.round()}",
+                      "0 out of ${userController?.calorieGoal?.ceil()}",
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium!
                           .apply(color: TColors.darkGrey),
                     ),
                     SizedBox(height: TSizes.spaceBtwItems / 4),
-                    Text("Calorie consumed Today",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .apply(color: TColors.black))
+                    Text(
+                      "Calorie consumed Today",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .apply(color: TColors.black),
+                    )
                   ],
                 ),
                 Spacer(),
@@ -76,8 +79,7 @@ class DietTracker extends StatelessWidget {
             ),
             SizedBox(height: TSizes.spaceBtwItems),
             GridView(
-              shrinkWrap:
-                  true, // Makes sure the GridView doesn't expand infinitely
+              shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 3,
@@ -85,10 +87,30 @@ class DietTracker extends StatelessWidget {
                 mainAxisSpacing: 10,
               ),
               children: [
-                buildLinearProgressBar(context, "Protein", 15, 50),
-                buildLinearProgressBar(context, "Fat", 20, 50),
-                buildLinearProgressBar(context, "Carbohydrates", 10, 50),
-                buildLinearProgressBar(context, "Fiber", 40, 50),
+                buildLinearProgressBar(
+                  context,
+                  "Protein",
+                  0,
+                  userController!.proteinGoal!,
+                ),
+                buildLinearProgressBar(
+                  context,
+                  "Fat",
+                  0,
+                  userController.fatGoal!,
+                ),
+                buildLinearProgressBar(
+                  context,
+                  "Carbohydrates",
+                  0,
+                  userController.carbsGoal!,
+                ),
+                buildLinearProgressBar(
+                  context,
+                  "Fiber",
+                  0,
+                  userController.fiberGoal!,
+                ),
               ],
             )
           ],

@@ -14,24 +14,29 @@ class DietTrackerPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
-        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.keyboard_arrow_left)),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: Icon(Icons.keyboard_arrow_left),
+        ),
+        title: Text('Calorie Counter'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(TSizes.spaceBtwItems),
+          padding: const EdgeInsets.all(TSizes.spaceBtwItems / 1.5),
           child: Column(
             children: [
-          TrackedDietWidget(),
-              SizedBox(height: TSizes.spaceBtwSections,),
-              TrackingMealListCard(mealTiming: "BreakFast",),
-              SizedBox(height: TSizes.spaceBtwItems,),
-              TrackingMealListCard(mealTiming: "Morning Snack",),
-              SizedBox(height: TSizes.spaceBtwItems,),
-              TrackingMealListCard(mealTiming: "Lunch",),
-              SizedBox(height: TSizes.spaceBtwItems,),
-              TrackingMealListCard(mealTiming: "Evening Snack",),
-              SizedBox(height: TSizes.spaceBtwItems,),
-              TrackingMealListCard(mealTiming: "Dinner",),
+              TrackedDietWidget(),
+              SizedBox(height: TSizes.spaceBtwSections / 1.5),
+              TrackingMealListCard(mealTiming: "BreakFast"),
+              SizedBox(height: TSizes.spaceBtwItems),
+              TrackingMealListCard(mealTiming: "Morning Snack"),
+              SizedBox(height: TSizes.spaceBtwItems),
+              TrackingMealListCard(mealTiming: "Lunch"),
+              SizedBox(height: TSizes.spaceBtwItems),
+              TrackingMealListCard(mealTiming: "Evening Snack"),
+              SizedBox(height: TSizes.spaceBtwItems),
+              TrackingMealListCard(mealTiming: "Dinner"),
             ],
           ),
         ),

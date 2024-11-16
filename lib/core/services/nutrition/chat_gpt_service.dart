@@ -5,7 +5,7 @@ class ChatGptRecipeService {
   final String apiKey =
       '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';
 
-  Future<Map<String, dynamic>> fetchRecipe(String prompt) async {
+  Future<Map<String, dynamic>> fetchRecipeFridgeAi(String prompt) async {
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
@@ -106,7 +106,7 @@ class ChatGptRecipeService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load recommendations');
+      throw Exception('Failed to load fetchRecipeFridgeAi');
     }
   }
 

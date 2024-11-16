@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   final String id;
   final String userName; // Username as the unique identifier
@@ -18,6 +20,11 @@ class UserModel {
   final String? defaultAddressId;
   final double? calorieGoal;
   final double? waterGoal;
+  final double? proteinGoal;
+  final double? fatGoal;
+  final double? carbsGoal;
+  final double? fiberGoal;
+  final DateTime? accountCreationTime;
 
   UserModel({
     required this.id,
@@ -39,6 +46,11 @@ class UserModel {
     this.defaultAddressId,
     this.calorieGoal,
     this.waterGoal,
+    this.proteinGoal,
+    this.fatGoal,
+    this.carbsGoal,
+    this.fiberGoal,
+    this.accountCreationTime,
   });
 
   // Factory constructor to create a UserModel instance from Firestore document
@@ -63,6 +75,12 @@ class UserModel {
       defaultAddressId: data['defaultAddressId'] ?? '',
       calorieGoal: data['calorieGoal'] ?? 0.0,
       waterGoal: data['waterGoal'] ?? 0.0,
+      proteinGoal: data['proteinGoal']?.toDouble() ?? 0.0,
+      fatGoal: data['fatGoal']?.toDouble() ?? 0.0,
+      carbsGoal: data['carbsGoal']?.toDouble() ?? 0.0,
+      fiberGoal: data['fiberGoal']?.toDouble() ?? 0.0,
+      accountCreationTime:
+          (data['accountCreationTime'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -87,6 +105,13 @@ class UserModel {
       'defaultAddressId': defaultAddressId,
       'calorieGoal': calorieGoal,
       'waterGoal': waterGoal,
+      'proteinGoal': proteinGoal,
+      'fatGoal': fatGoal,
+      'carbsGoal': carbsGoal,
+      'fiberGoal': fiberGoal,
+      'accountCreationTime': accountCreationTime != null
+          ? Timestamp.fromDate(accountCreationTime!)
+          : null,
     };
   }
 }

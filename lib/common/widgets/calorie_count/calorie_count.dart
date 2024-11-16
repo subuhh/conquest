@@ -6,9 +6,9 @@ class CalorieCalculator {
     required double weightKg,
   }) {
     if (gender.toLowerCase() == 'male') {
-      return 88.362 + (13.397 * weightKg) + (4.799 * heightCm) - (5.677 * age);
+      return 66.47 + (13.75 * weightKg) + (5.003 * heightCm) - (6.755 * age);
     } else {
-      return 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
+      return 655.1 + (9.563 * weightKg) + (1.850 * heightCm) - (4.676 * age);
     }
   }
 
@@ -17,11 +17,13 @@ class CalorieCalculator {
       case 'daily':
         return bmr * 1.9;
       case 'weekly':
+        return bmr * 1.725;
+      case 'occasionally':
         return bmr * 1.55;
       case 'rarely':
-        return bmr * 1.2;
-      case 'not regular':
         return bmr * 1.375;
+      case 'sedentary':
+        return bmr * 1.2;
       default:
         return bmr * 1.2;
     }
@@ -54,5 +56,59 @@ class CalorieCalculator {
     double tdee = calculateTDEE(bmr, activityLevel);
     double adjustment = calculateCalorieAdjustment(goals);
     return tdee + adjustment;
+  }
+
+  // Macronutrient Calculation Based on Goals
+  static Map<String, double> calculateMacros(
+      double totalCalories, String goal) {
+    // Default Ratios
+    double proteinRatio;
+    double fatRatio;
+    double carbsRatio;
+
+    switch (goal.toLowerCase()) {
+      case 'lose weight':
+        // Higher protein to preserve muscle, lower carbs
+        proteinRatio = 0.35;
+        fatRatio = 0.30;
+        carbsRatio = 0.35;
+        break;
+
+      case 'gain muscles':
+        // Balanced macros with emphasis on protein and carbs
+        proteinRatio = 0.30;
+        fatRatio = 0.25;
+        carbsRatio = 0.45;
+        break;
+
+      case 'build strength':
+        // Moderate protein, balanced carbs and fats
+        proteinRatio = 0.25;
+        fatRatio = 0.25;
+        carbsRatio = 0.50;
+        break;
+
+      default:
+        // Balanced as a fallback
+        proteinRatio = 0.25;
+        fatRatio = 0.25;
+        carbsRatio = 0.50;
+        break;
+    }
+
+    // Calculate macronutrient grams
+    double proteinGrams = (totalCalories * proteinRatio) / 4; // 4 kcal per gram
+    double fatGrams = (totalCalories * fatRatio) / 9; // 9 kcal per gram
+    double carbsGrams = (totalCalories * carbsRatio) / 4; // 4 kcal per gram
+
+    // Fiber: Default to 25-30g per day
+    double fiberGrams = 30;
+
+    return {
+      'protein': proteinGrams,
+      'carbs': carbsGrams,
+      'fat': fatGrams,
+      'fiber': fiberGrams,
+    };
   }
 }

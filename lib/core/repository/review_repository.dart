@@ -18,9 +18,12 @@ class ReviewRepository {
     List<File>? imageFiles,
   }) async {
     try {
-      await _firestore.collection('reviews').add({
+      await _firestore
+          .collection('products')
+          .doc(productId)
+          .collection('reviews')
+          .add({
         'userId': userId,
-        'productId': productId,
         'rating': rating,
         'reviewText': reviewText,
         'timestamp': FieldValue.serverTimestamp(),
@@ -37,17 +40,21 @@ class ReviewRepository {
 
   Stream<List<ReviewModel>> streamProductReviews(String productId) {
     return _firestore
+        .collection('products')
+        .doc(productId)
         .collection('reviews')
         .where('productId', isEqualTo: productId)
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-        .map((doc) => ReviewModel.fromFirestore(doc.data()))
-        .toList());
+            .map((doc) => ReviewModel.fromFirestore(doc.data()))
+            .toList());
   }
 
   Stream<Map<String, dynamic>> streamRatingSummary(String productId) {
     return _firestore
+        .collection('products')
+        .doc(productId)
         .collection('reviews')
         .where('productId', isEqualTo: productId)
         .snapshots()
@@ -70,7 +77,8 @@ class ReviewRepository {
             : doc['rating'] as double;
 
         totalRating += rating;
-        ratingDistribution[rating.toInt()] = ratingDistribution[rating.toInt()]! + 1;
+        ratingDistribution[rating.toInt()] =
+            ratingDistribution[rating.toInt()]! + 1;
       }
 
       double averageRating = totalRating / totalReviews;
@@ -82,5 +90,4 @@ class ReviewRepository {
       };
     });
   }
-
 }

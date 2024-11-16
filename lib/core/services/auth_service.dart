@@ -3,6 +3,7 @@ import 'package:conquest/common/widgets/calorie_count/calorie_count.dart';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:conquest/core/model/user.dart';
+import 'package:conquest/features/Authentication/FirstTimeLogin/first_time_login_by_google.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -91,6 +92,9 @@ class AuthService extends GetxController {
           goals: controller.selectedGoals,
         );
 
+        final macros = CalorieCalculator.calculateMacros(
+            calorie, controller.selectedGoals[0]);
+
         final waterGoal = WaterIntakeCalCul().calculateWaterIntakeGoal(
           convertWeightToDouble(
               controller.currentWeightInteger.value,
@@ -121,6 +125,10 @@ class AuthService extends GetxController {
           age: controller.selectedAge.value,
           calorieGoal: calorie,
           waterGoal: waterGoal,
+          proteinGoal: macros['protein'],
+          carbsGoal: macros['carbs'],
+          fatGoal: macros['fat'],
+          fiberGoal: macros['fiber'],
         );
         await FirestoreService().createUserDocument(userModel);
         return user;
@@ -265,8 +273,13 @@ class AuthService extends GetxController {
         Get.offAllNamed('/btmnav');
       } else {
         // New user; navigate to form screen to collect extra information
-        FormController.instance.googleUser = googleUser;
-        Get.to(() => FormScreen(isFromGoogle: true));
+        final form = FormController.instance;
+        form.googleUser = googleUser;
+        if (form.selectedAge > 0 && form.selectedGender.value.isNotEmpty) {
+          Get.to(() => FirstTimeLogin());
+        } else {
+          Get.to(() => FormScreen(isFromGoogle: true));
+        }
       }
     } else {
       // Optional: Handle the case where Google sign-in was canceled

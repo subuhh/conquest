@@ -35,59 +35,62 @@ class DrawerScreen extends StatelessWidget {
   }
 
   Widget buildLoggedInHeader(UserModel? userModel) {
-    return Container(
-      margin: const EdgeInsets.all(10.0),
-      padding:
-          const EdgeInsets.only(top: 24.0, left: 16, bottom: 24, right: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 35,
-            backgroundColor: TColors.primary.withOpacity(0.9),
-            child: userModel!.profileImageUrl != null &&
-                    userModel.profileImageUrl!.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(35),
-                    child: CachedNetworkImage(
-                        imageUrl: userModel.profileImageUrl!),
-                  )
-                : Text(
-                    userModel.name[0].toUpperCase(),
-                    style: const TextStyle(fontSize: 32, color: Colors.white),
-                  ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userModel.name,
-                  style: TTextTheme.lightTextTheme.headlineMedium,
-                ),
-                Text(
-                  userModel.email,
-                  style: TTextTheme.lightTextTheme.bodyMedium!
-                      .copyWith(fontWeight: FontWeight.w500),
+    return userModel != null
+        ? Container(
+            margin: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(
+                top: 24.0, left: 16, bottom: 24, right: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 35,
+                  backgroundColor: TColors.primary.withOpacity(0.9),
+                  child: userModel.profileImageUrl != null &&
+                          userModel.profileImageUrl!.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(35),
+                          child: CachedNetworkImage(
+                              imageUrl: userModel.profileImageUrl!),
+                        )
+                      : Text(
+                          userModel.name[0].toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 32, color: Colors.white),
+                        ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userModel.name,
+                        style: TTextTheme.lightTextTheme.headlineMedium,
+                      ),
+                      Text(
+                        userModel.email,
+                        style: TTextTheme.lightTextTheme.bodyMedium!
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Container();
   }
 
   Widget _buildDrawerHeaderShimmer() {

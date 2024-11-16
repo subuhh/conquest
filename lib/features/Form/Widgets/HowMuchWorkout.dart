@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import '../../../core/Controllers/Form_Controller/FormController.dart';
 import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sizes.dart';
 
 class HowMuchWorkout extends StatefulWidget {
   const HowMuchWorkout({super.key});
@@ -20,14 +19,21 @@ class _HowMuchWorkoutState extends State<HowMuchWorkout> {
       //mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: TSizes.spaceBtwItems),
-        _buildOptionButton("Daily", "You work out every day."),
-        SizedBox(height: TSizes.spaceBtwItems),
-        _buildOptionButton("Weekly", "You work out several times a week."),
-        SizedBox(height: TSizes.spaceBtwItems),
-        _buildOptionButton("Rarely", "You hardly ever work out."),
-        SizedBox(height: TSizes.spaceBtwItems),
-        _buildOptionButton("Not Regular", "You exercise occasionally."),
+        SizedBox(height: 8),
+        _buildOptionButton(
+            "Daily", "You're dedicated to working out every single day."),
+        SizedBox(height: 8),
+        _buildOptionButton("Weekly",
+            "You have a regular workout routine and exercise several times a week."),
+        SizedBox(height: 8),
+        _buildOptionButton("Occasionally",
+            "You work out from time to time, but not on a consistent schedule."),
+        SizedBox(height: 8),
+        _buildOptionButton("Rarely",
+            "You rarely find time for exercise and workouts are infrequent."),
+        SizedBox(height: 8),
+        _buildOptionButton("Sedentary",
+            "You lead a mostly inactive lifestyle with little to no exercise."),
       ],
     );
   }
@@ -72,7 +78,6 @@ class _HowMuchWorkoutState extends State<HowMuchWorkout> {
                     .apply(fontSizeFactor: 0.5)
                     .copyWith(fontWeight: FontWeight.w500),
               ),
-              const SizedBox(height: 4), // Space between title and subtitle
               Text(
                 subtitle,
                 style: Theme.of(context)

@@ -15,10 +15,12 @@ class FirstTimeLoginController extends GetxController
     with WidgetsBindingObserver {
   FirstTimeLoginController();
 
+  final controller = FormController.instance;
+
   final formKey = GlobalKey<FormState>();
-  final userNameController = TextEditingController();
-  final nameController = TextEditingController();
-  final phoneController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   var isLoading = false.obs;
   var isChecked = false.obs;
@@ -27,6 +29,9 @@ class FirstTimeLoginController extends GetxController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+
+    nameController =
+        TextEditingController(text: controller.googleUser!.displayName);
   }
 
   @override
@@ -79,7 +84,6 @@ class FirstTimeLoginController extends GetxController
         log('isAvailable: $isUsernameAvailable');
 
         if (isUsernameAvailable) {
-          final controller = FormController.instance;
           final User? user;
 
           double convertHeightToCm() {
@@ -110,6 +114,9 @@ class FirstTimeLoginController extends GetxController
             activityLevel: controller.selectedWorkoutFrequency.value,
             goals: controller.selectedGoals,
           );
+
+          final macros = CalorieCalculator.calculateMacros(
+              calorie, controller.selectedGoals[0]);
 
           final waterGoal = WaterIntakeCalCul().calculateWaterIntakeGoal(
             convertWeightToDouble(
@@ -156,6 +163,11 @@ class FirstTimeLoginController extends GetxController
             profileImageUrl: user.photoURL ?? '',
             calorieGoal: calorie,
             waterGoal: waterGoal,
+            proteinGoal: macros['protein'],
+            carbsGoal: macros['carbs'],
+            fatGoal: macros['fat'],
+            fiberGoal: macros['fiber'],
+            accountCreationTime: DateTime.now(),
           );
 
           // Create user document
