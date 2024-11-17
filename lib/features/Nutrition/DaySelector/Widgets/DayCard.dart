@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../utils/constants/colors.dart';
 
-
 class DayCard extends StatelessWidget {
   final String day;
   final String date;
@@ -25,8 +24,20 @@ class DayCard extends StatelessWidget {
     Color textColor;
     Color iconColor;
 
-
     if (isToday) {
+      // Gradient for active days
+      backgroundGradient = LinearGradient(
+        colors: [
+          TColors.primary,
+          TColors.primary,
+          Colors.white54,
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+      textColor = Colors.white;
+      iconColor = TColors.primary.withOpacity(0.7);
+    } else if (!isActive) {
       // Gradient for today
       backgroundGradient = LinearGradient(
         colors: [Colors.black, Colors.grey],
@@ -35,15 +46,6 @@ class DayCard extends StatelessWidget {
       );
       textColor = Colors.white;
       iconColor = Colors.grey;
-    } else if (isActive) {
-      // Gradient for active days
-      backgroundGradient = LinearGradient(
-        colors: [TColors.primary,TColors.primary, Colors.white54,],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
-      textColor = Colors.black;
-      iconColor = TColors.primary;
     } else {
       // Gradient for inactive days
       backgroundGradient = LinearGradient(
@@ -56,7 +58,7 @@ class DayCard extends StatelessWidget {
     }
 
     return Container(
-      width:55, // Set a fixed width for each day card
+      width: 55, // Set a fixed width for each day card
       //padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         gradient: backgroundGradient,
@@ -64,26 +66,42 @@ class DayCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-         Positioned(
+          Positioned(
             bottom: 0,
             right: -10,
             child: Transform.rotate(
-                angle: 6,
-                child: SvgPicture.asset('assets/icons/nutrition/newMeal.svg',height: 40,color: iconColor,)),),
+              angle: 6,
+              child: SvgPicture.asset(
+                'assets/icons/nutrition/newMeal.svg',
+                height: 40,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                // color: iconColor,
+              ),
+            ),
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(day,style: Theme.of(context).textTheme.titleMedium!.apply(color: textColor),),
-
-                Text(date,style: Theme.of(context).textTheme.titleSmall!.apply(color: textColor),)
+                Text(
+                  day,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .apply(color: textColor),
+                ),
+                Text(
+                  date,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .apply(color: textColor),
+                )
               ],
             ),
           ),
-
         ],
       ),
     );
   }
 }
-

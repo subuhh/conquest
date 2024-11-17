@@ -19,7 +19,7 @@ class UserModel {
   final List<String>? dietPreference;
   final String? defaultAddressId;
   final double? calorieGoal;
-  final double? waterGoal;
+  final WaterGoal? waterGoal; // Changed from double to WaterGoal
   final double? proteinGoal;
   final double? fatGoal;
   final double? carbsGoal;
@@ -28,7 +28,7 @@ class UserModel {
 
   UserModel({
     required this.id,
-    required this.userName, // Renamed userId to userName
+    required this.userName,
     required this.email,
     required this.name,
     required this.phoneNumber,
@@ -74,7 +74,9 @@ class UserModel {
       dietPreference: List<String>.from(data['dietPreference'] ?? []),
       defaultAddressId: data['defaultAddressId'] ?? '',
       calorieGoal: data['calorieGoal'] ?? 0.0,
-      waterGoal: data['waterGoal'] ?? 0.0,
+      waterGoal: data['waterGoal'] != null
+          ? WaterGoal.fromMap(data['waterGoal'])
+          : null, // Parse waterGoal map
       proteinGoal: data['proteinGoal']?.toDouble() ?? 0.0,
       fatGoal: data['fatGoal']?.toDouble() ?? 0.0,
       carbsGoal: data['carbsGoal']?.toDouble() ?? 0.0,
@@ -104,7 +106,7 @@ class UserModel {
       'dietPreference': dietPreference,
       'defaultAddressId': defaultAddressId,
       'calorieGoal': calorieGoal,
-      'waterGoal': waterGoal,
+      'waterGoal': waterGoal?.toMap(), // Convert WaterGoal to map
       'proteinGoal': proteinGoal,
       'fatGoal': fatGoal,
       'carbsGoal': carbsGoal,
@@ -112,6 +114,33 @@ class UserModel {
       'accountCreationTime': accountCreationTime != null
           ? Timestamp.fromDate(accountCreationTime!)
           : null,
+    };
+  }
+}
+
+// WaterGoal model to handle amount and unit
+class WaterGoal {
+  final int amount; // Water goal amount
+  final String unit; // Unit (e.g., "ml", "oz", "L")
+
+  WaterGoal({
+    required this.amount,
+    required this.unit,
+  });
+
+  // Factory method to create a WaterGoal from a Firestore map
+  factory WaterGoal.fromMap(Map<String, dynamic> map) {
+    return WaterGoal(
+      amount: map['amount']?.toInt() ?? 0,
+      unit: map['unit'] ?? 'L', // Default to L
+    );
+  }
+
+  // Method to convert a WaterGoal to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'amount': amount,
+      'unit': unit,
     };
   }
 }

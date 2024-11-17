@@ -162,7 +162,7 @@ class FirstTimeLoginController extends GetxController
             age: controller.selectedAge.value,
             profileImageUrl: user.photoURL ?? '',
             calorieGoal: calorie,
-            waterGoal: waterGoal,
+            waterGoal: WaterGoal(amount: waterGoal, unit: 'L'),
             proteinGoal: macros['protein'],
             carbsGoal: macros['carbs'],
             fatGoal: macros['fat'],

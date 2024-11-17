@@ -12,12 +12,6 @@ class RecipeFavoriteController extends GetxController {
 
   final _db = FirebaseFirestore.instance;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchFavoriteRecipes(); // Load favorite recipes on initialization
-  }
-
   // Fetch favorite recipes from Firestore
   Future<void> fetchFavoriteRecipes() async {
     final userId = AuthService.instance.currentUser!.uid;
@@ -68,10 +62,12 @@ class RecipeFavoriteController extends GetxController {
       String userId, Map<String, dynamic> recipe) async {
     if (favoriteRecipes.any((r) => r['id'] == recipe['id'])) {
       await removeRecipeFromFavorites(userId, recipe['id']);
-      TLoaders.customToast(message: 'Recipe has been removed to Favourite Recipe.');
+      TLoaders.customToast(
+          message: 'Recipe has been removed to Favourite Recipe.');
     } else {
       await saveRecipeToFavorites(userId, recipe);
-      TLoaders.customToast(message: 'Recipe has been added to Favourite Recipe.');
+      TLoaders.customToast(
+          message: 'Recipe has been added to Favourite Recipe.');
     }
   }
 }

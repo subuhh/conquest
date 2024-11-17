@@ -124,7 +124,7 @@ class AuthService extends GetxController {
           dietPreference: controller.selectedDietPreferences,
           age: controller.selectedAge.value,
           calorieGoal: calorie,
-          waterGoal: waterGoal,
+          waterGoal:WaterGoal(amount: waterGoal, unit: 'L'),
           proteinGoal: macros['protein'],
           carbsGoal: macros['carbs'],
           fatGoal: macros['fat'],

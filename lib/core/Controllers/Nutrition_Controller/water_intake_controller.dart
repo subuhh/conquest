@@ -1,14 +1,18 @@
-import 'package:conquest/core/services/auth_service.dart';
+import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:get/get.dart';
 import '../../model/Nutrition/water_intake_model.dart';
+import '../../services/auth_service.dart';
 import '../../services/nutrition/water_intake_service.dart';
 
 class WaterIntakeController extends GetxController {
   final WaterIntakeService _waterIntakeService = WaterIntakeService();
 
   Rx<WaterIntakeModel?> waterIntake = Rx<WaterIntakeModel?>(null);
+  RxDouble waterGoal = 0.0.obs; // Default goal in ml
+  RxString waterGoalUnit = 'L'.obs; // Default unit
   RxBool isLoading = false.obs;
 
+  @override
   void onInit() {
     super.onInit();
     initializeTodayWaterIntake(AuthService.instance.currentUser!.uid);
@@ -27,7 +31,7 @@ class WaterIntakeController extends GetxController {
     }
   }
 
-  // Add a water entry to the water intake
+  // Add a water entry and update the water goal progress
   Future<void> addWaterEntry(String userId, double amount) async {
     if (waterIntake.value != null) {
       final updatedWaterIntake = waterIntake.value!;
@@ -35,42 +39,54 @@ class WaterIntakeController extends GetxController {
           .add(WaterEntry(time: DateTime.now(), amount: amount));
       updatedWaterIntake.totalIntake += amount;
 
+      // Reassign the reactive variable
+      waterIntake.value = WaterIntakeModel(
+        date: updatedWaterIntake.date,
+        totalIntake: updatedWaterIntake.totalIntake,
+        entries: updatedWaterIntake.entries,
+      );
+
       await _waterIntakeService.setWaterIntake(userId, updatedWaterIntake);
-      waterIntake.value = updatedWaterIntake; // Update the state
     }
   }
 
+  // Remove the last water entry
   Future<void> removeWaterEntry(String userId) async {
     if (waterIntake.value != null && waterIntake.value!.entries.isNotEmpty) {
-      // Get the current water intake data
       final updatedWaterIntake = waterIntake.value!;
-
-      // Get the last entry
-      final lastEntry = updatedWaterIntake.entries.last;
-
-      // Remove the last entry from the list
-      updatedWaterIntake.entries.removeLast();
-
-      // Subtract the amount of the last entry from total intake
+      final lastEntry = updatedWaterIntake.entries.removeLast();
       updatedWaterIntake.totalIntake -= lastEntry.amount;
 
-      // Save the updated water intake
-      await _waterIntakeService.setWaterIntake(userId, updatedWaterIntake);
+      // Reassign the reactive variable
+      waterIntake.value = WaterIntakeModel(
+        date: updatedWaterIntake.date,
+        totalIntake: updatedWaterIntake.totalIntake,
+        entries: updatedWaterIntake.entries,
+      );
 
-      // Update the state with the new data
-      waterIntake.value = updatedWaterIntake;
+      await _waterIntakeService.setWaterIntake(userId, updatedWaterIntake);
     }
+  }
+
+  // Set or update the water goal and its unit
+  Future<void> setWaterGoal(String userId, double goal, String unit) async {
+    await _waterIntakeService.updateWaterGoal(userId, goal, unit);
+    waterGoal.value = goal;
+    waterGoalUnit.value = unit;
   }
 
   // Initialize or fetch today's water intake
   Future<void> initializeTodayWaterIntake(String userId) async {
     DateTime today = DateTime.now();
-    // Fetch today's water intake or create a new one if it doesn't exist
     final existingWaterIntake =
         await _waterIntakeService.getWaterIntake(userId, today);
 
+    final userController = UserController.instance.userModel.value!.waterGoal;
+
+    waterGoal.value = userController!.amount.toDouble();
+    waterGoalUnit.value = userController.unit;
+
     if (existingWaterIntake == null) {
-      // If no water intake for today exists, create a new record
       final newWaterIntake = WaterIntakeModel(
         date: today,
         totalIntake: 0.0,

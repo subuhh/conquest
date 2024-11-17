@@ -13,21 +13,21 @@ class RecommendedMeals extends StatelessWidget {
   Widget build(BuildContext context) {
     final recipeController = RecipeController.instance;
 
-    return recipeController.recipes.isEmpty
-        ? const SizedBox.shrink()
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Recommended Meals',
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(height: TSizes.spaceBtwItems),
-              Obx(() {
-                if (recipeController.isLoading.value) {
-                  return Shimmer.fromColors(
+    return Obx(
+      () => recipeController.recipes.isEmpty
+          ? const SizedBox.shrink()
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Recommended Meals',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: TSizes.spaceBtwItems),
+                if (recipeController.isLoading.value) ...[
+                  Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
                     highlightColor: Colors.grey[100]!,
                     child: SizedBox(
@@ -51,25 +51,11 @@ class RecommendedMeals extends StatelessWidget {
                         },
                       ),
                     ),
-                  );
-                }
-
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.335,
-                  // width: MediaQuery.of(context).size.width * 0.6,
-                  width: double.maxFinite,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      final recipe = recipeController.recipes[index];
-                      return RecommendedMealCardSmall(context, recipe);
-                    },
-                  ),
-                );
-              }),
-            ],
-          );
+                  )
+                ],
+                RecommendedMealCarousel(context, recipeController.recipes)
+              ],
+            ),
+    );
   }
 }

@@ -1,137 +1,142 @@
-import "package:cached_network_image/cached_network_image.dart";
-import "package:conquest/core/model/Nutrition/recipe_model.dart";
-import "package:flutter/material.dart";
-import "package:flutter_svg/svg.dart";
-import "package:shimmer/shimmer.dart";
-import "../../../../../utils/constants/sizes.dart";
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import "../../../MealRecipes/MealRecipePage.dart";
+import 'package:shimmer/shimmer.dart';
+import '../../../MealRecipes/MealRecipePage.dart';
+import 'package:conquest/core/model/Nutrition/recipe_model.dart';
 
-Widget RecommendedMealCardSmall(BuildContext context, RecipeModel recipe) {
+Widget RecommendedMealCarousel(
+    BuildContext context, List<RecipeModel> recipes) {
   Size size = MediaQuery.of(context).size;
 
-  return Padding(
-    padding: const EdgeInsets.only(right: 8),
-    child: GestureDetector(
-      onTap: () => Get.to(
-        () => MealRecipesPage(recipe: recipe),
-      ),
-      child: SizedBox(
-        width: size.width * 0.65,
+  return CarouselSlider.builder(
+    itemCount: 3,
+    itemBuilder: (context, index, realIndex) {
+      final recipe = recipes[index];
+
+      return GestureDetector(
+        onTap: () => Get.to(
+          () => MealRecipesPage(recipe: recipe),
+        ),
         child: Card(
           color: Colors.white,
           elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Stack(
+              children: [
+                // Full-height image
+                CachedNetworkImage(
+                  imageUrl: recipe.imageUrl,
+                  height: size.height * 0.3,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: size.height * 0.3,
+                      width: double.infinity,
+                      color: Colors.white,
                     ),
-                    child: CachedNetworkImage(
-                      imageUrl: recipe.imageUrl,
-                      height: size.height * 0.2,
-                      width: size.width * 0.65,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          height: size.height * 0.2,
-                          width: size.width * 0.65,
-                          color: Colors.white,
-                        ),
+                  ),
+                ),
+                // Black gradient overlay
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: size.height * 0.1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.8),
+                          Colors.black.withOpacity(0.5),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: GestureDetector(
-                      onTap: () async {
-                        // final userId = AuthService.instance.currentUser!.uid;
-                        // await favoriteController.toggleFavorite(
-                        //     userId, recipeJson);
-                      },
-                      child: CircleAvatar(
-                        radius: 16.5,
-                        child: CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: Colors.black,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: size.width * 0.55,
-                      child: Text(
+                ),
+                // Title, calories, and protein on top of the gradient
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  right: 10,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         recipe.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/nutrition/newMeal.svg',
-                          height: 18,
-                          colorFilter:
-                              ColorFilter.mode(Colors.orange, BlendMode.srcIn),
-                        ),
-                        SizedBox(width: TSizes.spaceBtwItems / 2),
-                        Text(
-                          '${recipe.calories}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(color: Colors.black, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/nutrition/Stopwatch.svg',
-                          height: 18,
-                          colorFilter:
-                              ColorFilter.mode(Colors.orange, BlendMode.srcIn),
-                        ),
-                        SizedBox(width: TSizes.spaceBtwItems / 2),
-                        Text(
-                          '${recipe.prepTime}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(color: Colors.black, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ],
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Text(
+                            '${recipe.calories} kcal',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            '${recipe.protein} Protein',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                // Favorite icon
+                // Positioned(
+                //   top: 10,
+                //   right: 10,
+                //   child: GestureDetector(
+                //     onTap: () async {
+                //       // Add your favorite toggle logic here
+                //     },
+                //     child: CircleAvatar(
+                //       radius: 18,
+                //       backgroundColor: Colors.black.withOpacity(0.5),
+                //       child: Icon(
+                //         Icons.favorite_border,
+                //         color: Colors.white,
+                //         size: 20,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
           ),
         ),
-      ),
+      );
+    },
+    options: CarouselOptions(
+      height: size.height * 0.35,
+      viewportFraction: 1,
+      enlargeCenterPage: false,
+      autoPlay: false,
     ),
   );
 }

@@ -1,5 +1,5 @@
 class WaterIntakeCalCul {
-  double calculateWaterIntakeGoal(double weight, String workoutFrequency) {
+  int calculateWaterIntakeGoal(double weight, String workoutFrequency) {
     double baseGoal = weight * 30; // 30ml per kg of body weight
 
     // Adjust based on workout frequency
@@ -21,6 +21,7 @@ class WaterIntakeCalCul {
         break;
     }
 
-    return baseGoal; // Return the calculated goal in milliliters
+    // Convert milliliters to liters and round to the nearest integer
+    return (baseGoal / 1000).round();
   }
 }
