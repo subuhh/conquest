@@ -5,7 +5,6 @@ import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../core/Controllers/Nutrition_Controller/common_food_controller.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/helpers/helper_functions.dart';
@@ -17,7 +16,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomePageController());
-    Get.put(NutritionController());
     return Scaffold(
       /// AppBar
       backgroundColor: TColors.secondaryBackground,

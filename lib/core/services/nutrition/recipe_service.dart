@@ -1,4 +1,5 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../model/Nutrition/recipe_model.dart';
 import '../../model/user.dart';
@@ -21,7 +22,7 @@ class FirebaseRecipeService {
 
   // Fetch recipes from Firestore based on user preferences
   Future<List<RecipeModel>> getRecommendedRecipes(
-      String userUid, String mealType) async {
+      String userUid, String mealType, int offset, int limit) async {
     // Fetch user details using UID
     UserModel? user = await firestoreService.getUserDetails(userUid);
 
@@ -33,8 +34,8 @@ class FirebaseRecipeService {
     // Retrieve diet preferences and calorie goal
     List<String> diets = user.dietPreference!;
     final calorieGoal = user.calorieGoal;
-    log('User Diet Preferences: $diets');
-    log('User Calorie Goal for a Meal: $calorieGoal');
+    dev.log('User Diet Preferences: $diets');
+    dev.log('User Calorie Goal for a Meal: $calorieGoal');
 
     // Map user diet preferences to recipe categories
     List<String> allowedRecipeDiets = [];
@@ -43,21 +44,26 @@ class FirebaseRecipeService {
         allowedRecipeDiets.addAll(dietMapping[diet]!);
       }
     }
-    log('Allowed Recipe Diets: $allowedRecipeDiets');
+    dev.log('Allowed Recipe Diets: $allowedRecipeDiets');
 
-    // Fetch recipes from Firestore with filtering by meal type
-    final querySnapshot = await recipeCollection
-        // .where('protein', isGreaterThan: 0)
-        .get();
+    // Fetch previously recommended recipes for the user
+    List<String> previouslyRecommendedRecipeIds =
+        await getUserPreviouslyRecommendedRecipes(userUid);
+
+    // Fetch recipes from Firestore
+    final querySnapshot = await recipeCollection.get();
 
     // Convert query snapshot to RecipeModel list
     List<RecipeModel> allRecipes =
         querySnapshot.docs.map((doc) => RecipeModel.fromDocument(doc)).toList();
 
-    // Filter recipes by strict diet preferences
+    // Filter recipes by strict diet preferences and exclude previously recommended recipes
     List<RecipeModel> filteredByDiet = allRecipes.where((recipe) {
-      // Adjusted to check if `recipe.diet` (as a String) matches any allowed diet preference
-      return allowedRecipeDiets.contains(recipe.diet);
+      // Adjusted to check if `recipe.diet` (as a String) matches all user's diet preferences
+      bool matchesAllDiets = diets.every(
+          (userDiet) => dietMapping[userDiet]?.contains(recipe.diet) ?? false);
+      return matchesAllDiets &&
+          !previouslyRecommendedRecipeIds.contains(recipe.id);
     }).toList();
 
     // Further filter recipes based on calorie goal
@@ -70,16 +76,62 @@ class FirebaseRecipeService {
         int recipeCalories = int.parse(recipe.calories.toString());
         return recipeCalories <= calorieGoal!;
       } catch (e) {
-        log('Error parsing calories for recipe: ${recipe.id}, ${recipe.calories}');
+        dev.log(
+            'Error parsing calories for recipe: ${recipe.id}, ${recipe.calories}');
         return false; // Exclude if parsing fails
       }
     }).toList();
 
-    // Sort the recommended recipes by calorie content
-    filteredByCalorie.sort((a, b) => a.calories!.compareTo(b.calories!));
+    // Prioritize high-protein recipes
+    List<RecipeModel> highProteinRecipes = filteredByCalorie
+        .where((recipe) => recipe.diet.contains(diets[0] == 'Vegetarian'
+            ? allowedRecipeDiets[1]
+            : allowedRecipeDiets[2]))
+        .toList();
 
-    // Log the final recommended recipes
-    log('Recommended Recipes Count: ${filteredByCalorie.length}');
-    return filteredByCalorie;
+    List<RecipeModel> nonHighProteinRecipes = filteredByCalorie
+        .where((recipe) => !recipe.diet.contains(diets[0] == 'Vegetarian'
+            ? allowedRecipeDiets[1]
+            : allowedRecipeDiets[2]))
+        .toList();
+
+    // Combine the high-protein recipes with the non-high-protein recipes, and shuffle the list
+    List<RecipeModel> recommendedRecipes = [
+      ...highProteinRecipes,
+      ...nonHighProteinRecipes
+    ];
+    recommendedRecipes.shuffle(Random());
+
+    // Take the required number of recipes based on the offset and limit
+    List<RecipeModel> paginatedRecipes =
+        recommendedRecipes.skip(offset).take(limit).toList();
+
+    // Store the recommended recipes for the user to avoid showing the same recipes again
+    await storeUserRecommendedRecipes(userUid,
+        paginatedRecipes.map((recipe) => recipe.id.toString()).toList());
+
+    // dev.log the final recommended recipes
+    dev.log('Recommended Recipes Count: ${paginatedRecipes.length}');
+    return paginatedRecipes;
+  }
+
+  // Fetch previously recommended recipes for the user from Firestore
+  Future<List<String>> getUserPreviouslyRecommendedRecipes(
+      String userUid) async {
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userUid).get();
+    final previouslyRecommendedRecipes =
+        userDoc.data()?['previouslyRecommendedRecipes'] as List<dynamic>?;
+    return previouslyRecommendedRecipes?.map((id) => id.toString()).toList() ??
+        [];
+  }
+
+  // Store the recommended recipes for the user in Firestore
+  Future<void> storeUserRecommendedRecipes(
+      String userUid, List<String> recommendedRecipeIds) async {
+    await FirebaseFirestore.instance.collection('users').doc(userUid).update({
+      'previouslyRecommendedRecipes':
+          FieldValue.arrayUnion(recommendedRecipeIds),
+    });
   }
 }

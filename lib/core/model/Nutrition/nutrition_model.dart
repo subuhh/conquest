@@ -1,37 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class NutritionModel {
-  String userId;
-  DateTime date;
-  WaterIntake water;
-  CalorieIntake calories;
-
-  NutritionModel({
-    required this.userId,
-    required this.date,
-    required this.water,
-    required this.calories,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'date': Timestamp.fromDate(date),
-      'water': water.toMap(),
-      'calories': calories.toMap(),
-    };
-  }
-
-  factory NutritionModel.fromMap(Map<String, dynamic> map) {
-    return NutritionModel(
-      userId: map['userId'],
-      date: (map['date'] as Timestamp).toDate(),
-      water: WaterIntake.fromMap(map['water']),
-      calories: CalorieIntake.fromMap(map['calories']),
-    );
-  }
-}
-
 class WaterIntake {
   int totalWaterMl;
   List<int> entries; // Stores each water entry in ml
@@ -55,22 +21,25 @@ class WaterIntake {
 
 class CalorieIntake {
   Meal breakfast;
+  Meal morningSnack;
   Meal lunch;
-  Meal snack;
+  Meal eveningSnack;
   Meal dinner;
 
   CalorieIntake({
     required this.breakfast,
+    required this.morningSnack,
     required this.lunch,
-    required this.snack,
+    required this.eveningSnack,
     required this.dinner,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'breakfast': breakfast.toMap(),
+      'morningsnack': morningSnack.toMap(),
       'lunch': lunch.toMap(),
-      'snack': snack.toMap(),
+      'eveningsnack': eveningSnack.toMap(),
       'dinner': dinner.toMap(),
     };
   }
@@ -78,8 +47,9 @@ class CalorieIntake {
   factory CalorieIntake.fromMap(Map<String, dynamic> map) {
     return CalorieIntake(
       breakfast: Meal.fromMap(map['breakfast']),
+      morningSnack: Meal.fromMap(map['morningsnack']),
       lunch: Meal.fromMap(map['lunch']),
-      snack: Meal.fromMap(map['snack']),
+      eveningSnack: Meal.fromMap(map['eveningsnack']),
       dinner: Meal.fromMap(map['dinner']),
     );
   }
@@ -96,6 +66,14 @@ class Meal {
     required this.totalCalories,
     required this.macros,
   });
+
+  static Meal empty() {
+    return Meal(
+      items: [],
+      totalCalories: 0,
+      macros: {},
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

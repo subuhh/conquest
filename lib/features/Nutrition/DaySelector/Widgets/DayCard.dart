@@ -8,6 +8,8 @@ class DayCard extends StatelessWidget {
   final String date;
   final bool isActive;
   final bool isToday;
+  final bool isSelected;
+  final Function()? onTap;
 
   const DayCard({
     Key? key,
@@ -15,6 +17,8 @@ class DayCard extends StatelessWidget {
     required this.date,
     required this.isActive,
     this.isToday = false,
+    required this.onTap,
+    required this.isSelected,
   }) : super(key: key);
 
   @override
@@ -24,7 +28,16 @@ class DayCard extends StatelessWidget {
     Color textColor;
     Color iconColor;
 
-    if (isToday) {
+    if (isSelected && !isToday) {
+      // Gradient for selected day
+      backgroundGradient = LinearGradient(
+        colors: [TColors.primary, Colors.blueAccent],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+      textColor = Colors.white;
+      iconColor = Colors.blueAccent.withOpacity(0.7);
+    } else if (isToday) {
       // Gradient for active days
       backgroundGradient = LinearGradient(
         colors: [
@@ -57,50 +70,53 @@ class DayCard extends StatelessWidget {
       iconColor = Colors.transparent;
     }
 
-    return Container(
-      width: 55, // Set a fixed width for each day card
-      //padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        gradient: backgroundGradient,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            right: -10,
-            child: Transform.rotate(
-              angle: 6,
-              child: SvgPicture.asset(
-                'assets/icons/nutrition/newMeal.svg',
-                height: 40,
-                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                // color: iconColor,
+    return GestureDetector(
+      onTap: isToday || !isActive ? onTap : null,
+      child: Container(
+        width: 55, // Set a fixed width for each day card
+        //padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          gradient: backgroundGradient,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              bottom: 0,
+              right: -10,
+              child: Transform.rotate(
+                angle: 6,
+                child: SvgPicture.asset(
+                  'assets/icons/nutrition/newMeal.svg',
+                  height: 40,
+                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                  // color: iconColor,
+                ),
               ),
             ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  day,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .apply(color: textColor),
-                ),
-                Text(
-                  date,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .apply(color: textColor),
-                )
-              ],
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    day,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .apply(color: textColor),
+                  ),
+                  Text(
+                    date,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall!
+                        .apply(color: textColor),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

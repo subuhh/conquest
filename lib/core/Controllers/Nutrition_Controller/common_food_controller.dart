@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import '../../model/Nutrition/common_food_model.dart';
 import '../../services/nutrition/common_food_service.dart';
 
-class NutritionController extends GetxController {
-  static NutritionController get instance => Get.find();
-  final NutritionService _nutritionService = Get.put(NutritionService());
+class CommonFoodController extends GetxController {
+  static CommonFoodController get instance => Get.find();
+  final _nutritionService = Get.put(CommonFoodService());
 
   var nutritionData = <NutritionItem>[].obs;
   var filteredData = <NutritionItem>[].obs;
@@ -28,7 +28,8 @@ class NutritionController extends GetxController {
       // Fetch data from Firebase
       List<NutritionItem> items = await _nutritionService.fetchNutritionData();
       nutritionData.assignAll(items);
-      filteredData.assignAll(items.take(5).toList()); // Show only 5 items initially
+      filteredData
+          .assignAll(items.take(5).toList()); // Show only 5 items initially
     } catch (e) {
       log("Error fetching data: $e");
     } finally {
@@ -42,8 +43,10 @@ class NutritionController extends GetxController {
       filteredData.assignAll(nutritionData);
     } else {
       filteredData.assignAll(
-        nutritionData.where((item) =>
-            item.foodName.toLowerCase().contains(query.toLowerCase())).toList(),
+        nutritionData
+            .where((item) =>
+                item.foodName.toLowerCase().contains(query.toLowerCase()))
+            .toList(),
       );
     }
   }

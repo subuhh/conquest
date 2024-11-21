@@ -13,6 +13,9 @@ class RecipeController extends GetxController {
 
   final _recipeService = FirebaseRecipeService();
 
+  int offset = 0;
+  final int limit = 3;
+
   @override
   void onInit() {
     super.onInit();
@@ -24,11 +27,16 @@ class RecipeController extends GetxController {
   Future<void> fetchRecipes() async {
     isLoading(true);
     try {
-      final fetchedRecipes = await _recipeService
-          .getRecommendedRecipes(AuthService.instance.currentUser!.uid,'');
-      recipes.assignAll(fetchedRecipes);
+      final fetchedRecipes = await _recipeService.getRecommendedRecipes(
+          AuthService.instance.currentUser!.uid, '', offset, limit);
+      recipes.addAll(fetchedRecipes);
+      offset += limit;
     } finally {
       isLoading(false);
     }
+  }
+
+  void reloadRecipes() {
+    fetchRecipes();
   }
 }

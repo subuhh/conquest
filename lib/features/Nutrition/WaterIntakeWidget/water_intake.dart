@@ -1,6 +1,7 @@
 import 'package:conquest/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import 'package:conquest/features/Nutrition/Widgets/CircularProgressIndicator/CircularProgressIndicator.dart';
@@ -16,19 +17,35 @@ class WaterIntake extends StatelessWidget {
     final user = UserController.instance;
 
     return Obx(() {
-      if (waterIntakeController.waterIntake.value == null) {
-        return Center(child: CircularProgressIndicator());
+      if (waterIntakeController.isLoading.value) {
+        return Center(
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 120,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
       }
 
       double waterGoal = waterIntakeController.waterGoal.value;
-
       String waterUnit = waterIntakeController.waterGoalUnit.value;
 
-      double currentWaterIntake = waterUnit == 'ML'
-          ? waterIntakeController.waterIntake.value!.totalIntake
-          : waterIntakeController.waterIntake.value!.totalIntake / 1000;
+      double currentWaterIntake = 0.0;
+      double progress = 0.0;
 
-      double progress = currentWaterIntake / waterGoal;
+      if (waterIntakeController.waterIntake.value != null) {
+        currentWaterIntake = waterUnit == 'ML'
+            ? waterIntakeController.waterIntake.value!.totalIntake
+            : waterIntakeController.waterIntake.value!.totalIntake / 1000;
+        progress = currentWaterIntake / waterGoal;
+      }
 
       return GestureDetector(
         onTap: () {

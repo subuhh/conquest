@@ -5,7 +5,10 @@ import '../../services/auth_service.dart';
 import '../../services/nutrition/water_intake_service.dart';
 
 class WaterIntakeController extends GetxController {
+  static WaterIntakeController get instance => Get.find();
+
   final WaterIntakeService _waterIntakeService = WaterIntakeService();
+  String userId = AuthService.instance.currentUser!.uid;
 
   Rx<WaterIntakeModel?> waterIntake = Rx<WaterIntakeModel?>(null);
   RxDouble waterGoal = 0.0.obs; // Default goal in ml
@@ -19,7 +22,7 @@ class WaterIntakeController extends GetxController {
   }
 
   // Fetch water intake data for a specific user and date
-  Future<void> fetchWaterIntake(String userId, DateTime date) async {
+  Future<void> fetchWaterIntake(DateTime date) async {
     isLoading.value = true;
     try {
       final result = await _waterIntakeService.getWaterIntake(userId, date);

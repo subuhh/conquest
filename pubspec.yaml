@@ -34,6 +34,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   crypto: ^3.0.6
   path_provider: ^2.1.4
+  syncfusion_flutter_charts: ^27.2.2
 
   # Location & Address
   geocoding: ^3.0.0

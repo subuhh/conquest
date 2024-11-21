@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/model/Nutrition/common_food_model.dart';
 import '../../../../../utils/constants/sizes.dart';
 
 class MacroNutrientsBreakdownWidget extends StatelessWidget {
-  const MacroNutrientsBreakdownWidget({super.key});
+  const MacroNutrientsBreakdownWidget({super.key, required this.item});
+
+  final NutritionItem item;
 
   @override
-
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Container(
@@ -18,7 +20,7 @@ class MacroNutrientsBreakdownWidget extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,13 +28,22 @@ class MacroNutrientsBreakdownWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Calories",style: textTheme.bodySmall!.apply(color: Colors.grey),textAlign: TextAlign.left,),
-                    Text("85 cal",style: textTheme.headlineMedium,),
+                    Text(
+                      "Calories",
+                      style: textTheme.bodySmall!.apply(color: Colors.grey),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      "${item.energyKcal.toInt()} cal",
+                      style: textTheme.headlineMedium,
+                    ),
                   ],
                 ),
-                Text("Net Weight 35g",style: textTheme.bodyMedium,),
+                Text(
+                  "Net Weight: 100g",
+                  style: textTheme.bodyMedium,
+                ),
               ],
-
             ),
           ),
 
@@ -41,18 +52,18 @@ class MacroNutrientsBreakdownWidget extends StatelessWidget {
             child: Divider(),
           ),
           //SizedBox(height: TSizes.spaceBtwItems,),
-          _buildNutritionRow('Protein', '10 gm', textTheme),
-          _buildNutritionRow('Carbs', '30 gm', textTheme),
-          _buildNutritionRow('Fats', '5 gm', textTheme),
-          _buildNutritionRow('Fibre', '4 gm', textTheme),
-          SizedBox(height: TSizes.spaceBtwItems,)
-
+          _buildNutritionRow('Protein', '${item.proteinG}g', textTheme),
+          _buildNutritionRow('Carbs', '${item.carbG}g', textTheme),
+          _buildNutritionRow('Fats', '${item.fatG}g', textTheme),
+          _buildNutritionRow('Fibre', '${item.fibreG}g', textTheme),
+          SizedBox(
+            height: TSizes.spaceBtwItems,
+          )
         ],
       ),
     );
   }
 }
-
 
 Widget _buildNutritionRow(String label, String value, TextTheme textTheme) {
   return Padding(

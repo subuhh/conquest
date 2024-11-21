@@ -16,16 +16,13 @@ class QuantityMeasureWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Quantity',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                Text('Quantity', style: TextStyle(color: Colors.grey)),
                 SizedBox(height: 8.0),
                 TextField(
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // Allows numbers and decimals
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
                   ],
                   decoration: InputDecoration(
                     filled: true,
@@ -51,7 +48,8 @@ class QuantityMeasureWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10.0),
@@ -60,7 +58,9 @@ class QuantityMeasureWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('grams'),
-                      Icon(Icons.arrow_drop_down, color: Colors.transparent), // Hidden arrow to keep the layout consistent
+                      Icon(Icons.arrow_drop_down,
+                          color: Colors
+                              .transparent), // Hidden arrow to keep the layout consistent
                     ],
                   ),
                 ),

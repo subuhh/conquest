@@ -15,8 +15,11 @@ class RecipeFavoriteController extends GetxController {
   // Fetch favorite recipes from Firestore
   Future<void> fetchFavoriteRecipes() async {
     final userId = AuthService.instance.currentUser!.uid;
-    final querySnapshot =
-        await _db.collection('users').doc(userId).collection('favorites').get();
+    final querySnapshot = await _db
+        .collection('users')
+        .doc(userId)
+        .collection('favorites_recipes')
+        .get();
     favoriteRecipes.assignAll(querySnapshot.docs.map((doc) => doc.data()));
   }
 
@@ -30,7 +33,7 @@ class RecipeFavoriteController extends GetxController {
     await _db
         .collection('users')
         .doc(userId)
-        .collection('favorites')
+        .collection('favorites_recipes')
         .doc(recipe['id'].toString())
         .set(recipe);
 
@@ -46,7 +49,7 @@ class RecipeFavoriteController extends GetxController {
     await _db
         .collection('users')
         .doc(userId)
-        .collection('favorites')
+        .collection('favorites_recipes')
         .doc(recipeId)
         .delete();
 

@@ -7,6 +7,7 @@ import 'package:conquest/features/Nutrition/Fridge_Ai/fridge_ai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../core/Controllers/Nutrition_Controller/nutrition_controller.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
 import 'DietTracker/DietTrackerWidget.dart';
@@ -17,6 +18,7 @@ class NutritionHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(WaterIntakeController());
+    Get.put(NutritionController());
 
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
@@ -51,7 +53,6 @@ class NutritionHomePage extends StatelessWidget {
               WaterIntake(),
               SizedBox(height: TSizes.spaceBtwSections / 2),
               RecommendedMeals(),
-              // DailyRecommendedMeal(),
               SizedBox(height: TSizes.spaceBtwSections * 3),
             ],
           ),

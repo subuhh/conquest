@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../../model/Nutrition/common_food_model.dart';
 
-class NutritionService extends GetxService {
+class CommonFoodService extends GetxService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Fetch nutrition data from Firestore
