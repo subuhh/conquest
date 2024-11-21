@@ -146,5 +146,4 @@ class NutritionService {
   //
   //   return invertedMacros;
   // }
-
 }
