@@ -1,6 +1,9 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conquest/core/Controllers/drawer_controller.dart';
+import 'package:conquest/features/Legal_Faq_About/about_us.dart';
+import 'package:conquest/features/Legal_Faq_About/faq.dart';
+import 'package:conquest/features/Legal_Faq_About/privacy_policy.dart';
+import 'package:conquest/features/Legal_Faq_About/terms_n_condition.dart';
 import 'package:conquest/features/MarketPlace/Products/OrderHIstory/MyOrders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -268,7 +271,9 @@ class DrawerScreen extends StatelessWidget {
                         ),
                         menuListTile(
                           'FAQ',
-                          () {},
+                          () {
+                            Get.to(() => FAQScreen());
+                          },
                           'assets/icons/drawerIcons/faq.svg',
                           context,
                         ),
@@ -280,13 +285,25 @@ class DrawerScreen extends StatelessWidget {
                       tiles: [
                         menuListTile(
                           'About',
-                          () {},
+                          () {
+                            Get.to(() => AboutScreen());
+                          },
                           'assets/icons/drawerIcons/about_us.svg',
                           context,
                         ),
                         menuListTile(
+                          'Terms & Condition',
+                          () {
+                            Get.to(() => TermsConditionsScreen());
+                          },
+                          'assets/icons/drawerIcons/terms_n_condition.svg',
+                          context,
+                        ),
+                        menuListTile(
                           'Privacy & Policy',
-                          () {},
+                          () {
+                            Get.to(() => PrivacyPolicyScreen());
+                          },
                           'assets/icons/drawerIcons/privacy_policy.svg',
                           context,
                         ),
@@ -296,30 +313,30 @@ class DrawerScreen extends StatelessWidget {
                     CustomListTileGroup(
                       header: 'More',
                       tiles: [
-                        menuListTile(
-                          'Settings',
-                          () {},
-                          'assets/icons/drawerIcons/settings.svg',
-                          context,
-                        ),
-                        menuListTile(
-                          'Invite Friends',
-                          () {},
-                          'assets/icons/drawerIcons/invite.svg',
-                          context,
-                        ),
-                        menuListTile(
-                          'Rate Us',
-                          () async {
-                            if (Platform.isAndroid) {
-                              // Handle Play Store link
-                            } else if (Platform.isIOS) {
-                              // Handle App Store link
-                            }
-                          },
-                          'assets/icons/drawerIcons/rate_us.svg',
-                          context,
-                        ),
+                        // menuListTile(
+                        //   'Settings',
+                        //   () {},
+                        //   'assets/icons/drawerIcons/settings.svg',
+                        //   context,
+                        // ),
+                        // menuListTile(
+                        //   'Invite Friends',
+                        //   () {},
+                        //   'assets/icons/drawerIcons/invite.svg',
+                        //   context,
+                        // ),
+                        // menuListTile(
+                        //   'Rate Us',
+                        //   () async {
+                        //     if (Platform.isAndroid) {
+                        //       // Handle Play Store link
+                        //     } else if (Platform.isIOS) {
+                        //       // Handle App Store link
+                        //     }
+                        //   },
+                        //   'assets/icons/drawerIcons/rate_us.svg',
+                        //   context,
+                        // ),
                         menuListTile(
                           'Log Out',
                           () {
