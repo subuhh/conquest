@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../common/widgets/divider_with_text.dart';
 import '../../core/Controllers/Address_Controllers/saved_address_controller.dart';
+import '../../core/Controllers/location_service.dart';
 import '../../utils/Shimmer/shimmer.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/theme/customthemes/textThemes.dart';
-
 
 class SavedAddress extends StatelessWidget {
   const SavedAddress({super.key});
@@ -18,6 +18,8 @@ class SavedAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AddressController addressController = Get.put(AddressController());
+
+    final locationController = Get.put(LocationController());
 
     // Function to get icon based on address type
     IconData getAddressIcon(String type) {
@@ -109,6 +111,15 @@ class SavedAddress extends StatelessWidget {
               ),
               onSelected: (value) {
                 // if (value == 'edit') {
+                //   showModalBottomSheet(
+                //     backgroundColor: TColors.softGrey,
+                //     isScrollControlled: true,
+                //     enableDrag: false,
+                //     context: context,
+                //     builder: (BuildContext context) {
+                //       return AddAddressDetails(addressModel: address);
+                //     },
+                //   );
                 // }
                 if (value == 'delete') {
                   showDeleteConfirmationDialog(address);
@@ -175,8 +186,16 @@ class SavedAddress extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              onTap: () {
-                Get.to(() => const AddNewAddress());
+              onTap: () async {
+                if (locationController.locationPermissionGranted.value) {
+                  Get.to(() => const AddNewAddress());
+                } else {
+                  bool permission =
+                      await locationController.checkLocationPermission();
+                  if (permission) {
+                    Get.to(() => const AddNewAddress());
+                  }
+                }
               },
             ),
             const SizedBox(height: TSizes.defaultSpace),

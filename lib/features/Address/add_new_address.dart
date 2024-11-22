@@ -30,8 +30,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
   final FirestoreService _firestoreService = FirestoreService();
   final controller = Get.put(AuthService());
 
-  final LocationController _locationController =
-      Get.put(LocationController()); // GetX location controller
+  final _locationController = Get.find<LocationController>();
 
   bool isFetchingAddress = false;
 
@@ -116,7 +115,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 children: [
                   // Map
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.65,
+                    height: MediaQuery.of(context).size.height * 0.62,
                     child: GoogleMap(
                       mapType: MapType.normal,
                       initialCameraPosition: _cameraPosition ??
@@ -142,7 +141,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       },
                     ),
                   ),
-                  // TextField
+                  // Search TextField
                   Positioned(
                     top: 10,
                     left: 15,
@@ -231,6 +230,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     ),
                   ),
 
+                  // Location Pin
                   Positioned(
                     top: MediaQuery.of(context).size.width / 1.5 + 10,
                     left: MediaQuery.of(context).size.width / 2 - 10,
@@ -249,7 +249,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
               // Text
               const Padding(
-                padding: EdgeInsets.only(left: 15, top: 15),
+                padding: EdgeInsets.only(left: 15, top: 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -282,7 +282,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                   ? _locationController.currentCity.value!
                                   : _locationController.selectedCity.value!,
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              maxLines: 2,
                               style: TTextTheme.lightTextTheme.headlineSmall!
                                   .copyWith(fontSize: 18),
                             ),
@@ -346,7 +346,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
                             : _locationController.selectedAddress.value!,
                     phoneNumber: userModel!.phoneNumber,
                     userName: userModel!.name,
-                    userId: userModel!.id,
                     isCurrentAddress:
                         _locationController.selectedAddress.value!.isEmpty,
                     locationController: _locationController,

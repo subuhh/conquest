@@ -12,6 +12,7 @@ class TLoaders {
   static customToast({required message}) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
+        // action: ,
         width: 500,
         elevation: 0,
         behavior: SnackBarBehavior.floating,

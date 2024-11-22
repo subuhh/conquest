@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:conquest/common/widgets/divider_with_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/Controllers/location_service.dart';
-import '../../core/api_key/google_api_key.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utils/constants/sizes.dart';
@@ -27,8 +27,8 @@ class SearchBottomSheet extends StatefulWidget {
 
 class _SearchBottomSheetState extends State<SearchBottomSheet> {
   final TextEditingController _searchController = TextEditingController();
-  final LocationController _locationController = Get.put(LocationController());
-  final String _apiKey = googleMapApiKey; // Replace with your actual API key
+  final LocationController _locationController = Get.find<LocationController>();
+  final String _apiKey = dotenv.get('GOOGLE_API_KEY');
   final String _sessionToken = "12345";
   final String _baseUrl =
       "https://maps.googleapis.com/maps/api/place/autocomplete/json";
@@ -96,8 +96,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
       height: THelperFunctions.screenHeight(context) * 0.7,
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -281,4 +281,25 @@ class FirestoreService extends GetxController {
       throw Exception("Failed to delete address: $e");
     }
   }
+
+  // Update Address
+  Future<void> updateAddress(AddressModel address, String userId, String addressId) async {
+    try {
+      // Reference the specific address document in Firestore
+      DocumentReference addressRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('addresses')
+          .doc(addressId);
+
+      // Update the address document with the new data
+      await addressRef.update(address.toMap());
+
+      log('Address successfully updated!');
+    } catch (e) {
+      log('Error updating address: $e');
+      throw Exception("Failed to update address: $e");
+    }
+  }
+
 }

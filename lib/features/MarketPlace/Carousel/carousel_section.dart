@@ -54,6 +54,13 @@ class _CarouselSectionState extends State<CarouselSection> {
                           child: CachedNetworkImage(
                             imageUrl: banner.imageUrl,
                             fit: BoxFit.cover,
+                            placeholder: (context, value){
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 200.0,
+                                color: Colors.grey[200],
+                              );
+                            },
                           ),
                           // Image.network(
                           //   banner.imageUrl,

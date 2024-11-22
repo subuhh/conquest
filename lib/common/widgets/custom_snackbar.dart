@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import '../../utils/constants/colors.dart';
 
 void showSnackBar(
-    String message, String title, {
+    String message,
+    String title, {
       bool isError = false,
       bool isLoading = false,
       bool isDuration = false,
       bool isBehaviourFloat = true,
       Duration time = const Duration(days: 1),
+      String? actionLabel,
+      VoidCallback? onAction,
     }) {
   final Color backgroundColor = isError ? Colors.red : TColors.primary;
 
@@ -27,7 +30,14 @@ void showSnackBar(
     isDismissible: true,
     snackStyle: isBehaviourFloat ? SnackStyle.FLOATING : SnackStyle.GROUNDED,
     animationDuration: const Duration(milliseconds: 300),
+    mainButton: actionLabel != null
+        ? TextButton(
+      onPressed: onAction,
+      child: Text(
+        actionLabel,
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+    )
+        : null,
   );
 }
-
-

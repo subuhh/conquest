@@ -20,43 +20,67 @@ class LocationController extends GetxController {
   var selectedPostalCode = Rxn<String>('');
   var selectedState = Rxn<String>('');
 
-  @override
+  // Global permission status
+  var locationPermissionGranted = false.obs;
+
   void onInit() {
     super.onInit();
-    fetchLocation(); // Fetch location when the app starts
+    fetchLocation();
   }
 
-  // Function to fetch user's current location
-  Future<void> fetchLocation() async {
-    isLoading.value = true; // Start loading
+  // Method to check and request location permissions
+  Future<bool> checkLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    try {
-      // Check if location services are enabled
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        showSnackBar('Error', 'Location services are not enabled.');
-        isLoading.value = false;
-        return;
-      }
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      showSnackBar('Location Services Disabled',
+          'Please enable location services to proceed.',
+          isError: true);
+      return false;
+    }
 
-      // Check and request location permissions
-      permission = await Geolocator.checkPermission();
+    // Check and request location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          showSnackBar('Error', 'Location permission denied.');
-          isLoading.value = false;
-          return;
-        }
+        showSnackBar('Permission Denied',
+            'Location permission is denied. Please allow location access in settings.',
+            actionLabel: 'Settings',
+            onAction: Geolocator.openAppSettings,
+            isError: true);
+        return false;
       }
+    }
 
-      // Handle permanently denied location permissions
-      if (permission == LocationPermission.deniedForever) {
-        showSnackBar('Error', 'Location permissions are permanently denied.');
+    // Handle permanently denied location permissions
+    if (permission == LocationPermission.deniedForever) {
+      showSnackBar('Permission Denied',
+          'Location permissions are permanently denied. Please enable them in settings.',
+          actionLabel: 'Settings',
+          onAction: Geolocator.openAppSettings,
+          isError: true);
+      return false;
+    }
+
+    // If permissions are granted
+    locationPermissionGranted.value = true;
+    return true;
+  }
+
+  // Function to fetch user's current location
+  Future<bool> fetchLocation() async {
+    isLoading.value = true; // Start loading
+
+    try {
+      // Check location permissions
+      bool permissionGranted = await checkLocationPermission();
+      if (!permissionGranted) {
         isLoading.value = false;
-        return;
+        return false;
       }
 
       // Get the current position of the device
@@ -70,9 +94,12 @@ class LocationController extends GetxController {
 
       // Fetch the address from the current coordinates
       await getAddressFromLatLng(position.latitude, position.longitude);
+      return true;
     } catch (e) {
-      showSnackBar('Oops....', 'Unable to deliver');
+      showSnackBar('Error', 'Unable to fetch location. Please try again later.',
+          isError: true);
       log('Failed to get current location. Please Try Again.');
+      return false;
     } finally {
       isLoading.value = false; // Stop loading
     }
@@ -94,7 +121,8 @@ class LocationController extends GetxController {
       currentState.value = place.subAdministrativeArea;
       log('Address: $formattedAddress');
     } catch (e) {
-      showSnackBar('Oops....', 'Unable to deliver');
+      showSnackBar('Error', 'Unable to fetch address. Please try again later.',
+          isError: true);
       log('Failed to get address from coordinates: $e');
     }
   }
@@ -115,7 +143,9 @@ class LocationController extends GetxController {
         log('Selected Address: ${selectedAddress.value}');
       }
     } catch (e) {
-      showSnackBar('Error', 'Failed to get address from coordinates: $e');
+      showSnackBar('Error',
+          'Failed to get address from coordinates. Please try again later.',
+          isError: true);
     }
   }
 }

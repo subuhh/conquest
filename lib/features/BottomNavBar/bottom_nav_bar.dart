@@ -8,6 +8,8 @@ import '../../utils/constants/colors.dart'; // Make sure to import your constant
 import 'package:conquest/features/HomePage/homepage.dart';
 import 'package:conquest/features/MarketPlace/market_place_screen.dart';
 
+import '../Wokrout/testing_purpose.dart';
+
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
 
@@ -64,7 +66,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
               HomePage(),
               Workouthomepage(),
               NutritionHomePage(),
-              Center(child: Text('Community')),
+              ExerciseScreen(),
+              // Center(child: Text('Community')),
               MarketplaceScreen(),
             ],
           ),
