@@ -32,15 +32,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/logos/conquest-icon.png',
+            'assets/logos/ConQuest Top Bar Logo.png',
             height: TSizes.iconLg + 15,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Image.asset(
-            'assets/logos/conquest-string.png',
-            height: TSizes.iconLg + 80,
           ),
         ],
       ),

@@ -1,7 +1,6 @@
 import 'dart:developer';
-import 'package:conquest/core/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-
 import '../../model/Nutrition/nutrition_model.dart';
 import '../../services/nutrition/nutrition_service.dart';
 
@@ -9,7 +8,7 @@ class NutritionController extends GetxController {
   static NutritionController get instance => Get.find();
 
   final NutritionService _nutritionService = NutritionService();
-  String userId = AuthService.instance.currentUser!.uid;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   // Observables
   var isLoading = false.obs;
@@ -58,13 +57,21 @@ class NutritionController extends GetxController {
   Future<void> addOrUpdateMeal(String mealType, Meal mealData) async {
     isLoading(true);
     try {
+      log("Meal type: $mealType");
+      log("Meal data: $mealData");
+      log("Meals: ${meals[mealType]}");
+      log("Meal Calories: ${mealCalories[mealType]?.value}");
+      log("Meal Macros: ${mealMacros[mealType]}");
+
       // Add or update meal in the service
       await _nutritionService.addOrUpdateNutrition(userId, mealType, mealData);
 
       // Update the local state
       if (meals.containsKey(mealType)) {
+        log('Existing');
         meals[mealType]!.add(mealData); // Add to existing list
       } else {
+        log('New Meal');
         meals[mealType] = [mealData]; // Create new list
       }
 
@@ -94,10 +101,6 @@ class NutritionController extends GetxController {
                 ?.fold(0.0, (sum, meal) => sum! + meal.macros['carbG']!) ??
             0.0,
       );
-      // mealMacros[mealType]?.update(
-      //   "fiber",
-      //       (prev) => meals[mealType]?.fold(0.0, (sum, meal) => sum! + meal.fiber) ?? 0.0,
-      // );
 
       // Recalculate total calories
       _calculateTotalCalories();
@@ -115,60 +118,66 @@ class NutritionController extends GetxController {
   }
 
   /// Remove a meal
-  // Future<void> removeMeal(String mealType, int mealIndex, Meal meal) async {
-  //   isLoading(true);
-  //   try {
-  //     // Remove meal from the service
-  //     await _nutritionService.removeMeal(userId, mealType, meal);
-  //
-  //     // Update local state
-  //     meals[mealType]?.removeAt(mealIndex);
-  //
-  //     // Update calories for the meal type
-  //     mealCalories[mealType]?.value =
-  //         meals[mealType]?.fold(0, (sum, meal) => sum! + meal.totalCalories) ??
-  //             0;
-  //
-  //     mealMacros[mealType]?.update(
-  //       "protein",
-  //       (prev) =>
-  //           meals[mealType]
-  //               ?.fold(0.0, (sum, meal) => sum! + meal.macros['proteinG']!) ??
-  //           0.0,
-  //     );
-  //     mealMacros[mealType]?.update(
-  //       "fat",
-  //       (prev) =>
-  //           meals[mealType]
-  //               ?.fold(0.0, (sum, meal) => sum! + meal.macros['fatG']!) ??
-  //           0.0,
-  //     );
-  //     mealMacros[mealType]?.update(
-  //       "carbs",
-  //       (prev) =>
-  //           meals[mealType]
-  //               ?.fold(0.0, (sum, meal) => sum! + meal.macros['carbG']!) ??
-  //           0.0,
-  //     );
-  //
-  //     // Recalculate total calories
-  //     _calculateTotalCalories();
-  //     _calculateTotalMacros();
-  //
-  //     meals.refresh();
-  //     mealCalories.refresh();
-  //     mealMacros.refresh();
-  //
-  //     // Notify success
-  //     TLoaders.successSnackBar(
-  //         title: "Success", message: "Meal removed successfully!");
-  //   } catch (e) {
-  //     // Handle error
-  //     log("Failed to remove meal: $e");
-  //   } finally {
-  //     isLoading(false);
-  //   }
-  // }
+  Future<void> removeMeal(String mealType, int mealIndex, Meal meal) async {
+    isLoading(true);
+    try {
+      // Validate meal type and index
+      if (meals[mealType] == null || mealIndex >= meals[mealType]!.length) {
+        throw Exception("Invalid meal type or index: $mealType, $mealIndex");
+      }
+
+      // Update local state
+      meals[mealType]?.removeAt(mealIndex);
+
+      // Update calories for the meal type
+      mealCalories[mealType]?.value =
+          meals[mealType]?.fold(0, (sum, meal) => sum! + meal.totalCalories) ??
+              0;
+
+      mealMacros[mealType]?.update(
+        "protein",
+        (prev) =>
+            meals[mealType]
+                ?.fold(0.0, (sum, meal) => sum! + meal.macros['proteinG']!) ??
+            0.0,
+      );
+      mealMacros[mealType]?.update(
+        "fat",
+        (prev) =>
+            meals[mealType]
+                ?.fold(0.0, (sum, meal) => sum! + meal.macros['fatG']!) ??
+            0.0,
+      );
+      mealMacros[mealType]?.update(
+        "carbs",
+        (prev) =>
+            meals[mealType]
+                ?.fold(0.0, (sum, meal) => sum! + meal.macros['carbG']!) ??
+            0.0,
+      );
+
+      // Recalculate total calories
+      _calculateTotalCalories();
+      _calculateTotalMacros();
+
+      meals.refresh();
+      mealCalories.refresh();
+      mealMacros.refresh();
+
+      // Remove meal from the service
+      await _nutritionService.removeMeal(
+          userId, mealType, meal.items[mealIndex]);
+
+      // Notify success
+      // TLoaders.successSnackBar(
+      //     title: "Success", message: "Meal removed successfully!");
+    } catch (e) {
+      // Handle error
+      log("Failed to remove meal: $e");
+    } finally {
+      isLoading(false);
+    }
+  }
 
   /// Fetch meals from the service and update local state
   Future<void> fetchMeals({DateTime? date}) async {

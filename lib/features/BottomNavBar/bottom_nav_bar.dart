@@ -3,7 +3,6 @@ import 'package:conquest/features/Workout/WorkoutHomepage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../store_workout.dart';
 import '../../utils/constants/colors.dart';
 import 'package:conquest/features/HomePage/homepage.dart';
 import 'package:conquest/features/MarketPlace/market_place_screen.dart';
@@ -63,8 +62,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
               HomePage(),
               WorkoutHomePage(),
               NutritionHomePage(),
-              StoreWorkout(),
-              // Center(child: Text('Community')),
+              // StoreWorkout(),
+              Center(child: Text('Community')),
               MarketplaceScreen(),
             ],
           ),

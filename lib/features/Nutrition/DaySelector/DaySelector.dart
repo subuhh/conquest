@@ -61,8 +61,8 @@ class _DaySelectorState extends State<DaySelector> {
 
     // If total available days plus future days is less than 6,
     // extend future days to meet minimum requirement
-    if (totalAvailableDays + futureDays < 6) {
-      futureDays = 6 - totalAvailableDays;
+    if (totalAvailableDays + futureDays < 5) {
+      futureDays = 5 - totalAvailableDays;
     }
 
     // Always start from account creation date

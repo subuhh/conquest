@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conquest/core/Controllers/Nutrition_Controller/nutrition_controller.dart';
 import '../../model/Nutrition/nutrition_model.dart';
 
 class NutritionService {
@@ -91,32 +92,81 @@ class NutritionService {
   }
 
   /// Remove a meal item for a specific user and meal type
-  // Future<void> removeMeal(String userId, String mealType, Meal mealItem) async {
-  //   try {
-  //     final date = DateTime.now();
-  //     final docId = _formatDateKey(date);
-  //     final docRef = _firestore
-  //         .collection('users')
-  //         .doc(userId)
-  //         .collection('calorieIntake')
-  //         .doc(docId);
+  Future<void> removeMeal(
+      String userId, String mealType, String itemName) async {
+    try {
+      final nutritionController = NutritionController.instance;
+      final date = DateTime.now();
+      final docId = _formatDateKey(date);
+      final docRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('calorieIntake')
+          .doc(docId);
+
+      // Check if the document exists
+      final docSnapshot = await docRef.get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        final mealData = data?[mealType];
+        if (mealData != null) {
+          final items = List<String>.from(mealData['items']);
+          // final macros = Map<String, double>.from(mealData['macros']);
+          // final totalCalories = mealData['totalCalories'];
+
+          // Log existing items and the item to remove
+          print("Firestore items: $items");
+          print("Item to remove: $itemName");
+
+          // Check if the item exists in the list
+          if (items.contains(itemName)) {
+            items.remove(itemName);
+
+            // Map controller macro names to Firestore macro names
+            final updatedMacros = {
+              "proteinG": NutritionController.instance.mealMacros[mealType]
+                      ?["protein"] ??
+                  0.0,
+              "fatG": NutritionController.instance.mealMacros[mealType]
+                      ?["fat"] ??
+                  0.0,
+              "carbG": NutritionController.instance.mealMacros[mealType]
+                      ?["carbs"] ??
+                  0.0,
+            };
+
+            await docRef.update({
+              "$mealType.items": items,
+              "$mealType.totalCalories":
+                  nutritionController.mealCalories[mealType]?.value,
+              "$mealType.macros": updatedMacros,
+            });
+
+            print("Item removed successfully");
+          } else {
+            print("The item does not exist in the current Firestore items.");
+          }
+        } else {
+          print("Meal type data does not exist.");
+        }
+      } else {
+        print("Document does not exist.");
+      }
+    } catch (e) {
+      throw Exception("Error removing meal: $e");
+    }
+  }
+
+  /// Invert macros for subtraction
+  // Map<String, dynamic> _invertMacros(Map<String, dynamic> macros) {
+  //   final invertedMacros = <String, dynamic>{};
   //
-  //     // Check if the document exists
-  //     final docSnapshot = await docRef.get();
+  //   macros.forEach((key, value) {
+  //     invertedMacros[key] = -value; // Subtracting macros
+  //   });
   //
-  //     if (docSnapshot.exists) {
-  //       final mealData = Meal.fromMap(docSnapshot.data()?[mealType] ?? {});
-  //
-  //       // Update the specific meal in the existing document
-  //       await docRef.update({
-  //         "$mealType.items": FieldValue.arrayRemove([mealItem]),
-  //         "$mealType.totalCalories": FieldValue.increment(mealItem.totalCalories),
-  //         "$mealType.macros": _updateMacros(mealData.macros, _invertMacros(mealItem.macros)),
-  //       });
-  //     }
-  //   } catch (e) {
-  //     throw Exception("Error removing meal: $e");
-  //   }
+  //   return invertedMacros;
   // }
 
   /// Format date for document ID

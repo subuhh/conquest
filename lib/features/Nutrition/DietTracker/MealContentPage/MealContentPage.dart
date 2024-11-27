@@ -6,7 +6,6 @@ import '../../../../core/model/Nutrition/nutrition_model.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../Widgets/nutritron_fact_chart.dart';
-import 'Widget/QuantityMeasurement Widget.dart';
 
 class MealContentPage extends StatelessWidget {
   const MealContentPage({
@@ -118,9 +117,9 @@ class MealContentPage extends StatelessWidget {
                 macros: totalMacros,
               ),
 
-              const SizedBox(height: TSizes.spaceBtwSections),
-              // Quantity Measurement
-              QuantityMeasureWidget(),
+              // const SizedBox(height: TSizes.spaceBtwSections),
+              // // Quantity Measurement
+              // QuantityMeasureWidget(),
 
               const SizedBox(height: TSizes.spaceBtwSections),
 
@@ -156,7 +155,7 @@ class MealContentPage extends StatelessWidget {
             Get.back();
           },
           child: Text(
-            "Add to $mealType",
+            "Add Meal",
             style: Theme.of(context)
                 .textTheme
                 .headlineSmall!

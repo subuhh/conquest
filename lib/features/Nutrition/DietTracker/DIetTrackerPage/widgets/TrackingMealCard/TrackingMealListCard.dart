@@ -85,12 +85,13 @@ class TrackingMealListCard extends StatelessWidget {
                               // subtitle: Text(meal.description),
                               trailing: GestureDetector(
                                 onTap: () {
-                                  // nutritionController.removeMeal(
-                                  //     mealTiming, index,meal);
+                                  nutritionController.removeMeal(
+                                      mealTiming, index,meal);
                                 },
                                 child: const Icon(Icons.remove_circle,
                                     color: Colors.red),
                               ),
+                        // onTap: () => MealContentPage(foodData: ,),
                             )
                           : const SizedBox.shrink();
                     },
