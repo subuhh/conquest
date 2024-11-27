@@ -9,21 +9,25 @@ final List<OrderCard> orders = [
     productName: 'MuscleBlaze Creatine Monohydrate',
     productCharacterstic: '0.55 lb Unflavoured',
     orderStatus: OrderStatus.delivered,
+    imageUrl: 'assets/images/order_!.jpeg',
   ),
   const OrderCard(
     orderID: 'HKM-45678-97012345',
     productName: 'Optimum Nutrition Whey Protein',
     productCharacterstic: '2 lb Double Rich Chocolate',
     orderStatus: OrderStatus.shipped,
+    imageUrl: 'assets/images/order_2.jpeg',
   ),
   const OrderCard(
     orderID: 'HKM-98765-97054321',
     productName: 'BSN Syntha-6 Protein Powder',
     productCharacterstic: '4.5 lb Strawberry Milkshake',
     orderStatus: OrderStatus.processing,
+    imageUrl: 'assets/images/order_3.jpeg',
   ),
   // Add more orders as needed
 ];
+
 class MyOrdersScreen extends StatelessWidget {
   const MyOrdersScreen({super.key});
 
@@ -38,24 +42,24 @@ class MyOrdersScreen extends StatelessWidget {
         foregroundColor: Colors.black,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child:ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            final order = orders[index];
-            return Padding(
-              padding: const EdgeInsets.all(8.0), // Optional padding around each card
-              child: OrderCard(
-                orderID: order.orderID,
-                productName: order.productName,
-                productCharacterstic: order.productCharacterstic,
-                orderStatus: order.orderStatus,
-              ),
-            );
-          },
-        )
-      ),
+          padding: const EdgeInsets.all(16.0),
+          child: ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              return Padding(
+                padding: const EdgeInsets.all(
+                    8.0), // Optional padding around each card
+                child: OrderCard(
+                  orderID: order.orderID,
+                  productName: order.productName,
+                  productCharacterstic: order.productCharacterstic,
+                  orderStatus: order.orderStatus,
+                  imageUrl: order.imageUrl,
+                ),
+              );
+            },
+          )),
     );
   }
 }
-

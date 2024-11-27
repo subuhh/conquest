@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:conquest/common/widgets/calorie_count/calorie_count.dart';
+import '../../../common/widgets/User_Health_Functions/user_health_functions.dart';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:conquest/core/model/user.dart';
@@ -7,7 +7,6 @@ import 'package:conquest/features/Authentication/FirstTimeLogin/first_time_login
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../../common/widgets/water_intake/water_intake_calculate.dart';
 import '../../features/Form/Form.dart';
 import 'firestore_service.dart';
 
@@ -80,7 +79,7 @@ class AuthService extends GetxController {
           return weightInKg;
         }
 
-        final calorie = CalorieCalculator.calculateCalorieRequirement(
+        final calorie = UserHealthFunctions.calculateCalorieRequirement(
           age: controller.selectedAge.value,
           gender: controller.selectedGender.value,
           heightCm: convertHeightToCm(),
@@ -92,14 +91,19 @@ class AuthService extends GetxController {
           goals: controller.selectedGoals,
         );
 
-        final macros = CalorieCalculator.calculateMacros(
+        final macros = UserHealthFunctions.calculateMacros(
             calorie, controller.selectedGoals[0]);
 
-        final waterGoal = WaterIntakeCalCul().calculateWaterIntakeGoal(
+        final waterGoal = UserHealthFunctions.calculateWaterIntakeGoal(
           convertWeightToDouble(
               controller.currentWeightInteger.value,
               controller.currentWeightFraction.value,
               controller.currentWeightUnit.value),
+          controller.selectedWorkoutFrequency.value,
+        );
+
+        final assignedWorkout = UserHealthFunctions.determineWorkout(
+          controller.selectedGoals,
           controller.selectedWorkoutFrequency.value,
         );
 
@@ -122,13 +126,16 @@ class AuthService extends GetxController {
               controller.goalWeightUnit.value),
           workoutFrequency: controller.selectedWorkoutFrequency.value,
           dietPreference: controller.selectedDietPreferences,
+          profileImageUrl: user.photoURL ?? '',
           age: controller.selectedAge.value,
           calorieGoal: calorie,
-          waterGoal:WaterGoal(amount: waterGoal, unit: 'L'),
+          waterGoal: WaterGoal(amount: waterGoal, unit: 'L'),
           proteinGoal: macros['protein'],
           carbsGoal: macros['carbs'],
           fatGoal: macros['fat'],
           fiberGoal: macros['fiber'],
+          assignedWorkout: assignedWorkout,
+          accountCreationTime: DateTime.now(),
         );
         await FirestoreService().createUserDocument(userModel);
         return user;

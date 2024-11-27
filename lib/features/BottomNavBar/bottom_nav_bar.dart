@@ -1,14 +1,12 @@
 import 'package:conquest/features/Nutrition/NutritionHomePage.dart';
-import 'package:conquest/features/Wokrout/WorkoutHomepage.dart';
+import 'package:conquest/features/Workout/WorkoutHomepage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../utils/constants/colors.dart'; // Make sure to import your constants
+import '../../store_workout.dart';
+import '../../utils/constants/colors.dart';
 import 'package:conquest/features/HomePage/homepage.dart';
 import 'package:conquest/features/MarketPlace/market_place_screen.dart';
-
-import '../Wokrout/testing_purpose.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -27,7 +25,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
     'assets/icons/appicons/nutrition-outline.svg',
     'assets/icons/drawerIcons/community.svg',
     'assets/icons/bottomNavbaricons/InactiveIcons/shop.svg',
-
   ];
 
   final activeIconList = <String>[
@@ -37,7 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     'assets/icons/drawerIcons/community.svg',
     'assets/icons/bottomNavbaricons/activeIcons/shop.svg',
 
-   // 'assets/icons/bottomNavbaricons/activeIcons/settings.svg',
+    // 'assets/icons/bottomNavbaricons/activeIcons/settings.svg',
   ];
 
   final itemLabel = <String>[
@@ -64,9 +61,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
             },
             children: const [
               HomePage(),
-              Workouthomepage(),
+              WorkoutHomePage(),
               NutritionHomePage(),
-              ExerciseScreen(),
+              StoreWorkout(),
               // Center(child: Text('Community')),
               MarketplaceScreen(),
             ],
@@ -77,37 +74,42 @@ class _BottomNavBarState extends State<BottomNavBar> {
             child: CurvedNavigationBar(
               index: _currentIndex,
               height: 70.0,
-              backgroundColor: Colors.transparent, // Transparent behind the curve
+              backgroundColor:
+                  Colors.transparent, // Transparent behind the curve
               color: Colors.black,
               buttonBackgroundColor: TColors.primary, // The primary color
               items: List.generate(inActiveIconList.length, (index) {
-                return _currentIndex == index?Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: SvgPicture.asset(
-                    activeIconList[index],
-                    width: 25,
-                    height: 25,
-                    colorFilter: ColorFilter.mode(
-                       Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ):
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SvgPicture.asset(
-                      inActiveIconList[index],
-                      width: 25,
-                      height: 25,
-                      colorFilter: ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    Text(itemLabel[index],style: TextStyle(color: Colors.white,fontSize: 12),)
-                  ],
-                );
+                return _currentIndex == index
+                    ? Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SvgPicture.asset(
+                          activeIconList[index],
+                          width: 25,
+                          height: 25,
+                          colorFilter: ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SvgPicture.asset(
+                            inActiveIconList[index],
+                            width: 25,
+                            height: 25,
+                            colorFilter: ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          Text(
+                            itemLabel[index],
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          )
+                        ],
+                      );
               }),
               onTap: (index) {
                 setState(() {

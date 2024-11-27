@@ -13,12 +13,14 @@ class OrderCard extends StatelessWidget {
       required this.orderID,
       required this.productName,
       required this.productCharacterstic,
-      required this.orderStatus});
+      required this.orderStatus,
+      required this.imageUrl});
 
   final OrderStatus orderStatus;
   final String orderID;
   final String productName;
   final String productCharacterstic;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +77,8 @@ class OrderCard extends StatelessWidget {
               child: Row(
                 children: [
                   // Product Image
-                  Image.network(
-                    'https://apexsupplements.b-cdn.net/wp-content/uploads/2024/05/Muscleblaze-Creatine-Monohydrate-CreAMP-250gm-1.jpg',
+                  Image.asset(
+                    imageUrl,
                     width: 50,
                     height: 50,
                   ),

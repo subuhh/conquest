@@ -25,6 +25,7 @@ class UserModel {
   final double? carbsGoal;
   final double? fiberGoal;
   final DateTime? accountCreationTime;
+  final String? assignedWorkout;
 
   UserModel({
     required this.id,
@@ -51,6 +52,7 @@ class UserModel {
     this.carbsGoal,
     this.fiberGoal,
     this.accountCreationTime,
+    this.assignedWorkout,
   });
 
   // Factory constructor to create a UserModel instance from Firestore document
@@ -83,6 +85,7 @@ class UserModel {
       fiberGoal: data['fiberGoal']?.toDouble() ?? 0.0,
       accountCreationTime:
           (data['accountCreationTime'] as Timestamp?)?.toDate(),
+      assignedWorkout: data['assignedWorkout'] ?? '',
     );
   }
 
@@ -114,6 +117,7 @@ class UserModel {
       'accountCreationTime': accountCreationTime != null
           ? Timestamp.fromDate(accountCreationTime!)
           : null,
+      'assignedWorkout': assignedWorkout,
     };
   }
 }

@@ -1,14 +1,12 @@
 import 'dart:developer';
 import 'package:conquest/common/widgets/custom_snackbar.dart';
-import 'package:conquest/common/widgets/water_intake/water_intake_calculate.dart';
 import 'package:conquest/core/model/user.dart';
 import 'package:conquest/core/services/auth_service.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../common/widgets/calorie_count/calorie_count.dart';
+import '../../../common/widgets/User_Health_Functions/user_health_functions.dart';
 import '../Form_Controller/FormController.dart';
 
 class FirstTimeLoginController extends GetxController
@@ -103,7 +101,7 @@ class FirstTimeLoginController extends GetxController
             return weightInKg;
           }
 
-          final calorie = CalorieCalculator.calculateCalorieRequirement(
+          final calorie = UserHealthFunctions.calculateCalorieRequirement(
             age: controller.selectedAge.value,
             gender: controller.selectedGender.value,
             heightCm: convertHeightToCm(),
@@ -115,10 +113,10 @@ class FirstTimeLoginController extends GetxController
             goals: controller.selectedGoals,
           );
 
-          final macros = CalorieCalculator.calculateMacros(
+          final macros = UserHealthFunctions.calculateMacros(
               calorie, controller.selectedGoals[0]);
 
-          final waterGoal = WaterIntakeCalCul().calculateWaterIntakeGoal(
+          final waterGoal = UserHealthFunctions.calculateWaterIntakeGoal(
             convertWeightToDouble(
                 controller.currentWeightInteger.value,
                 controller.currentWeightFraction.value,
@@ -140,11 +138,16 @@ class FirstTimeLoginController extends GetxController
             return;
           }
 
+          final assignedWorkout = UserHealthFunctions.determineWorkout(
+            controller.selectedGoals,
+            controller.selectedWorkoutFrequency.value,
+          );
+
           final userModel = UserModel(
             id: user!.uid,
             userName: userNameController.text,
-            name: nameController.text,
             email: user.email!,
+            name: nameController.text,
             phoneNumber: phoneController.text,
             fitnessGoal: controller.selectedGoals,
             gender: controller.selectedGender.value,
@@ -168,6 +171,7 @@ class FirstTimeLoginController extends GetxController
             fatGoal: macros['fat'],
             fiberGoal: macros['fiber'],
             accountCreationTime: DateTime.now(),
+            assignedWorkout: assignedWorkout,
           );
 
           // Create user document
