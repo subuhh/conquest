@@ -78,13 +78,14 @@ class UserModel {
       calorieGoal: data['calorieGoal'] ?? 0.0,
       waterGoal: data['waterGoal'] != null
           ? WaterGoal.fromMap(data['waterGoal'])
-          : null, // Parse waterGoal map
+          : null,
+      // Parse waterGoal map
       proteinGoal: data['proteinGoal']?.toDouble() ?? 0.0,
       fatGoal: data['fatGoal']?.toDouble() ?? 0.0,
       carbsGoal: data['carbsGoal']?.toDouble() ?? 0.0,
       fiberGoal: data['fiberGoal']?.toDouble() ?? 0.0,
       accountCreationTime:
-          (data['accountCreationTime'] as Timestamp?)?.toDate(),
+      (data['accountCreationTime'] as Timestamp?)?.toDate(),
       assignedWorkout: data['assignedWorkout'] ?? '',
     );
   }
@@ -119,6 +120,63 @@ class UserModel {
           : null,
       'assignedWorkout': assignedWorkout,
     };
+  }
+
+  // Method to copy UserModel with some updated fields
+  UserModel copyWith({
+    String? id,
+    String? userName,
+    String? email,
+    String? name,
+    String? phoneNumber,
+    String? profileImageUrl,
+    String? bio,
+    int? age,
+    String? gender,
+    double? height,
+    double? weight,
+    double? weightGoal,
+    List<String>? fitnessGoal,
+    String? workoutFrequency,
+    List<String>? workoutHistory,
+    List<String>? dietPreference,
+    String? defaultAddressId,
+    double? calorieGoal,
+    WaterGoal? waterGoal,
+    double? proteinGoal,
+    double? fatGoal,
+    double? carbsGoal,
+    double? fiberGoal,
+    DateTime? accountCreationTime,
+    String? assignedWorkout,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      userName: userName ?? this.userName,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      bio: bio ?? this.bio,
+      age: age ?? this.age,
+      gender: gender ?? this.gender,
+      height: height ?? this.height,
+      weight: weight ?? this.weight,
+      weightGoal: weightGoal ?? this.weightGoal,
+      fitnessGoal: fitnessGoal ?? this.fitnessGoal,
+      workoutFrequency: workoutFrequency ?? this.workoutFrequency,
+      workoutHistory: workoutHistory ?? this.workoutHistory,
+      dietPreference: dietPreference ?? this.dietPreference,
+      defaultAddressId: defaultAddressId ?? this.defaultAddressId,
+      calorieGoal: calorieGoal ?? this.calorieGoal,
+      waterGoal: waterGoal ?? this.waterGoal,
+      proteinGoal: proteinGoal ?? this.proteinGoal,
+      fatGoal: fatGoal ?? this.fatGoal,
+      carbsGoal: carbsGoal ?? this.carbsGoal,
+      fiberGoal: fiberGoal ?? this.fiberGoal,
+      accountCreationTime: accountCreationTime ?? this.accountCreationTime,
+      assignedWorkout: assignedWorkout ?? this.assignedWorkout,
+    );
   }
 }
 

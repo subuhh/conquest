@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/text_strings.dart';
-import '../controller/profile_controller.dart';
+import '../../../core/Controllers/profile_controller.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -50,6 +51,8 @@ class ProfilePage extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   labelText: 'Full Name',
                                   prefixIcon: Icon(Iconsax.user),
+                                  filled: true,
+                                  fillColor: Colors.white,
                                 ),
                                 controller: controller.nameController,
                                 validator: (value) {
@@ -65,6 +68,8 @@ class ProfilePage extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   labelText: 'UserName',
                                   prefixIcon: Icon(Iconsax.user_edit),
+                                  filled: true,
+                                  fillColor: Colors.white,
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -83,6 +88,8 @@ class ProfilePage extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   prefixIcon: Icon(Iconsax.direct_right),
                                   labelText: TTexts.email,
+                                  filled: true,
+                                  fillColor: Colors.white,
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -97,6 +104,8 @@ class ProfilePage extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   labelText: 'Phone no.',
                                   prefixIcon: Icon(Iconsax.call),
+                                  filled: true,
+                                  fillColor: Colors.white,
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -113,6 +122,8 @@ class ProfilePage extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   labelText: 'Bio',
                                   prefixIcon: Icon(Icons.info_outline),
+                                  filled: true,
+                                  fillColor: Colors.white,
                                 ),
                                 controller: controller.bioController,
                                 keyboardType: TextInputType.multiline,
@@ -129,12 +140,13 @@ class ProfilePage extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
                       onPressed: controller.isEdited.value
-                          ? () => controller.updateProfile()
-                          : () {},
+                          ? () => controller.updateProfile(context)
+                          : null,
                       child: controller.isLoading.value
                           ? const Center(
                               child: CircularProgressIndicator(
-                                  color: Colors.white))
+                                  color: Colors.white),
+                            )
                           : const Text('Save Changes'),
                     ),
                   ),
@@ -158,30 +170,53 @@ class ProfilePage extends StatelessWidget {
           Stack(
             children: [
               CircleAvatar(
-                radius: 60,
-                backgroundColor: TColors.primary,
-                child: Text(
-                  controller.nameController.text.isNotEmpty
-                      ? controller.nameController.text[0].toUpperCase()
-                      : '',
-                  style: Theme.of(Get.context!)
-                      .textTheme
-                      .headlineLarge!
-                      .copyWith(color: Colors.white),
-                ),
+                radius: 55,
+                backgroundColor: controller.profileImage.value != null ||
+                        (controller.userModel!.profileImageUrl != null &&
+                            controller.userModel!.profileImageUrl!.isNotEmpty)
+                    ? Colors.transparent
+                    : TColors.primary.withOpacity(0.9),
+                child: controller.profileImage.value != null
+                    ? ClipOval(
+                        child: Image.file(
+                          controller.profileImage.value!,
+                        ),
+                      )
+                    : controller.userModel!.profileImageUrl != null &&
+                            controller.userModel!.profileImageUrl!.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              height: 100,
+                              imageUrl: controller.userModel!.profileImageUrl!,
+                            ),
+                          )
+                        : Text(
+                            controller.nameController.text.isNotEmpty
+                                ? controller.nameController.text[0]
+                                    .toUpperCase()
+                                : '',
+                            style: Theme.of(Get.context!)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(color: Colors.white),
+                          ),
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
+                bottom: 5,
+                right: 2,
                 child: CircleAvatar(
-                  radius: 21,
+                  radius: 19,
                   backgroundColor: Colors.black,
                   child: CircleAvatar(
-                    radius: 20,
+                    radius: 18,
                     backgroundColor: Colors.white,
                     child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Iconsax.edit),
+                      onPressed: () {
+                        controller.pickImage();
+                      },
+                      icon: const Icon(Iconsax.edit, size: 20),
                     ),
                   ),
                 ),

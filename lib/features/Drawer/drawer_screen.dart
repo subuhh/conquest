@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:conquest/core/Controllers/drawer_controller.dart';
 import 'package:conquest/features/Legal_Faq_About/about_us.dart';
 import 'package:conquest/features/Legal_Faq_About/faq.dart';
 import 'package:conquest/features/Legal_Faq_About/privacy_policy.dart';
@@ -11,6 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../common/widgets/custom_list_tile_group.dart';
 import '../../../core/model/user.dart';
 import '../../../core/services/auth_service.dart';
+import '../../core/Controllers/user_controller.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/theme/customthemes/textThemes.dart';
 import '../Address/address_saved_screen.dart';
@@ -19,19 +19,19 @@ class DrawerScreen extends StatelessWidget {
   DrawerScreen({super.key});
 
   // Instance of GetX Controller
-  final DrawerMenuController drawerController = Get.put(DrawerMenuController());
+  final userController = UserController.instance;
 
   Widget _buildProfileHeader() {
     return Container(
       color: Colors.white,
       child: Obx(() {
-        if (drawerController.isLoading.value) {
+        if (userController.isLoading.value) {
           // Show shimmer while loading user details
           return _buildDrawerHeaderShimmer();
         }
 
         // Display profile details after data is loaded
-        final userModel = drawerController.userModel.value;
+        final userModel = userController.userModel.value;
         return buildLoggedInHeader(userModel);
       }),
     );
@@ -59,13 +59,19 @@ class DrawerScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 35,
-                  backgroundColor: TColors.primary.withOpacity(0.9),
+                  backgroundColor: userModel.profileImageUrl != null &&
+                          userModel.profileImageUrl!.isNotEmpty
+                      ? Colors.transparent
+                      : TColors.grey.withOpacity(0.9),
                   child: userModel.profileImageUrl != null &&
                           userModel.profileImageUrl!.isNotEmpty
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(35),
                           child: CachedNetworkImage(
-                              imageUrl: userModel.profileImageUrl!),
+                            fit: BoxFit.fitHeight,
+                            height: 100,
+                            imageUrl: userModel.profileImageUrl!,
+                          ),
                         )
                       : Text(
                           userModel.name[0].toUpperCase(),

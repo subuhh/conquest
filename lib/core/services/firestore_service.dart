@@ -65,14 +65,13 @@ class FirestoreService extends GetxController {
       isLoading.value = true;
       await _firestore
           .collection('users')
-          .doc(updatedUser.userName)
+          .doc(updatedUser.id)
           .update(updatedUser.toMap());
       log("Firestore update successful.");
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
       log('Error updating user details: $e');
-      Get.snackbar('Error', 'Could not update user details');
       rethrow;
     }
   }
@@ -283,7 +282,8 @@ class FirestoreService extends GetxController {
   }
 
   // Update Address
-  Future<void> updateAddress(AddressModel address, String userId, String addressId) async {
+  Future<void> updateAddress(
+      AddressModel address, String userId, String addressId) async {
     try {
       // Reference the specific address document in Firestore
       DocumentReference addressRef = _firestore
@@ -301,5 +301,4 @@ class FirestoreService extends GetxController {
       throw Exception("Failed to update address: $e");
     }
   }
-
 }
