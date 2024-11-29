@@ -11,81 +11,81 @@ import 'package:conquest/features/MarketPlace/Category/category_section.dart';
 import 'package:conquest/features/MarketPlace/Products/Products_screen/products_section.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/sizes.dart';
 
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controllerP = Get.put(ProductController());
-    final controller = Get.put(MarketplaceController());
+    final productController = ProductController.instance;
+    final marketController = MarketplaceController.instance;
 
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
-      appBar: CustomAppBar(actions: [
-        IconButton(
-          onPressed: () => Get.to(() => WishListScreen()),
-          icon: const Icon(Iconsax.heart),
-        ),
-        // Cart Button
-        CartCounterIcon(),
-        const SizedBox(width: 12)
-      ],),
-      body: Column(
-        children: [
-          const Searchbar(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Obx(
-                () {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Carousel Slider
-                      CarouselSection(
-                        isLoading: controller.isLoading.value,
-                        banners: controller.banners,
-                        //  banners: controller.banners,
-                      ),
-
-                      // Category Buttons
-                      CategorySection(
-                        categories: controller.categories,
-                        isLoading: controller.isLoading.value,
-                      ),
-
-                      // Trending Section
-                      if (controllerP.featuredProducts.isNotEmpty)
-                        ProductsSection(
-                          title: 'Trending Now',
-                          isLoading: controllerP.isLoading.value,
-                          products: controllerP.featuredProducts,
+      appBar: CustomAppBar(
+        left: 35,
+        actions: [
+          IconButton(
+            onPressed: () => Get.to(() => WishListScreen()),
+            icon: const Icon(Iconsax.heart),
+          ),
+          // Cart Button
+          CartCounterIcon(),
+          const SizedBox(width: 12)
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const Searchbar(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Obx(
+                  () {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Carousel Slider
+                        CarouselSection(
+                          isLoading: marketController.isLoading.value,
+                          banners: marketController.banners,
+                          //  banners: controller.banners,
                         ),
 
-                      // Bestseller Section
-                      ProductsSection(
-                        title: 'Bestseller',
-                        isLoading: controllerP.isLoading.value,
-                        products: controllerP.allProducts,
-                      ),
+                        const SizedBox(height: 15),
 
-                      // Top Picks Section
-                      // ProductsSection(
-                      //   title: 'Top Picks',
-                      //   isLoading: controller.isLoading.value,
-                      //   products: controller.products,
-                      // ),
-                      SizedBox(
-                        height: 110,
-                      )
-                    ],
-                  );
-                },
+                        // Category Buttons
+                        CategorySection(
+                          categories: marketController.categories,
+                          isLoading: marketController.isLoading.value,
+                        ),
+                        const SizedBox(height: 2),
+
+                        // Trending Section
+                        if (productController.featuredProducts.isNotEmpty)
+                          ProductsSection(
+                            title: 'Trending Now',
+                            isLoading: productController.isLoading.value,
+                            products: productController.featuredProducts,
+                          ),
+
+                        // Bestseller Section
+                        ProductsSection(
+                          title: 'Bestseller',
+                          isLoading: productController.isLoading.value,
+                          products: productController.allProducts,
+                        ),
+
+                        SizedBox(height: 110)
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

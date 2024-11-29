@@ -22,6 +22,7 @@ class HomePage extends StatelessWidget {
       /// AppBar
       backgroundColor: TColors.secondaryBackground,
       appBar: CustomAppBar(
+        left: 10,
         actions: [
           IconButton(
             onPressed: () {},
@@ -54,23 +55,8 @@ class HomePage extends StatelessWidget {
                           banners: controller.banners,
                           //  banners: controller.banners,
                         ),
-                        // child: CarouselView(
-                        //   itemSnapping: true,
-                        //   itemExtent: THelperFunctions.screenWidth(context) - 35,
-                        //   children: List.generate(
-                        //     10,
-                        //     (int index) {
-                        //       return Container(
-                        //         color: Colors.grey,
-                        //         child: Image.network(
-                        //           'https://picsum.photos/400?random=$index',
-                        //           fit: BoxFit.cover,
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
                       ),
+                      const SizedBox(height: 15),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -93,8 +79,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: TSizes.spaceBtwItems / 2),
-
+                      const SizedBox(height: 20),
                       // Cards
                       Column(
                         children: List.generate(4, (index) {

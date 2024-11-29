@@ -12,32 +12,24 @@ class ProductController extends GetxController {
 
   @override
   void onInit() {
-    fetchFeaturedProducts();
     fetchProducts();
     super.onInit();
-  }
-
-  void fetchFeaturedProducts() async {
-    try {
-      isLoading.value = true;
-
-      final products = await productRepository.fetchFeaturedProducts();
-
-      featuredProducts.assignAll(products);
-    } catch (e) {
-      Get.snackbar('Error', 'Could not fetch featured products');
-    } finally {
-      isLoading.value = false;
-    }
   }
 
   void fetchProducts() async {
     try {
       isLoading.value = true;
 
+      // Fetch all products
       final products = await productRepository.fetchAllProducts();
 
-      allProducts.assignAll(products);
+      for (var product in products) {
+        if (product.isFeatured == true) {
+          featuredProducts.add(product);
+        }
+      }
+
+      allProducts.assignAll(products); // This will contain all products
     } catch (e) {
       Get.snackbar('Error', 'Could not fetch products');
     } finally {

@@ -1,11 +1,15 @@
 import 'package:conquest/core/Controllers/Nutrition_Controller/recipe_controller.dart';
+import 'package:conquest/core/Controllers/marketplace_controller.dart';
 import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:conquest/core/model/banner.dart';
 import 'package:get/get.dart';
 import '../services/firestore_service.dart';
+import 'Product_Controller/product_controller.dart';
 
 class HomePageController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
+  final productController = Get.put(ProductController());
+  final marketPlaceController = Get.put(MarketplaceController());
   var banners = <BannerModel>[].obs;
   var isLoading = true.obs;
 

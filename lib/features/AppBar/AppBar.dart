@@ -5,10 +5,12 @@ import '../../utils/constants/sizes.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor ;
   final List<Widget>? actions;
+  final double left;
+  final double? right;
 
   CustomAppBar({
     this.backgroundColor = Colors.white,
-    this.actions,
+    this.actions, required this.left, this.right = 0,
   });
 
   @override
@@ -31,9 +33,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/logos/ConQuest Top Bar Logo.png',
-            height: TSizes.iconLg + 15,
+          Padding(
+            padding: EdgeInsets.only(left: left,right: right ?? 0),
+            child: Image.asset(
+              'assets/logos/ConQuest Top Bar Logo.png',
+              height: TSizes.iconLg + 15,
+            ),
           ),
         ],
       ),

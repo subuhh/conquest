@@ -1,8 +1,10 @@
+import 'package:conquest/features/MarketPlace/Products/Products_See_All_Screen/products_see_all_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
+import 'package:get/get.dart';
 
 class CategorySection extends StatefulWidget {
   final List<Map<String, dynamic>> categories;
@@ -17,66 +19,60 @@ class CategorySection extends StatefulWidget {
 class _CategorySectionState extends State<CategorySection> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-          widget.isLoading
-              ? buildShimmerCategories()
-              : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: widget.categories.map((category) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: TColors.grey,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 29,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: SvgPicture.asset(
-                                      getSvgAssetForCategory(category['name']),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: TSizes.sm - 2),
-                              SizedBox(
-                                width: 85,
-                                child: Text(
-                                  category['name']!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(fontSize: 12),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
+    return widget.isLoading
+        ? buildShimmerCategories()
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: widget.categories.map((category) {
+              return GestureDetector(
+                onTap: () {
+                  Get.to(
+                    () => ProductsSeeAllScreen(
+                      categoryId: category['id'],
+                      name: category['name'],
+                    ),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: TColors.grey,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 29,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: SvgPicture.asset(
+                            getSvgAssetForCategory(category['name']),
+                            fit: BoxFit.contain,
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
-              ),
-        ],
-      ),
-    );
+                      ),
+                    ),
+                    const SizedBox(height: TSizes.sm - 2),
+                    SizedBox(
+                      width: 85,
+                      child: Text(
+                        category['name']!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(fontSize: 12),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          );
   }
 
   Widget buildShimmerCategories() {

@@ -21,59 +21,56 @@ class CarouselSection extends StatefulWidget {
 class _CarouselSectionState extends State<CarouselSection> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8),
-      child: widget.isLoading
-          ? _buildShimmerPlaceholder()
-          : CarouselSlider(
-              options: CarouselOptions(
-                height: 200.0,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 1.0,
-                enableInfiniteScroll: true,
-              ),
-              items: List.generate(widget.banners.length, (index) {
-                final banner = widget.banners[index];
-                return Builder(
-                  builder: (BuildContext context) {
-                    return GestureDetector(
-                      // onTap: () => Navigator.pushNamed(
-                      //   context,
-                      //   banner.onTapScreen,
-                      // ),
-                      onTap: () {},
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: CachedNetworkImage(
-                            imageUrl: banner.imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, value){
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 200.0,
-                                color: Colors.grey[200],
-                              );
-                            },
-                          ),
-                          // Image.network(
-                          //   banner.imageUrl,
-                          //   fit: BoxFit.cover,
-                          // ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+    return widget.isLoading
+        ? _buildShimmerPlaceholder()
+        : CarouselSlider(
+            options: CarouselOptions(
+              height: 200.0,
+              autoPlay: true,
+              enlargeCenterPage: true,
+              viewportFraction: 1.0,
+              enableInfiniteScroll: true,
             ),
-    );
+            items: List.generate(widget.banners.length, (index) {
+              final banner = widget.banners[index];
+              return Builder(
+                builder: (BuildContext context) {
+                  return GestureDetector(
+                    // onTap: () => Navigator.pushNamed(
+                    //   context,
+                    //   banner.onTapScreen,
+                    // ),
+                    onTap: () {},
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: CachedNetworkImage(
+                          imageUrl: banner.imageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, value){
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.0,
+                              color: Colors.grey[200],
+                            );
+                          },
+                        ),
+                        // Image.network(
+                        //   banner.imageUrl,
+                        //   fit: BoxFit.cover,
+                        // ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          );
   }
 
   Widget _buildShimmerPlaceholder() {

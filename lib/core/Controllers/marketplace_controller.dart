@@ -3,6 +3,8 @@ import 'package:conquest/core/model/banner.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 
 class MarketplaceController extends GetxController {
+  static MarketplaceController get instance => Get.find();
+
   final FirestoreService _firestoreService = FirestoreService();
   var categories = <Map<String, dynamic>>[].obs;
   var banners = <BannerModel>[].obs;

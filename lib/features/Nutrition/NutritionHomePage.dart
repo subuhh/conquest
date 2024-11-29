@@ -23,6 +23,7 @@ class NutritionHomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: CustomAppBar(
+        left: 0,
         actions: [
           GestureDetector(
             onTap: () {

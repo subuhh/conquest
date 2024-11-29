@@ -11,7 +11,7 @@ class Searchbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-          vertical: TSizes.spaceBtwInputFields / 1.5, horizontal: 10),
+          vertical: TSizes.spaceBtwInputFields / 1.5),
       child: Container(
         height: 50.0, // Adjust the height as needed
         decoration: BoxDecoration(
@@ -21,6 +21,8 @@ class Searchbar extends StatelessWidget {
         ),
         child: const TextField(
           decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
             hintText: 'Search',
             hintStyle: TextStyle(
               color: Colors.grey, // Grey text color

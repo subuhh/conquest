@@ -28,19 +28,24 @@ class FavoriteButton extends StatelessWidget {
               )
             : null,
         child: Center(
-          child: IconButton(
-            icon: Icon(
-              controller.isFavorite(productId) ? Iconsax.heart5 : Iconsax.heart,
-              color: controller.isFavorite(productId)
-                  ? isDecoration
-                      ? TColors.primary
-                      : Colors.white
-                  : isDecoration
-                      ? Colors.black
-                      : Colors.white,
-              size: isDecoration ? 20 : null,
+          child: GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.all(7.0),
+              child: Icon(
+                controller.isFavorite(productId)
+                    ? Iconsax.heart5
+                    : Iconsax.heart,
+                color: controller.isFavorite(productId)
+                    ? isDecoration
+                        ? TColors.primary
+                        : Colors.white
+                    : isDecoration
+                        ? Colors.black
+                        : Colors.white,
+                size: isDecoration ? 19 : null,
+              ),
             ),
-            onPressed: () => controller.toggleFavoriteProduct(productId),
+            onTap: () => controller.toggleFavoriteProduct(productId),
           ),
         ),
       );
