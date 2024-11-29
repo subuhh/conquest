@@ -56,10 +56,10 @@ class CalorieIntake {
 }
 
 class Meal {
-  List<String> items; // Example: ["roti", "dal", "salad"]
+  List<String> items;
   int totalCalories;
   Map<String, double>
-      macros; // Example: {'protein': 15.0, 'carbs': 45.0, 'fat': 12.0}
+      macros;
 
   Meal({
     required this.items,

@@ -63,6 +63,9 @@ class ChatGptRecipeService {
                       },
                       "calories": {"type": "number"},
                       "recipeTime": {"type": "string"},
+                      "course": {"type": "string"},
+                      "cuisine": {"type": "string"},
+                      "diet": {"type": "string"},
                       "nutritionValue": {
                         "type": "object",
                         "properties": {
@@ -89,6 +92,9 @@ class ChatGptRecipeService {
                       "steps",
                       "calories",
                       "recipeTime",
+                      "course",
+                      "cuisine",
+                      "diet",
                       "nutritionValue"
                     ],
                     "additionalProperties": false

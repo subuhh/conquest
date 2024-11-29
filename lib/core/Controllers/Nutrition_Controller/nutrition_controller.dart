@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:conquest/common/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../../model/Nutrition/nutrition_model.dart';
@@ -57,22 +58,24 @@ class NutritionController extends GetxController {
   Future<void> addOrUpdateMeal(String mealType, Meal mealData) async {
     isLoading(true);
     try {
-      log("Meal type: $mealType");
-      log("Meal data: $mealData");
-      log("Meals: ${meals[mealType]}");
-      log("Meal Calories: ${mealCalories[mealType]?.value}");
-      log("Meal Macros: ${mealMacros[mealType]}");
-
       // Add or update meal in the service
       await _nutritionService.addOrUpdateNutrition(userId, mealType, mealData);
 
       // Update the local state
       if (meals.containsKey(mealType)) {
-        log('Existing');
         meals[mealType]!.add(mealData); // Add to existing list
       } else {
-        log('New Meal');
         meals[mealType] = [mealData]; // Create new list
+      }
+
+      // Ensure mealMacros for this meal type exists
+      if (!mealMacros.containsKey(mealType) || mealMacros[mealType] == null) {
+        mealMacros[mealType] = {
+          "protein": 0.0,
+          "fat": 0.0,
+          "carbs": 0.0,
+          "fiber": 0.0,
+        }.obs;
       }
 
       // Update calories for the meal type
@@ -80,25 +83,28 @@ class NutritionController extends GetxController {
           meals[mealType]?.fold(0, (sum, meal) => sum! + meal.totalCalories) ??
               0;
 
+      // Update macros for the meal type
       mealMacros[mealType]?.update(
         "protein",
         (prev) =>
-            meals[mealType]
-                ?.fold(0.0, (sum, meal) => sum! + meal.macros['proteinG']!) ??
+            meals[mealType]?.fold(
+                0.0, (sum, meal) => sum! + (meal.macros['proteinG'] ?? 0.0)) ??
             0.0,
       );
+
       mealMacros[mealType]?.update(
         "fat",
         (prev) =>
-            meals[mealType]
-                ?.fold(0.0, (sum, meal) => sum! + meal.macros['fatG']!) ??
+            meals[mealType]?.fold(
+                0.0, (sum, meal) => sum! + (meal.macros['fatG'] ?? 0.0)) ??
             0.0,
       );
+
       mealMacros[mealType]?.update(
         "carbs",
         (prev) =>
-            meals[mealType]
-                ?.fold(0.0, (sum, meal) => sum! + meal.macros['carbG']!) ??
+            meals[mealType]?.fold(
+                0.0, (sum, meal) => sum! + (meal.macros['carbG'] ?? 0.0)) ??
             0.0,
       );
 
@@ -111,6 +117,8 @@ class NutritionController extends GetxController {
       mealMacros.refresh();
     } catch (e) {
       // Handle error
+      showSnackBar(
+          'Error', 'Some error occurred updating the meal. Please try again.');
       log('"Failed to update meal: $e"');
     } finally {
       isLoading(false);
@@ -118,66 +126,84 @@ class NutritionController extends GetxController {
   }
 
   /// Remove a meal
-  Future<void> removeMeal(String mealType, int mealIndex, Meal meal) async {
+  /// Remove a meal based on Meal and mealType
+  Future<void> removeMeal(String mealType, Meal meal) async {
     isLoading(true);
     try {
-      // Validate meal type and index
-      if (meals[mealType] == null || mealIndex >= meals[mealType]!.length) {
-        throw Exception("Invalid meal type or index: $mealType, $mealIndex");
+      // Validate meal type
+      if (meals[mealType] == null || !meals[mealType]!.contains(meal)) {
+        throw Exception("Meal not found for type: $mealType");
       }
 
-      // Update local state
-      meals[mealType]?.removeAt(mealIndex);
+      log('Removing meal for $mealType: $meal');
+      log('Meals before removal: ${meals[mealType]}');
+
+      // Update local state by removing the specific meal
+      meals[mealType]?.remove(meal);
+
+      log('Meals after removal: ${meals[mealType]}');
 
       // Update calories for the meal type
       mealCalories[mealType]?.value =
-          meals[mealType]?.fold(0, (sum, meal) => sum! + meal.totalCalories) ??
-              0;
+          meals[mealType]?.fold(0, (sum, m) => sum! + m.totalCalories) ?? 0;
 
+      log('Updated calories for $mealType: ${mealCalories[mealType]?.value}');
+
+      // Update macros for the meal type
       mealMacros[mealType]?.update(
         "protein",
-        (prev) =>
-            meals[mealType]
-                ?.fold(0.0, (sum, meal) => sum! + meal.macros['proteinG']!) ??
-            0.0,
-      );
-      mealMacros[mealType]?.update(
-        "fat",
-        (prev) =>
-            meals[mealType]
-                ?.fold(0.0, (sum, meal) => sum! + meal.macros['fatG']!) ??
-            0.0,
-      );
-      mealMacros[mealType]?.update(
-        "carbs",
-        (prev) =>
-            meals[mealType]
-                ?.fold(0.0, (sum, meal) => sum! + meal.macros['carbG']!) ??
+            (prev) =>
+        meals[mealType]?.fold(0.0, (sum, m) => sum! + (m.macros['proteinG'] ?? 0.0)) ??
             0.0,
       );
 
-      // Recalculate total calories
+      log('Updated protein for $mealType: ${mealMacros[mealType]?["protein"]}');
+
+      mealMacros[mealType]?.update(
+        "fat",
+            (prev) =>
+        meals[mealType]?.fold(0.0, (sum, m) => sum! + (m.macros['fatG'] ?? 0.0)) ??
+            0.0,
+      );
+
+      log('Updated fat for $mealType: ${mealMacros[mealType]?["fat"]}');
+
+      mealMacros[mealType]?.update(
+        "carbs",
+            (prev) =>
+        meals[mealType]?.fold(0.0, (sum, m) => sum! + (m.macros['carbG'] ?? 0.0)) ??
+            0.0,
+      );
+
+      log('Updated carbs for $mealType: ${mealMacros[mealType]?["carbs"]}');
+
+      // Recalculate total calories and macros
       _calculateTotalCalories();
       _calculateTotalMacros();
 
+      log('Total calories: ${totalCalories.value}');
+      log('Total macros: Protein ${totalMacros["protein"]?.value}, '
+          'Fat ${totalMacros["fat"]?.value}, '
+          'Carbs ${totalMacros["carbs"]?.value}');
+
+      // Refresh observables
       meals.refresh();
       mealCalories.refresh();
       mealMacros.refresh();
 
       // Remove meal from the service
-      await _nutritionService.removeMeal(
-          userId, mealType, meal.items[mealIndex]);
+      await _nutritionService.removeMeal(userId, mealType, meal.items.first);
 
-      // Notify success
-      // TLoaders.successSnackBar(
-      //     title: "Success", message: "Meal removed successfully!");
+      log("Meal successfully removed from the database.");
     } catch (e) {
-      // Handle error
       log("Failed to remove meal: $e");
+      showSnackBar(
+          'Error', 'Some error occurred while removing the meal. Please try again.');
     } finally {
       isLoading(false);
     }
   }
+
 
   /// Fetch meals from the service and update local state
   Future<void> fetchMeals({DateTime? date}) async {

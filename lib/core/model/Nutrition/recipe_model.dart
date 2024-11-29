@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecipeModel {
-  final int id;
+  final String id;
   final String name;
   final List<String> ingredients;
   final String prepTime;
@@ -10,11 +10,11 @@ class RecipeModel {
   final String diet;
   final int? servings;
   final List<String> instructions;
-  final String? protein; // nutritional info
-  final String? fat; // nutritional info
-  final String? fiber; // nutritional info
-  final String? carbs; // nutritional info
-  final String? calories; // total calories
+  final String? protein;
+  final String? fat;
+  final String? fiber;
+  final String? carbs;
+  final String? calories;
   final String imageUrl;
 
   RecipeModel({
@@ -57,7 +57,7 @@ class RecipeModel {
 
   factory RecipeModel.fromDocument(DocumentSnapshot doc) {
     return RecipeModel(
-      id: doc['id'],
+      id: doc['id'].toString(),
       name: doc['name'],
       ingredients: List<String>.from(doc['ingredients']),
       prepTime: doc['prepTime'],

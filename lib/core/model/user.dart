@@ -26,6 +26,8 @@ class UserModel {
   final double? fiberGoal;
   final DateTime? accountCreationTime;
   final String? assignedWorkout;
+  final List<String>? previouslyGeneratedRecipes;
+  final List<String>? favoriteRecipes;
 
   UserModel({
     required this.id,
@@ -53,6 +55,8 @@ class UserModel {
     this.fiberGoal,
     this.accountCreationTime,
     this.assignedWorkout,
+    this.previouslyGeneratedRecipes,
+    this.favoriteRecipes,
   });
 
   // Factory constructor to create a UserModel instance from Firestore document
@@ -85,8 +89,11 @@ class UserModel {
       carbsGoal: data['carbsGoal']?.toDouble() ?? 0.0,
       fiberGoal: data['fiberGoal']?.toDouble() ?? 0.0,
       accountCreationTime:
-      (data['accountCreationTime'] as Timestamp?)?.toDate(),
+          (data['accountCreationTime'] as Timestamp?)?.toDate(),
       assignedWorkout: data['assignedWorkout'] ?? '',
+      previouslyGeneratedRecipes:
+          List<String>.from(data['previouslyGeneratedRecipes'] ?? []),
+      favoriteRecipes: List<String>.from(data['favoriteRecipes'] ?? []),
     );
   }
 
@@ -119,6 +126,8 @@ class UserModel {
           ? Timestamp.fromDate(accountCreationTime!)
           : null,
       'assignedWorkout': assignedWorkout,
+      'previouslyGeneratedRecipes': previouslyGeneratedRecipes ?? [],
+      'favoriteRecipes': favoriteRecipes ?? [],
     };
   }
 
@@ -149,6 +158,8 @@ class UserModel {
     double? fiberGoal,
     DateTime? accountCreationTime,
     String? assignedWorkout,
+    List<String>? previouslyGeneratedRecipes,
+    List<String>? favoriteRecipes,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -176,6 +187,9 @@ class UserModel {
       fiberGoal: fiberGoal ?? this.fiberGoal,
       accountCreationTime: accountCreationTime ?? this.accountCreationTime,
       assignedWorkout: assignedWorkout ?? this.assignedWorkout,
+      previouslyGeneratedRecipes:
+          previouslyGeneratedRecipes ?? this.previouslyGeneratedRecipes,
+      favoriteRecipes: favoriteRecipes ?? this.favoriteRecipes,
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:conquest/core/Controllers/Nutrition_Controller/recipe_controller.dart';
+import 'package:conquest/core/services/nutrition/recipe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:conquest/core/Controllers/Nutrition_Controller/recipe_controller.dart';
 import '../../services/nutrition/chat_gpt_service.dart';
 
 class FridgeAIRecipeGeneratorController extends GetxController {
@@ -10,7 +11,6 @@ class FridgeAIRecipeGeneratorController extends GetxController {
 
   final _formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get formKey => _formKey;
-  final recipeController = Get.put(RecipeController());
 
   var selectedIngredients = <String>[].obs;
   var maxCalories = 0.obs;
@@ -22,7 +22,9 @@ class FridgeAIRecipeGeneratorController extends GetxController {
   var imageUrls = <String>[].obs;
   List<Map<String, dynamic>> recommendations = [];
 
-  final ChatGptRecipeService _recipeService = ChatGptRecipeService();
+  final ChatGptRecipeService _chatGptRecipeService = ChatGptRecipeService();
+  final recipeService = RecipeService();
+  final recipeController = RecipeController.instance;
 
   Map<String, dynamic> parseRecipeJson(String recipe) {
     return jsonDecode(recipe);
@@ -41,11 +43,16 @@ class FridgeAIRecipeGeneratorController extends GetxController {
     """;
 
     try {
-      final response = await _recipeService.fetchRecipeFridgeAi(prompt);
+      final response = await _chatGptRecipeService.fetchRecipeFridgeAi(prompt);
       final responses =
           parseRecipeJson(response['choices'][0]['message']['content']);
       recommendations = List<Map<String, dynamic>>.from(responses['recipes']);
       log('Controller: $recommendations');
+
+      // isLoadingRecipes.value = false;
+
+      recipeController.storeRecipeAfterImageGeneration(
+          recommendations, imageUrls);
 
       // Start generating images
       // await generateRecipeImages();
@@ -67,7 +74,8 @@ class FridgeAIRecipeGeneratorController extends GetxController {
       log('Image description: $description');
       try {
         // Generate the image URL based on recipe description
-        final imageUrl = await _recipeService.generateRecipeImage(description);
+        final imageUrl =
+            await _chatGptRecipeService.generateRecipeImage(description);
         log('$description: $imageUrl');
         imageUrls.add(imageUrl);
       } catch (error) {
@@ -76,45 +84,21 @@ class FridgeAIRecipeGeneratorController extends GetxController {
       }
     }
 
+    recipeController.storeRecipeAfterImageGeneration(
+        recommendations, imageUrls);
+
+    isLoadingImages.value = false;
+  }
+
+  // Method to clear all recipe-related data and reset state
+  void clearRecipeData() {
+    selectedIngredients.clear();
+    maxCalories.value = 0;
+    macros.clear();
+    personalTouch.value = '';
+    recommendations.clear();
+    imageUrls.clear();
+    isLoadingRecipes.value = false;
     isLoadingImages.value = false;
   }
 }
-
-// String _generateRecipeHash(Map<String, dynamic> recipe) {
-//   final title = recipe['title'];
-//   final data = '$title';
-//   return sha256.convert(utf8.encode(data)).toString();
-// }
-
-// Future<bool> _isRecipeInDatabase(String hash) async {
-//   final querySnapshot = await FirebaseFirestore.instance
-//       .collection('recipes')
-//       .where('hash', isEqualTo: hash)
-//       .get();
-//   return querySnapshot.docs.isNotEmpty;
-// }
-
-// Future<void> _saveRecipeToFirebase(
-//     Map<String, dynamic> recipe, String imageUrl, String hash) async {
-//   try {
-//     final recipeModel = {
-//       'title': recipe['title'],
-//       'description': recipe['description'],
-//       'ingredients': recipe['ingredients'],
-//       'steps': recipe['steps'],
-//       'calories': recipe['calories'],
-//       'recipeTime': recipe['recipeTime'],
-//       'nutritionValue': recipe['nutritionValue'],
-//       'imageUrl': imageUrl,
-//       'dietPreference': selectedDiet.value,
-//       'mealType': mealType.value,
-//       'hash': hash,
-//       'createdAt': FieldValue.serverTimestamp(),
-//     };
-//
-//     await FirebaseFirestore.instance.collection('recipes').add(recipeModel);
-//     log('Recipe saved: ${recipe['title']}');
-//   } catch (e) {
-//     log('Error saving recipe: $e');
-//   }
-// }

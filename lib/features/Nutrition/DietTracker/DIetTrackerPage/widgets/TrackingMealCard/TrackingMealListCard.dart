@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:conquest/core/Controllers/Nutrition_Controller/food_database_controller.dart';
 import 'package:conquest/core/Controllers/Nutrition_Controller/nutrition_controller.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +39,11 @@ class TrackingMealListCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      mealTiming.capitalize!,
+                      mealTiming == 'morningsnack'
+                          ? 'Morning Snack'
+                          : mealTiming == 'eveningsnack'
+                              ? 'Evening Snack'
+                              : mealTiming.capitalize!,
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
@@ -85,13 +91,19 @@ class TrackingMealListCard extends StatelessWidget {
                               // subtitle: Text(meal.description),
                               trailing: GestureDetector(
                                 onTap: () {
+                                  log('Meal Timings: $mealTiming');
+                                  log('Index: $index');
+                                  log('Meal: $meal');
+
                                   nutritionController.removeMeal(
-                                      mealTiming, index,meal);
+                                    mealTiming,
+                                    meal,
+                                  );
                                 },
                                 child: const Icon(Icons.remove_circle,
                                     color: Colors.red),
                               ),
-                        // onTap: () => MealContentPage(foodData: ,),
+                              // onTap: () => MealContentPage(foodData: ,),
                             )
                           : const SizedBox.shrink();
                     },
@@ -154,7 +166,7 @@ class TrackingMealListCard extends StatelessWidget {
                               return ListTile(
                                 title: Text(item['label']),
                                 subtitle: Text(
-                                    "Calories: ${item['nutrients']['ENERC_KCAL']} kcal"),
+                                    "Calories: ${(item['nutrients']['ENERC_KCAL'] as double).toInt()} kcal"),
                                 trailing: const Icon(Icons.arrow_forward_ios,
                                     size: 16),
                                 onTap: () {

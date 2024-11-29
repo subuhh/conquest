@@ -55,21 +55,14 @@ class MealContentPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.secondaryBackground,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
             Get.back();
           },
-          icon: CircleAvatar(
-            radius: 17.5,
-            backgroundColor: Colors.grey,
-            child: CircleAvatar(
-              radius: 17,
-              backgroundColor: TColors.secondaryBackground,
-              child: const Icon(
-                Icons.arrow_back,
-                size: 20,
-              ),
-            ),
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 20,
           ),
         ),
         centerTitle: true,
@@ -148,7 +141,6 @@ class MealContentPage extends StatelessWidget {
                 "fatG": fat,
               },
             );
-
             // Update the meal in the controller
             nutritionController.addOrUpdateMeal(
                 mealType.toLowerCase(), mealData);

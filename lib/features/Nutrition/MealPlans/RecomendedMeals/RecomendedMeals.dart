@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conquest/core/Controllers/Nutrition_Controller/recipe_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -64,7 +65,19 @@ class RecommendedMeals extends StatelessWidget {
                     ),
                   )
                 ] else ...[
-                  RecommendedMealCarousel(context, recipeController.recipes)
+                  CarouselSlider.builder(
+                    itemCount: 3,
+                    itemBuilder: (context, index, realIndex) {
+                      final recipe = recipeController.recipes[index];
+                      return RecommendedMealCarousel(recipe, context);
+                    },
+                    options: CarouselOptions(
+                      height: MediaQuery.of(context).size.height * 0.35,
+                      viewportFraction: 1,
+                      enlargeCenterPage: false,
+                      autoPlay: false,
+                    ),
+                  ),
                 ],
               ],
             ),
