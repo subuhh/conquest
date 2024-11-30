@@ -7,6 +7,8 @@ import '../../utils/constants/colors.dart';
 import 'package:conquest/features/HomePage/homepage.dart';
 import 'package:conquest/features/MarketPlace/market_place_screen.dart';
 
+import '../Community/comm_feed_screen.dart';
+
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
 
@@ -58,13 +60,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 _currentIndex = index;
               });
             },
-            children: const [
-              HomePage(),
-              WorkoutHomePage(),
-              NutritionHomePage(),
-              // StoreWorkout(),
-              Center(child: Text('Community')),
-              MarketplaceScreen(),
+            children: [
+              const HomePage(),
+              const WorkoutHomePage(),
+              const NutritionHomePage(),
+              CommunityFeedPage(),
+              const MarketplaceScreen(),
             ],
           ),
           // CurvedNavigationBar
@@ -77,7 +78,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   Colors.transparent, // Transparent behind the curve
               color: Colors.black,
               buttonBackgroundColor: TColors.primary, // The primary color
-              items: List.generate(inActiveIconList.length, (index) {
+              items:
+              List.generate(inActiveIconList.length, (index) {
                 return _currentIndex == index
                     ? Padding(
                         padding: const EdgeInsets.all(5.0),

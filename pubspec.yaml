@@ -37,6 +37,10 @@ dependencies:
   syncfusion_flutter_charts: ^27.2.2
   google_fonts: ^6.2.1
   flutter_animate: ^4.5.2
+  permission_handler: ^11.3.1
+  video_player: ^2.9.2
+  video_compress: ^3.1.3
+  visibility_detector: ^0.4.0+2
 
   # Location & Address
   geocoding: ^3.0.0
@@ -84,6 +88,7 @@ flutter:
     - assets/icons/appicons/
     - assets/icons/drawerIcons/
     - assets/icons/nutrition/
+    - assets/icons/community/
     - assets/icons/bottomNavbaricons/InactiveIcons/
     - assets/icons/bottomNavbaricons/activeIcons/
     - assets/icons/FoodCategory/

@@ -1,7 +1,6 @@
 import 'package:conquest/core/Controllers/Form_Controller/FormController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
 import 'Widgets/gender_selection_page.dart';

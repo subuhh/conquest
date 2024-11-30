@@ -17,7 +17,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomePageController());
-    Get.put(UserController());
     return Scaffold(
       /// AppBar
       backgroundColor: TColors.secondaryBackground,
