@@ -14,6 +14,7 @@ class CommunityController extends GetxController {
   RxList<CommentModel> currentPostComments = <CommentModel>[].obs;
 
   // Loading and error states
+  RxBool isReacting = false.obs;
   RxBool isLoading = false.obs;
   RxBool isLoadingComments = false.obs;
   Rx<String?> errorMessage = Rx<String?>(null);
@@ -137,19 +138,66 @@ class CommunityController extends GetxController {
     }
   }
 
-  // React to a post with error handling
-  Future<PostModel?> reactToPost(String postId, ReactionType reaction) async {
-    isLoading.value = true;
-    errorMessage.value = null;
+  // Optimized react to post method
+  void reactToPost(String postId, ReactionType reaction) {
+    // Immediately update local state for responsiveness
+    final postIndex = posts.indexWhere((post) => post.postId == postId);
+    if (postIndex != -1) {
+      final currentPost = posts[postIndex];
 
-    try {
-      final updatedPost = await _communityService.reactToPost(postId, reaction);
-      isLoading.value = false;
-      return updatedPost;
-    } catch (e) {
-      _handleError(e);
-      return null;
+      // Predict local state change
+      final updatedReactions = Map<ReactionType, int>.from(currentPost.reactions);
+      final currentUserReaction = _getCurrentUserReaction(currentPost);
+
+      // Adjust reaction counts
+      int updatedLikeCount = currentPost.likeCount;
+      if (currentUserReaction == reaction) {
+        // Remove reaction
+        updatedReactions[reaction] = (updatedReactions[reaction] ?? 1) - 1;
+        updatedLikeCount--;
+      } else if (currentUserReaction != null) {
+        // Change reaction
+        updatedReactions[currentUserReaction] = (updatedReactions[currentUserReaction] ?? 1) - 1;
+        updatedReactions[reaction] = (updatedReactions[reaction] ?? 0) + 1;
+      } else {
+        // New reaction
+        updatedReactions[reaction] = (updatedReactions[reaction] ?? 0) + 1;
+        updatedLikeCount++;
+      }
+
+      // Update local post
+      final updatedPost = currentPost.copyWith(
+          reactions: updatedReactions,
+          likeCount: updatedLikeCount
+      );
+      posts[postIndex] = updatedPost;
+
+      // Start background update
+      isReacting.value = true;
+      _communityService.reactToPost(
+          postId,
+          reaction,
+              (serverUpdatedPost) {
+            // Sync with server response if needed
+            posts[postIndex] = serverUpdatedPost;
+            isReacting.value = false;
+          }
+      ).catchError((error) {
+        // Revert local changes if server update fails
+        posts[postIndex] = currentPost;
+        isReacting.value = false;
+        _handleError(error);
+      });
     }
+  }
+
+  // Helper method to get current user's reaction
+  ReactionType? _getCurrentUserReaction(PostModel post) {
+    final reactions = post.reactions;
+    for (var reaction in reactions.keys) {
+      if ((reactions[reaction] ?? 0) > 0) return reaction;
+    }
+    return null;
   }
 
   // Filter posts by category

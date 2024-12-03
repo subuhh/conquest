@@ -47,4 +47,20 @@
     </queries>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- required from API level 33 -->
+
+    <!-- To read images created by other apps -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- To read videos created by other apps -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- To read all files until API level 32 -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+    android:maxSdkVersion="32" />
+    <!-- To write all files until API level 29. We will MediaStore from API level 30 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="28" />
+
 </manifest>

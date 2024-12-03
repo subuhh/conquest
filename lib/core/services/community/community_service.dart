@@ -175,8 +175,8 @@ class CommunityService extends GetxService {
     }
   }
 
-  // Engage with post (like, reaction)
-  Future<PostModel> reactToPost(String postId, ReactionType reaction) async {
+  Future<void> reactToPost(String postId, ReactionType reaction,
+      void Function(PostModel)? onReactionUpdate) async {
     try {
       final user = _auth.currentUser;
       if (user == null) {
@@ -184,21 +184,102 @@ class CommunityService extends GetxService {
       }
 
       final postRef = _firestore.collection('posts').doc(postId);
-      final postDoc = await postRef.get();
+      final userReactionRef = _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('post_reactions')
+          .doc(postId);
 
-      if (!postDoc.exists) {
-        throw CommunityServiceException('Post does not exist');
-      }
+      // Optimized transaction with all reads first
+      await _firestore.runTransaction((transaction) async {
+        // Perform ALL reads first
+        final postDoc = await transaction.get(postRef);
+        final userReactionDoc = await transaction.get(userReactionRef);
 
-      // Update reactions and like count
-      await postRef.update({
-        'reactions.${reaction.toString()}': FieldValue.increment(1),
-        'likeCount': FieldValue.increment(1),
+        if (!postDoc.exists) {
+          throw CommunityServiceException('Post does not exist');
+        }
+
+        final postData = postDoc.data() as Map<String, dynamic>;
+        final currentReactions =
+            (postData['reactions'] as Map<String, dynamic>?) ?? {};
+        final currentUserReaction = userReactionDoc.exists
+            ? userReactionDoc.data()!['reaction'] as String?
+            : null;
+
+        // Prepare all updates based on reads
+        final updates = <String, dynamic>{};
+        bool shouldDeleteUserReaction = false;
+        bool shouldCreateUserReaction = false;
+        int likeCountChange = 0;
+
+        // Reaction logic
+        if (currentUserReaction == reaction.toString()) {
+          // Remove reaction if same reaction is clicked again
+          final newReactions = {
+            ...currentReactions,
+            reaction.toString():
+                (currentReactions[reaction.toString()] ?? 1) - 1
+          };
+          updates['reactions'] = newReactions;
+          shouldDeleteUserReaction = true;
+          likeCountChange = -1;
+        } else if (currentUserReaction != null) {
+          // Change from one reaction to another
+          final prevReaction = currentUserReaction;
+          final newReactions = {
+            ...currentReactions,
+            prevReaction: (currentReactions[prevReaction] ?? 1) - 1,
+            reaction.toString():
+                (currentReactions[reaction.toString()] ?? 0) + 1
+          };
+          updates['reactions'] = newReactions;
+          shouldCreateUserReaction = true;
+        } else {
+          // First time reaction
+          final newReactions = {
+            ...currentReactions,
+            reaction.toString():
+                (currentReactions[reaction.toString()] ?? 0) + 1
+          };
+          updates['reactions'] = newReactions;
+          shouldCreateUserReaction = true;
+          likeCountChange = 1;
+        }
+
+        // Update like count if changed
+        if (likeCountChange != 0) {
+          updates['likeCount'] = (postData['likeCount'] ?? 0) + likeCountChange;
+        }
+
+        // Perform ALL writes AFTER all reads
+        // Writes section
+        if (shouldDeleteUserReaction) {
+          transaction.delete(userReactionRef);
+        }
+
+        if (shouldCreateUserReaction) {
+          transaction.set(userReactionRef, {
+            'reaction': reaction.toString(),
+            'postId': postId,
+            'timestamp': FieldValue.serverTimestamp()
+          });
+        }
+
+        if (updates.isNotEmpty) {
+          transaction.update(postRef, updates);
+        }
+
+        return null; // Return value required by runTransaction
       });
 
-      // Fetch updated post
+      // Fetch updated post outside the transaction
       final updatedPostDoc = await postRef.get();
-      return PostModel.fromJson(updatedPostDoc.data() as Map<String, dynamic>);
+      final updatedPostData = updatedPostDoc.data() as Map<String, dynamic>;
+      final updatedPost = PostModel.fromJson(updatedPostData);
+
+      // Optional callback for immediate UI update
+      onReactionUpdate?.call(updatedPost);
     } catch (e, stackTrace) {
       throw CommunityServiceException(
           'Failed to react to post: ${e.toString()}',

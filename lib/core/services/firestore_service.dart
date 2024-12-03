@@ -119,6 +119,7 @@ class FirestoreService extends GetxController {
     }
   }
 
+
   // --- Category ---
 
   // Fetch all Categories from Firestore

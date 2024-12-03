@@ -11,7 +11,7 @@ class CategoryFilterBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.95,
+      initialChildSize: 0.85,
       maxChildSize: 0.99,
       minChildSize: 0.6,
       builder: (context, scrollController) {
@@ -41,10 +41,10 @@ class CategoryFilterBottomSheet extends StatelessWidget {
                 title: 'Categories',
                 child: _buildCategoryFilter(),
               ),
-              _buildFilterSection(
-                title: 'Visibility',
-                child: _buildVisibilityFilter(),
-              ),
+              // _buildFilterSection(
+              //   title: 'Visibility',
+              //   child: _buildVisibilityFilter(),
+              // ),
               _buildFilterSection(
                 title: 'Date Range',
                 child: _buildDateRangeFilter(),

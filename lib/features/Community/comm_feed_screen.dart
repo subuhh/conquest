@@ -1,4 +1,3 @@
-import 'package:conquest/features/Community/Post/post_creation_bottom_sheet.dart';
 import 'package:conquest/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +6,7 @@ import 'package:readmore/readmore.dart';
 import '../../core/Controllers/community_controller/community_controller.dart';
 import '../../core/model/community/post_model.dart';
 import 'Category_Filter/category_filter_bottom_sheet.dart';
+import 'Post/media_selection_screen.dart';
 import 'Post/post_footer.dart';
 import 'Post/post_media_creation.dart';
 
@@ -20,16 +20,25 @@ class CommunityFeedPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.white,
       appBar: _buildCustomAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildCategoryChips(),
-            _buildPostList(),
-            const SizedBox(height: 100)
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildCategoryChips(),
+                _buildPostList(),
+                const SizedBox(height: 100)
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 95,
+            right: 15,
+            child: _buildCreatePostButton(),
+          )
+        ],
       ),
-      floatingActionButton: _buildCreatePostButton(),
+      // floatingActionButton: _buildCreatePostButton(),
     );
   }
 
@@ -156,7 +165,10 @@ class CommunityFeedPage extends StatelessWidget {
       children: [
         // Support for multiple media types
         if (post.mediaUrls != null && post.mediaUrls!.isNotEmpty)
-          MediaCarouselWidget(mediaUrls: post.mediaUrls!),
+          MediaCarouselWidget(
+            mediaUrls: post.mediaUrls!,
+            postModel: post,
+          ),
 
         if (post.content != null)
           Padding(
@@ -191,38 +203,6 @@ class CommunityFeedPage extends StatelessWidget {
       ],
     );
   }
-
-  // Widget _buildMediaContent(PostModel post) {
-  //   // Determine if it's a video or image
-  //   final isVideo = _isVideoUrl(post.mediaUrls!.first);
-  //
-  //   return isVideo
-  //       ? _buildVideoPlayer(post.mediaUrls!.first)
-  //       : _buildImagePost(post.mediaUrls!.first);
-  // }
-
-  // bool _isVideoUrl(String url) {
-  //   // Add logic to check video URL
-  //   return url.contains('.mp4') || url.contains('.mov');
-  // }
-  //
-  // Widget _buildVideoPlayer(String videoUrl) {
-  //   return VideoPlayerWidget(videoUrl: videoUrl);
-  // }
-  //
-  // Widget _buildImagePost(String imageUrl) {
-  //   return CachedNetworkImage(
-  //     imageUrl: imageUrl,
-  //     fit: BoxFit.cover,
-  //     width: double.infinity,
-  //     placeholder: (context, url) => Center(
-  //       child: CircularProgressIndicator(
-  //         color: TColors.primary,
-  //       ),
-  //     ),
-  //     errorWidget: (context, url, error) => Icon(Icons.error),
-  //   );
-  // }
 
   Widget _buildPostHeader(PostModel post, BuildContext context) {
     return ListTile(
@@ -262,17 +242,9 @@ class CommunityFeedPage extends StatelessWidget {
 
   Widget _buildCreatePostButton() {
     return FloatingActionButton(
-      onPressed: _showCreatePostBottomSheet,
+      onPressed: () => Get.to(() => MediaPickerScreen()),
       backgroundColor: TColors.primary,
       child: const Icon(Icons.add, color: Colors.white),
-    );
-  }
-
-  void _showCreatePostBottomSheet() {
-    Get.bottomSheet(
-      PostCreationBottomSheet(),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
     );
   }
 

@@ -154,6 +154,63 @@ class PostModel {
       'metadata': metadata,
     };
   }
+
+  // CopyWith Method
+  PostModel copyWith({
+    String? postId,
+    String? userId,
+    String? userName,
+    String? userAvatar,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    PostType? postType,
+    String? content,
+    List<String>? mediaUrls,
+    PollData? pollData,
+    ChallengeData? challengeData,
+    int? likeCount,
+    int? commentCount,
+    int? shareCount,
+    Map<ReactionType, int>? reactions,
+    List<String>? hashtags,
+    Category? category,
+    String? location,
+    Visibility? visibility,
+    bool? isReported,
+    List<String>? reportedBy,
+    List<String>? taggedUsers,
+    List<String>? savedBy,
+    List<String>? viewers,
+    Map<String, dynamic>? metadata,
+  }) {
+    return PostModel(
+      postId: postId ?? this.postId,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userAvatar: userAvatar ?? this.userAvatar,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      postType: postType ?? this.postType,
+      content: content ?? this.content,
+      mediaUrls: mediaUrls ?? this.mediaUrls,
+      pollData: pollData ?? this.pollData,
+      challengeData: challengeData ?? this.challengeData,
+      likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
+      shareCount: shareCount ?? this.shareCount,
+      reactions: reactions ?? this.reactions,
+      hashtags: hashtags ?? this.hashtags,
+      category: category ?? this.category,
+      location: location ?? this.location,
+      visibility: visibility ?? this.visibility,
+      isReported: isReported ?? this.isReported,
+      reportedBy: reportedBy ?? this.reportedBy,
+      taggedUsers: taggedUsers ?? this.taggedUsers,
+      savedBy: savedBy ?? this.savedBy,
+      viewers: viewers ?? this.viewers,
+      metadata: metadata ?? this.metadata,
+    );
+  }
 }
 
 class PollData {

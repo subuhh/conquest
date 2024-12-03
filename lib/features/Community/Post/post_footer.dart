@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -6,12 +8,24 @@ import '../../../core/model/community/post_model.dart';
 import '../../../utils/constants/colors.dart';
 import '../Comment/comment_section.dart';
 
+Color? getReactionColor(ReactionType reaction) {
+  switch (reaction) {
+    case ReactionType.like:
+      return Colors.red;
+    case ReactionType.inspired:
+      return Colors.yellow;
+    case ReactionType.motivated:
+      return Colors.green;
+    case ReactionType.cheered:
+      return Colors.blue;
+  }
+}
+
 class PostFooter extends StatefulWidget {
   final PostModel post;
   final CommunityController controller;
 
-  const PostFooter({Key? key, required this.post, required this.controller})
-      : super(key: key);
+  const PostFooter({super.key, required this.post, required this.controller});
 
   @override
   _PostFooterState createState() => _PostFooterState();
@@ -36,12 +50,51 @@ class _PostFooterState extends State<PostFooter> {
                 onCancel: () {
                   Navigator.of(context).pop();
                 },
+                post: widget.post,
               ),
             ),
           ],
         );
       },
     );
+  }
+
+  // Updated method to get the appropriate icon based on the most prominent reaction
+  IconData _getReactionIcon() {
+    try {
+      // Find the reaction with the highest count
+      final reactions = widget.post.reactions;
+
+      if (reactions.isEmpty || widget.post.likeCount <= 0) {
+        return Icons.favorite_border;
+      }
+
+      log("Reactions before update: $reactions");
+
+      // Find the reaction type with the highest count
+      final mostProminentReaction = reactions.entries
+          .reduce(
+            (a, b) => a.value > b.value ? a : b,
+          )
+          .key;
+
+      // Return the appropriate filled icon based on the most prominent reaction
+      switch (mostProminentReaction) {
+        case ReactionType.like:
+          return Icons.favorite;
+        case ReactionType.inspired:
+          return Icons.lightbulb;
+        case ReactionType.motivated:
+          return Icons.fitness_center;
+        case ReactionType.cheered:
+          return Icons.celebration;
+        default:
+          return Icons.favorite_border;
+      }
+    } catch (e) {
+      // If any error occurs, default to like icon
+      return Icons.favorite_border;
+    }
   }
 
   @override
@@ -71,7 +124,7 @@ class _PostFooterState extends State<PostFooter> {
               children: [
                 // Reaction Icon
                 Icon(
-                  Icons.favorite_border,
+                  _getReactionIcon(),
                   color: TColors.primary,
                   size: 26,
                 ),
@@ -129,11 +182,13 @@ class _PostFooterState extends State<PostFooter> {
 class ElegantReactionPopup extends StatefulWidget {
   final void Function(ReactionType) onReactionSelected;
   final VoidCallback onCancel;
+  final PostModel post;
 
   const ElegantReactionPopup({
     Key? key,
     required this.onReactionSelected,
     required this.onCancel,
+    required this.post,
   }) : super(key: key);
 
   @override
@@ -176,9 +231,9 @@ class _ElegantReactionPopupState extends State<ElegantReactionPopup>
   IconData _getReactionIcon(ReactionType reaction) {
     switch (reaction) {
       case ReactionType.like:
-        return Icons.favorite_border;
+        return Icons.favorite;
       case ReactionType.inspired:
-        return Icons.lightbulb_outline;
+        return Icons.lightbulb;
       case ReactionType.motivated:
         return Icons.fitness_center;
       case ReactionType.cheered:
@@ -232,6 +287,10 @@ class _ElegantReactionPopupState extends State<ElegantReactionPopup>
               // Reaction icons in a horizontal layout
               ...ReactionType.values.map((reaction) {
                 final isSelected = _currentReaction == reaction;
+                // Get the count for the current reaction type
+                final reactionCount = widget.post.reactions[reaction] ?? 0;
+                log('Reaction Count: ${reactionCount}');
+
                 return GestureDetector(
                   onTap: () => widget.onReactionSelected(reaction),
                   child: AnimatedContainer(
@@ -246,10 +305,23 @@ class _ElegantReactionPopupState extends State<ElegantReactionPopup>
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Icon(
-                      _getReactionIcon(reaction),
-                      color: Colors.black54,
-                      size: isSelected ? 32 : 28,
+                    child: Row(
+                      children: [
+                        Icon(
+                          _getReactionIcon(reaction),
+                          color: getReactionColor(reaction),
+                          size: isSelected ? 32 : 28,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          reactionCount.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
