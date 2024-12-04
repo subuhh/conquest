@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../features/Community/Post/Post_Creation/media_editing.dart';
+
 class MediaPickerController extends GetxController {
   // Observable variables
   final RxList<AssetPathEntity> albums = <AssetPathEntity>[].obs;
@@ -197,7 +199,10 @@ class MediaPickerController extends GetxController {
     if (selectedMedia.isNotEmpty) {
       // Navigate to the next screen for editing/filtering
       // You'll need to implement the next screen navigation
-      Get.toNamed('/media-edit', arguments: selectedMedia);
+      Get.to(() => ImageEditorWorkflow(
+            selectedImages: selectedMedia,
+          ));
+      // Get.toNamed('/media-edit', arguments: selectedMedia);
     }
   }
 

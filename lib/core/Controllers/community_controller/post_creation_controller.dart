@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:conquest/core/services/community/community_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ import 'package:video_compress/video_compress.dart';
 import '../../model/community/post_model.dart';
 
 class PostCreationController extends GetxController {
+  static PostCreationController get instance => Get.find();
   final ImagePicker _picker = ImagePicker();
 
   // Observable list of selected media files
@@ -322,8 +324,7 @@ class PostCreationController extends GetxController {
 
       // Upload media files
       final uploadedUrls = await _uploadMediaFiles(
-        selectedMedia.map((media) => media.file).toList(),
-        selectedMedia.first.type == MediaType.image ? 'images' : 'videos',
+        selectedMedia,
       );
 
       // Determine post type based on media
@@ -357,6 +358,8 @@ class PostCreationController extends GetxController {
         selectedMedia.clear();
         selectedHashtags.clear();
         Get.back(); // Close bottom sheet
+        Get.back(); // Close bottom sheet
+        Get.back(); // Close bottom sheet
         Get.snackbar('Success', 'Post created successfully');
         return true;
       }
@@ -376,13 +379,10 @@ class PostCreationController extends GetxController {
     }
   }
 
-  // Update media upload method to handle the new MediaFile type
+// Update media upload method to handle the new MediaFile type
   Future<List<String>> _uploadMediaFiles(
-    List<File> mediaFiles,
-    String mediaType,
+    List<MediaFile> mediaFiles,
   ) async {
-    // Implementation remains similar to the original method
-    // Just ensure it works with the new media selection approach
     try {
       List<String> uploadedUrls = [];
 
@@ -390,20 +390,28 @@ class PostCreationController extends GetxController {
         final userId = UserController.instance.userModel.value?.id ?? 'unknown';
 
         String fileName = DateTime.now().millisecondsSinceEpoch.toString() +
-            '_' +
-            mediaFile.path.split('/').last;
+            (mediaFile.type == MediaType.image ? '.png' : '.mp4');
 
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('posts')
             .child(userId)
-            .child(mediaType)
+            .child(mediaFile.type == MediaType.image ? 'images' : 'videos')
             .child(fileName);
 
-        final uploadTask = storageRef.putFile(mediaFile);
+        // Upload media based on its type
+        UploadTask uploadTask;
+        if (mediaFile.type == MediaType.image && mediaFile.file is Uint8List) {
+          uploadTask = storageRef.putData(mediaFile.file as Uint8List);
+        } else if (mediaFile.type == MediaType.video &&
+            mediaFile.file is File) {
+          uploadTask = storageRef.putFile(mediaFile.file as File);
+        } else {
+          continue; // Skip if media type does not match
+        }
+
         final snapshot = await uploadTask.whenComplete(() {});
         final downloadUrl = await snapshot.ref.getDownloadURL();
-
         uploadedUrls.add(downloadUrl);
       }
 
@@ -443,7 +451,7 @@ class PostCreationController extends GetxController {
 
 // Media file class to handle both images and videos
 class MediaFile {
-  final File file;
+  final dynamic file;
   final MediaType type;
 
   MediaFile({required this.file, required this.type});

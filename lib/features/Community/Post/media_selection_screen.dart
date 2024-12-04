@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../../../core/Controllers/community_controller/post_album_picker_controller.dart';
-import '../../../core/Controllers/community_controller/post_creation_controller.dart';
 
 class MediaPickerScreen extends StatelessWidget {
   const MediaPickerScreen({Key? key}) : super(key: key);
@@ -10,23 +10,22 @@ class MediaPickerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(MediaPickerController());
-    final postCreationController = Get.put(PostCreationController());
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           "New Post",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () => Get.back(),
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: Colors.black,
             )),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         actions: [
           Obx(
             () => TextButton(
@@ -118,16 +117,19 @@ class MediaPickerScreen extends StatelessWidget {
           // Album dropdown
           Expanded(
             child: DropdownButton<AssetPathEntity>(
-              dropdownColor: Colors.black,
+              dropdownColor: Colors.white,
               value: controller.selectedAlbum.value,
               isExpanded: true,
               underline: Container(height: 0),
               style: const TextStyle(color: Colors.white, fontSize: 16),
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
               items: controller.albums.map((album) {
                 return DropdownMenuItem<AssetPathEntity>(
                   value: album,
-                  child: Text(album.name),
+                  child: Text(
+                    album.name,
+                    style: TextStyle(color: Colors.black),
+                  ),
                 );
               }).toList(),
               onChanged: (selectedAlbum) {
@@ -138,24 +140,42 @@ class MediaPickerScreen extends StatelessWidget {
             ),
           ),
 
+          const SizedBox(width: 20),
+
           // Multi-select toggle
-          IconButton(
-            icon: Obx(() => Icon(
-                  controller.isMultiSelectEnabled.value
-                      ? Icons.check_box
-                      : Icons.check_box_outline_blank,
-                  color: Colors.white,
-                )),
-            onPressed: controller.toggleMultiSelect,
+          Obx(
+            () => CircleAvatar(
+              radius: 22,
+              backgroundColor: controller.isMultiSelectEnabled.value
+                  ? Colors.blue
+                  : Colors.black.withOpacity(0.1),
+              child: IconButton(
+                icon: SvgPicture.asset(
+                  'assets/icons/community/multiple_select.svg',
+                  colorFilter: ColorFilter.mode(
+                      controller.isMultiSelectEnabled.value
+                          ? Colors.white
+                          : Colors.black,
+                      BlendMode.srcIn),
+                ),
+                onPressed: controller.toggleMultiSelect,
+              ),
+            ),
           ),
 
+          const SizedBox(width: 10),
+
           // Camera button
-          IconButton(
-            icon: const Icon(Icons.camera_alt, color: Colors.white),
-            onPressed: () {
-              // TODO: Implement camera capture functionality
-              controller.initializeCameraController();
-            },
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: Colors.black.withOpacity(0.1),
+            child: IconButton(
+              icon: const Icon(Icons.camera_alt, color: Colors.black),
+              onPressed: () {
+                // TODO: Implement camera capture functionality
+                controller.initializeCameraController();
+              },
+            ),
           ),
         ],
       ),
@@ -224,8 +244,8 @@ class MediaPickerScreen extends StatelessWidget {
                         final isSelected =
                             controller.selectedMedia.contains(media);
                         return Positioned(
-                          top: 4,
-                          right: 4,
+                          top: 6,
+                          right: 6,
                           child: AnimatedOpacity(
                             duration: const Duration(milliseconds: 200),
                             opacity: isSelected ? 1.0 : 0.0,
@@ -234,12 +254,17 @@ class MediaPickerScreen extends StatelessWidget {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(50),
                               ),
+                              width: 25,
+                              height: 25,
                               padding: const EdgeInsets.all(4),
-                              child: Text(
-                                '${controller.selectedMedia.indexOf(media) + 1}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                              child: Center(
+                                child: Text(
+                                  '${controller.selectedMedia.indexOf(media) + 1}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                             ),

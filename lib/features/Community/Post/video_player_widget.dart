@@ -115,7 +115,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
             return GestureDetector(
               onTap: _togglePlayPause,
               child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
+                aspectRatio: 9/16,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [

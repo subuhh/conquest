@@ -75,42 +75,46 @@ class _MediaCarouselWidgetState extends State<MediaCarouselWidget>
   Widget _buildMediaItem(String mediaUrl) {
     return GestureDetector(
       onDoubleTap: _onDoubleTap,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          _isVideoUrl(mediaUrl)
-              ? VideoPlayerWidget(videoUrl: mediaUrl)
-              : CachedNetworkImage(
-                  imageUrl: mediaUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  // m
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.grey.shade300,
+      child: Container(
+        color: Colors.black,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            _isVideoUrl(mediaUrl)
+                ? VideoPlayerWidget(videoUrl: mediaUrl)
+                : CachedNetworkImage(
+                    imageUrl: mediaUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    // m
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.grey.shade300,
+                      ),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-          // Heart animation
-          if (_isHeartVisible)
-            AnimatedBuilder(
-              animation: _heartController,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: Transform.scale(
-                    scale: _scaleAnimation.value,
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                      size: 100,
+            // Heart animation
+            if (_isHeartVisible)
+              AnimatedBuilder(
+                animation: _heartController,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: _opacityAnimation.value,
+                    child: Transform.scale(
+                      scale: _scaleAnimation.value,
+                      child: Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                        size: 100,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-        ],
+                  );
+                },
+              ),
+          ],
+        ),
       ),
     );
   }

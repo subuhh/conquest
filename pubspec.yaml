@@ -50,6 +50,7 @@ dependencies:
   image_editor_plus: ^1.0.6
   video_editor: ^3.0.0
   video_trimmer: ^3.0.0
+  image: ^4.3.0
 
   # Location & Address
   geocoding: ^3.0.0
