@@ -286,4 +286,31 @@ class CommunityService extends GetxService {
           stackTrace: stackTrace);
     }
   }
+
+  // Fetch posts for a specific user without using a stream
+  Future<List<PostModel>> getPostsByUserId(String userId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('posts')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final posts = querySnapshot.docs.map((doc) {
+        try {
+          return PostModel.fromJson(doc.data());
+        } catch (e) {
+          print('Error parsing post: ${e.toString()}');
+          return null;
+        }
+      }).whereType<PostModel>().toList();
+
+      return posts;
+    } catch (e, stackTrace) {
+      throw CommunityServiceException(
+          'Failed to fetch posts by user ID: ${e.toString()}',
+          stackTrace: stackTrace);
+    }
+  }
+
 }

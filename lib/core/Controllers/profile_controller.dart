@@ -24,7 +24,6 @@ class ProfileController extends GetxController {
   late TextEditingController emailController;
   late TextEditingController userNameController;
   late TextEditingController phoneController;
-  late TextEditingController bioController;
   String? selectedGender;
   UserModel? userModel;
 
@@ -46,8 +45,6 @@ class ProfileController extends GetxController {
           ..addListener(_checkIfEdited);
         phoneController = TextEditingController(text: userModel!.phoneNumber)
           ..addListener(_checkIfEdited);
-        bioController = TextEditingController(text: userModel!.bio)
-          ..addListener(_checkIfEdited);
         selectedGender = userModel!.gender;
       }
     } catch (e) {
@@ -62,14 +59,14 @@ class ProfileController extends GetxController {
         emailController.text != userModel!.email ||
         phoneController.text != userModel!.phoneNumber ||
         userNameController.text != userModel!.userName ||
-        bioController.text != userModel!.bio ||
         selectedGender != userModel!.gender;
     isEdited.value = edited;
   }
 
   Future<void> pickImage() async {
     try {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         profileImage.value = File(pickedFile.path);
         isEdited.value = true;
@@ -81,7 +78,10 @@ class ProfileController extends GetxController {
 
   Future<String?> _uploadProfileImage(File image) async {
     try {
-      final storageRef = FirebaseStorage.instance.ref().child('profile_images').child(userModel!.id);
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(userModel!.id);
       final uploadTask = await storageRef.putFile(image);
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       return downloadUrl;
@@ -110,7 +110,6 @@ class ProfileController extends GetxController {
           phoneNumber: phoneController.text,
           userName: userNameController.text,
           gender: selectedGender,
-          bio: bioController.text,
           profileImageUrl: imageUrl ?? userModel!.profileImageUrl,
         );
 
@@ -121,7 +120,6 @@ class ProfileController extends GetxController {
         showSnackBar('Success', 'Profile updated successfully');
 
         Navigator.pop(context);
-
       } catch (e) {
         showSnackBar('Error', 'Failed to update profile');
         log('$e');

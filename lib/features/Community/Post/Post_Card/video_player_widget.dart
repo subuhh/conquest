@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import '../../../utils/constants/colors.dart';
+import '../../../../utils/constants/colors.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
@@ -20,6 +20,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
   bool _isMuted = false;
   bool _isInitialized = false;
   bool _isPlaying = false;
+  bool _isVisible = false; // Track visibility state
 
   @override
   bool get wantKeepAlive => true;
@@ -39,28 +40,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
           setState(() {
             _isInitialized = true;
             _controller.setLooping(true);
-            _controller.play();
-            _isPlaying = true;
             _controller.setVolume(1.0);
-
-            // Add listener to update playing state
-            _controller.addListener(_updatePlayingState);
           });
         }
       });
-    }
-  }
-
-  void _updatePlayingState() {
-    if (mounted) {
-      final wasPlaying = _isPlaying;
-      final currentlyPlaying = _controller.value.isPlaying;
-
-      if (wasPlaying != currentlyPlaying) {
-        setState(() {
-          _isPlaying = currentlyPlaying;
-        });
-      }
     }
   }
 
@@ -73,6 +56,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
       } else {
         _controller.play();
       }
+      _isPlaying = !_isPlaying;
     });
   }
 
@@ -89,24 +73,28 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
     });
   }
 
+  // Handle visibility change and start/stop the video based on visibility
+  void _onVisibilityChanged(VisibilityInfo visibilityInfo) {
+    if (!_isInitialized) return;
+
+    final visiblePercentage = visibilityInfo.visibleFraction;
+    setState(() {
+      _isVisible = visiblePercentage > 0;
+      if (_isVisible && !_isPlaying) {
+        _controller.play(); // Play when visible
+      } else if (!_isVisible && _isPlaying) {
+        _controller.pause(); // Pause when not visible
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
     return VisibilityDetector(
       key: Key(widget.videoUrl),
-      onVisibilityChanged: (visibilityInfo) {
-        if (!_isInitialized) return;
-
-        final visiblePercentage = visibilityInfo.visibleFraction;
-        if (visiblePercentage <= 0) {
-          // Video is not visible, pause
-          _controller.pause();
-        } else if (visiblePercentage > 0) {
-          // Video is visible, play
-          _controller.play();
-        }
-      },
+      onVisibilityChanged: _onVisibilityChanged, // Detect visibility changes
       child: FutureBuilder(
         future: _initializeVideoPlayerFuture,
         builder: (context, snapshot) {
@@ -115,7 +103,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
             return GestureDetector(
               onTap: _togglePlayPause,
               child: AspectRatio(
-                aspectRatio: 9/16,
+                aspectRatio: 9 / 16,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -128,7 +116,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                               Icons.play_circle_fill,
                               key: const ValueKey('playIcon'),
                               size: 70,
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.transparent,
                             )
                           : const SizedBox.shrink(
                               key: ValueKey('emptyIcon'),
@@ -163,7 +151,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 
   @override
   void dispose() {
-    _controller.removeListener(_updatePlayingState);
     _controller.dispose();
     super.dispose();
   }

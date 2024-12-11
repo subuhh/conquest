@@ -1,10 +1,10 @@
 import 'package:conquest/core/Controllers/community_controller/community_controller.dart';
-import 'package:conquest/features/Community/Post/video_player_widget.dart';
+import 'package:conquest/features/Community/Post/Post_Card/video_player_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../../core/model/community/post_model.dart';
+import '../../../../core/model/community/post_model.dart';
 
 class MediaCarouselWidget extends StatefulWidget {
   final List<String> mediaUrls;
@@ -76,24 +76,31 @@ class _MediaCarouselWidgetState extends State<MediaCarouselWidget>
     return GestureDetector(
       onDoubleTap: _onDoubleTap,
       child: Container(
-        color: Colors.black,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Stack(
           alignment: Alignment.center,
           children: [
             _isVideoUrl(mediaUrl)
                 ? VideoPlayerWidget(videoUrl: mediaUrl)
-                : CachedNetworkImage(
-                    imageUrl: mediaUrl,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    // m
-                    placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.grey.shade300,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      child: CachedNetworkImage(
+                        imageUrl: mediaUrl,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
                   ),
             // Heart animation
             if (_isHeartVisible)

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
-import '../../../core/Controllers/community_controller/post_album_picker_controller.dart';
+import '../../../../core/Controllers/community_controller/post_album_picker_controller.dart';
+import '../../../../core/Controllers/community_controller/post_creation_controller.dart';
 
 class MediaPickerScreen extends StatelessWidget {
   const MediaPickerScreen({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class MediaPickerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(MediaPickerController());
+    Get.put(PostCreationController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -19,12 +21,6 @@ class MediaPickerScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black),
         ),
         automaticallyImplyLeading: false,
-        leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            )),
         backgroundColor: Colors.white,
         actions: [
           Obx(
@@ -232,6 +228,7 @@ class MediaPickerScreen extends StatelessWidget {
                   snapshot.data != null) {
                 return GestureDetector(
                   onTap: () => controller.selectMedia(media),
+                  onLongPress: () => controller.toggleMultiSelect(),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [

@@ -46,6 +46,9 @@ class TColors {
   static const Color lightGrey = Color(0xFFF9F9F9);
   static const Color white = Color(0xFFFFFFFF);
 
+  static const communityPrimary = Color(0xFFA756FA);
+  static const communitySecondary = Color(0xFF578AFD);
+
 }
 
 

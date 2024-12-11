@@ -7,6 +7,7 @@ class UserModel {
   final String name;
   final String phoneNumber;
   final String? profileImageUrl;
+  final String? bannerImageUrl;
   final String? bio;
   final int? age;
   final String? gender;
@@ -28,6 +29,9 @@ class UserModel {
   final String? assignedWorkout;
   final List<String>? previouslyGeneratedRecipes;
   final List<String>? favoriteRecipes;
+  final int? totalPost;
+  final int? totalFollowers;
+  final int? totalFollowing;
 
   UserModel({
     required this.id,
@@ -35,6 +39,7 @@ class UserModel {
     required this.email,
     required this.name,
     required this.phoneNumber,
+    this.bannerImageUrl,
     this.profileImageUrl,
     this.bio,
     this.age,
@@ -57,6 +62,9 @@ class UserModel {
     this.assignedWorkout,
     this.previouslyGeneratedRecipes,
     this.favoriteRecipes,
+    this.totalPost,
+    this.totalFollowers,
+    this.totalFollowing,
   });
 
   // Factory constructor to create a UserModel instance from Firestore document
@@ -68,6 +76,7 @@ class UserModel {
       name: data['name'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
       profileImageUrl: data['profileImageUrl'] ?? '',
+      bannerImageUrl: data['bannerImageUrl'] ?? '',
       bio: data['bio'] ?? '',
       age: data['age'] ?? 0,
       gender: data['gender'] ?? '',
@@ -94,6 +103,9 @@ class UserModel {
       previouslyGeneratedRecipes:
           List<String>.from(data['previouslyGeneratedRecipes'] ?? []),
       favoriteRecipes: List<String>.from(data['favoriteRecipes'] ?? []),
+      totalPost: data['totalPost'] ?? 0,
+      totalFollowing: data['totalFollowing'] ?? 0,
+      totalFollowers: data['totalFollowers'] ?? 0,
     );
   }
 
@@ -105,6 +117,7 @@ class UserModel {
       'name': name,
       'phoneNumber': phoneNumber,
       'profileImageUrl': profileImageUrl,
+      'bannerImageUrl': bannerImageUrl,
       'bio': bio,
       'age': age,
       'gender': gender,
@@ -128,6 +141,9 @@ class UserModel {
       'assignedWorkout': assignedWorkout,
       'previouslyGeneratedRecipes': previouslyGeneratedRecipes ?? [],
       'favoriteRecipes': favoriteRecipes ?? [],
+      'totalPost': totalPost,
+      'totalFollowing': totalFollowing,
+      'totalFollowers': totalFollowers,
     };
   }
 
@@ -139,6 +155,7 @@ class UserModel {
     String? name,
     String? phoneNumber,
     String? profileImageUrl,
+    String? bannerImageUrl,
     String? bio,
     int? age,
     String? gender,
@@ -160,6 +177,9 @@ class UserModel {
     String? assignedWorkout,
     List<String>? previouslyGeneratedRecipes,
     List<String>? favoriteRecipes,
+    int? totalPost,
+    int? totalFollowers,
+    int? totalFollowing,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -168,6 +188,7 @@ class UserModel {
       name: name ?? this.name,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      bannerImageUrl: bannerImageUrl ?? this.bannerImageUrl,
       bio: bio ?? this.bio,
       age: age ?? this.age,
       gender: gender ?? this.gender,
@@ -190,6 +211,9 @@ class UserModel {
       previouslyGeneratedRecipes:
           previouslyGeneratedRecipes ?? this.previouslyGeneratedRecipes,
       favoriteRecipes: favoriteRecipes ?? this.favoriteRecipes,
+      totalPost: totalPost ?? this.totalPost,
+      totalFollowers: totalFollowers ?? this.totalFollowers,
+      totalFollowing: totalFollowing ?? this.totalFollowing,
     );
   }
 }

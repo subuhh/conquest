@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../../../core/Controllers/community_controller/community_controller.dart';
-import '../../../core/model/community/post_model.dart';
-import '../../../utils/constants/colors.dart';
-import '../Comment/comment_section.dart';
+import '../../../../core/Controllers/community_controller/community_controller.dart';
+import '../../../../core/model/community/post_model.dart';
+import '../../../../utils/constants/colors.dart';
+import '../../Comment/comment_section.dart';
 
 Color? getReactionColor(ReactionType reaction) {
   switch (reaction) {
@@ -68,8 +66,6 @@ class _PostFooterState extends State<PostFooter> {
       if (reactions.isEmpty || widget.post.likeCount <= 0) {
         return Icons.favorite_border;
       }
-
-      log("Reactions before update: $reactions");
 
       // Find the reaction type with the highest count
       final mostProminentReaction = reactions.entries
@@ -289,7 +285,6 @@ class _ElegantReactionPopupState extends State<ElegantReactionPopup>
                 final isSelected = _currentReaction == reaction;
                 // Get the count for the current reaction type
                 final reactionCount = widget.post.reactions[reaction] ?? 0;
-                log('Reaction Count: ${reactionCount}');
 
                 return GestureDetector(
                   onTap: () => widget.onReactionSelected(reaction),

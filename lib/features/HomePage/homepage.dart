@@ -1,7 +1,6 @@
 import 'package:conquest/common/widgets/Iconbuttonwithlabe.dart';
 import 'package:conquest/common/widgets/searchbar.dart';
 import 'package:conquest/core/Controllers/homepage_controller.dart';
-import 'package:conquest/core/Controllers/user_controller.dart';
 import 'package:conquest/features/AppBar/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

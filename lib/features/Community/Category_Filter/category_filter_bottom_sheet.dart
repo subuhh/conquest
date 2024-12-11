@@ -11,7 +11,7 @@ class CategoryFilterBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.85,
+      initialChildSize: 0.75,
       maxChildSize: 0.99,
       minChildSize: 0.6,
       builder: (context, scrollController) {
@@ -32,26 +32,32 @@ class CategoryFilterBottomSheet extends StatelessWidget {
             controller: scrollController,
             padding: EdgeInsets.zero,
             children: [
-              _buildHeader(),
-              _buildFilterSection(
-                title: 'Search',
-                child: _buildSearchBar(),
-              ),
-              _buildFilterSection(
-                title: 'Categories',
-                child: _buildCategoryFilter(),
-              ),
-              // _buildFilterSection(
-              //   title: 'Visibility',
-              //   child: _buildVisibilityFilter(),
-              // ),
-              _buildFilterSection(
-                title: 'Date Range',
-                child: _buildDateRangeFilter(),
-              ),
-              _buildFilterSection(
-                title: 'Engagement Filters',
-                child: _buildEngagementFilter(),
+              Expanded(
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    _buildFilterSection(
+                      title: 'Search',
+                      child: _buildSearchBar(),
+                    ),
+                    _buildFilterSection(
+                      title: 'Categories',
+                      child: _buildCategoryFilter(),
+                    ),
+                    // _buildFilterSection(
+                    //   title: 'Visibility',
+                    //   child: _buildVisibilityFilter(),
+                    // ),
+                    _buildFilterSection(
+                      title: 'Date Range',
+                      child: _buildDateRangeFilter(),
+                    ),
+                    _buildFilterSection(
+                      title: 'Engagement Filters',
+                      child: _buildEngagementFilter(),
+                    ),
+                  ],
+                ),
               ),
               _buildActionButtons(),
             ],

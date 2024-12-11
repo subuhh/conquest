@@ -37,26 +37,38 @@ class FirestoreService extends GetxController {
   // Fetch User Details
   Future<UserModel?> getUserDetails(String? uid) async {
     try {
-      isLoading.value = true;
       DocumentSnapshot snapshot =
           await _firestore.collection('users').doc(uid).get();
       UserModel? fetchedUserModel;
       if (snapshot.exists) {
         fetchedUserModel = UserModel.fromFirestore(
             snapshot.data() as Map<String, dynamic>, snapshot.id);
-        userModel.value = fetchedUserModel;
-      } else {
-        userModel.value = null; // User document not found
       }
-      isLoading.value = false;
       return fetchedUserModel;
     } catch (e) {
-      isLoading.value = false;
       log('Error getting user details: $e');
-      Get.snackbar('Error', 'Could not fetch user details');
       return null;
     }
   }
+
+  // Fetch User Details as a Stream
+  Stream<UserModel?> getUserDetailsStream(String? uid) {
+    try {
+      return _firestore.collection('users').doc(uid).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return UserModel.fromFirestore(
+            snapshot.data() as Map<String, dynamic>,
+            snapshot.id,
+          );
+        }
+        return null;
+      });
+    } catch (e) {
+      log('Error getting user details stream: $e');
+      return Stream.value(null); // Return a stream with null in case of an error
+    }
+  }
+
 
   // Update User Details
   Future<void> updateUserDetails(UserModel updatedUser) async {

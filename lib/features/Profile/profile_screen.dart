@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/text_strings.dart';
-import '../../../core/Controllers/profile_controller.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/text_strings.dart';
+import '../../core/Controllers/profile_controller.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -118,17 +118,6 @@ class ProfilePage extends StatelessWidget {
                                 },
                               ),
                               const SizedBox(height: 20),
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: 'Bio',
-                                  prefixIcon: Icon(Icons.info_outline),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                                controller: controller.bioController,
-                                keyboardType: TextInputType.multiline,
-                              ),
-                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -167,61 +156,64 @@ class ProfilePage extends StatelessWidget {
         alignment: Alignment.bottomRight,
         children: [
           // Profile Picture (CircleAvatar)
-          Stack(
-            children: [
-              CircleAvatar(
-                radius: 55,
-                backgroundColor: controller.profileImage.value != null ||
-                        (controller.userModel!.profileImageUrl != null &&
-                            controller.userModel!.profileImageUrl!.isNotEmpty)
-                    ? Colors.transparent
-                    : TColors.primary.withOpacity(0.9),
-                child: controller.profileImage.value != null
-                    ? ClipOval(
-                        child: Image.file(
-                          controller.profileImage.value!,
+          CircleAvatar(
+            radius:
+                55, // This will be the radius of the circle for the profile image
+            backgroundColor: controller.profileImage.value != null ||
+                    (controller.userModel!.profileImageUrl != null &&
+                        controller.userModel!.profileImageUrl!.isNotEmpty)
+                ? Colors.transparent
+                : TColors.primary.withOpacity(0.9),
+            child: controller.profileImage.value != null
+                ? ClipOval(
+                    child: Image.file(
+                      controller.profileImage.value!,
+                      fit: BoxFit
+                          .cover, // Ensure the image fills the circle properly
+                      width: 110, // Maintain circle size
+                      height: 110, // Maintain circle size
+                    ),
+                  )
+                : controller.userModel!.profileImageUrl != null &&
+                        controller.userModel!.profileImageUrl!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          fit: BoxFit
+                              .cover, // Make the network image cover the circle
+                          width: 110, // Keep image size in sync with the circle
+                          height:
+                              110, // Keep image size in sync with the circle
+                          imageUrl: controller.userModel!.profileImageUrl!,
                         ),
                       )
-                    : controller.userModel!.profileImageUrl != null &&
-                            controller.userModel!.profileImageUrl!.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: CachedNetworkImage(
-                              fit: BoxFit.fill,
-                              height: 100,
-                              imageUrl: controller.userModel!.profileImageUrl!,
-                            ),
-                          )
-                        : Text(
-                            controller.nameController.text.isNotEmpty
-                                ? controller.nameController.text[0]
-                                    .toUpperCase()
-                                : '',
-                            style: Theme.of(Get.context!)
-                                .textTheme
-                                .headlineLarge!
-                                .copyWith(color: Colors.white),
-                          ),
-              ),
-              Positioned(
-                bottom: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 19,
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      onPressed: () {
-                        controller.pickImage();
-                      },
-                      icon: const Icon(Iconsax.edit, size: 20),
-                    ),
-                  ),
+                    : Text(
+                        controller.nameController.text.isNotEmpty
+                            ? controller.nameController.text[0].toUpperCase()
+                            : '',
+                        style: Theme.of(Get.context!)
+                            .textTheme
+                            .headlineLarge!
+                            .copyWith(color: Colors.white),
+                      ),
+          ),
+          Positioned(
+            bottom: 5,
+            right: 2,
+            child: CircleAvatar(
+              radius: 19,
+              backgroundColor: Colors.black,
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white,
+                child: IconButton(
+                  onPressed: () {
+                    controller.pickImage();
+                  },
+                  icon: const Icon(Iconsax.edit, size: 20),
                 ),
-              )
-            ],
+              ),
+            ),
           ),
         ],
       ),

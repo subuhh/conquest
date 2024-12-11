@@ -1,6 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conquest/core/Controllers/user_controller.dart';
+import 'package:conquest/core/model/user.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart' hide Visibility;
+import 'package:image_picker/image_picker.dart';
 import '../../model/community/post_model.dart';
 import '../../model/community/comment_model.dart';
 import '../../services/community/community_service.dart';
@@ -8,6 +15,8 @@ import '../../services/community/community_service.dart';
 class CommunityController extends GetxController {
   static CommunityController get instance => Get.find();
   final CommunityService _communityService = Get.put(CommunityService());
+
+  final ImagePicker _picker = ImagePicker();
 
   // Observables for posts and comments
   RxList<PostModel> posts = <PostModel>[].obs;
@@ -22,6 +31,9 @@ class CommunityController extends GetxController {
   // Filtering and pagination
   Rx<Category?> selectedCategory = Rx<Category?>(null);
   Rx<Visibility?> selectedVisibility = Rx<Visibility?>(null);
+
+  final RxString profileImageUrl = ''.obs;
+  final RxString bannerImageUrl = ''.obs;
 
   // Stream subscriptions
   StreamSubscription? _postsSubscription;
@@ -108,21 +120,6 @@ class CommunityController extends GetxController {
     }
   }
 
-  // Create a new post with error handling
-  Future<bool> createPost(PostModel post) async {
-    isLoading.value = true;
-    errorMessage.value = null;
-
-    try {
-      final createdPost = await _communityService.createPost(post);
-      isLoading.value = false;
-      return createdPost;
-    } catch (e) {
-      _handleError(e);
-      return false;
-    }
-  }
-
   // Add a comment with error handling
   Future<CommentModel?> addComment(CommentModel comment) async {
     isLoading.value = true;
@@ -146,7 +143,8 @@ class CommunityController extends GetxController {
       final currentPost = posts[postIndex];
 
       // Predict local state change
-      final updatedReactions = Map<ReactionType, int>.from(currentPost.reactions);
+      final updatedReactions =
+          Map<ReactionType, int>.from(currentPost.reactions);
       final currentUserReaction = _getCurrentUserReaction(currentPost);
 
       // Adjust reaction counts
@@ -157,7 +155,8 @@ class CommunityController extends GetxController {
         updatedLikeCount--;
       } else if (currentUserReaction != null) {
         // Change reaction
-        updatedReactions[currentUserReaction] = (updatedReactions[currentUserReaction] ?? 1) - 1;
+        updatedReactions[currentUserReaction] =
+            (updatedReactions[currentUserReaction] ?? 1) - 1;
         updatedReactions[reaction] = (updatedReactions[reaction] ?? 0) + 1;
       } else {
         // New reaction
@@ -167,22 +166,16 @@ class CommunityController extends GetxController {
 
       // Update local post
       final updatedPost = currentPost.copyWith(
-          reactions: updatedReactions,
-          likeCount: updatedLikeCount
-      );
+          reactions: updatedReactions, likeCount: updatedLikeCount);
       posts[postIndex] = updatedPost;
 
       // Start background update
       isReacting.value = true;
-      _communityService.reactToPost(
-          postId,
-          reaction,
-              (serverUpdatedPost) {
-            // Sync with server response if needed
-            posts[postIndex] = serverUpdatedPost;
-            isReacting.value = false;
-          }
-      ).catchError((error) {
+      _communityService.reactToPost(postId, reaction, (serverUpdatedPost) {
+        // Sync with server response if needed
+        posts[postIndex] = serverUpdatedPost;
+        isReacting.value = false;
+      }).catchError((error) {
         // Revert local changes if server update fails
         posts[postIndex] = currentPost;
         isReacting.value = false;
@@ -204,6 +197,99 @@ class CommunityController extends GetxController {
   void filterByCategory(Category category) {
     selectedCategory.value = category;
     fetchPostsRealTime();
+  }
+
+  // Fetch posts for a specific user without using a stream
+  Future<List<PostModel>?> fetchPostsByUserId(String userId) async {
+    try {
+      final userPosts = await _communityService.getPostsByUserId(userId);
+      return userPosts;
+    } catch (e) {
+      _handleError(e);
+      return null;
+    }
+  }
+
+  // Pick image
+  Future<void> pickImage({required bool isProfile}) async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        if (isProfile) {
+          profileImageUrl.value =
+              pickedFile.path; // Save local path temporarily
+        } else {
+          bannerImageUrl.value = pickedFile.path; // Save local path temporarily
+        }
+      }
+    } catch (e) {
+      log('Error: $e');
+      Get.snackbar('Error', 'Failed to pick image');
+    }
+  }
+
+  // Upload image to Firebase
+  Future<String> _uploadImageToFirebase(File image, bool isProfile) async {
+    try {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child(isProfile ? 'profile' : 'banner')
+          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await ref.putFile(image);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      throw Exception('Failed to upload image');
+    }
+  }
+
+  // Update profile with images
+  Future<bool> updateUserProfileWithImages(UserModel userModel) async {
+    try {
+      // Upload profile image if a new one was selected
+      if (File(profileImageUrl.value).existsSync()) {
+        final profileUrl =
+            await _uploadImageToFirebase(File(profileImageUrl.value), true);
+        userModel = userModel.copyWith(profileImageUrl: profileUrl);
+      }
+
+      // Upload banner image if a new one was selected
+      if (File(bannerImageUrl.value).existsSync()) {
+        final bannerUrl =
+            await _uploadImageToFirebase(File(bannerImageUrl.value), false);
+        userModel = userModel.copyWith(bannerImageUrl: bannerUrl);
+      }
+
+      // Update Firestore with user details
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userModel.id)
+          .update({
+        'name': userModel.name,
+        'userName': userModel.userName,
+        'bio': userModel.bio,
+        'profileImageUrl': userModel.profileImageUrl,
+        'bannerImageUrl': userModel.bannerImageUrl,
+      });
+
+      // Update user model in controller
+      UserController.instance.userModel.value = userModel;
+
+      // Update user avatar in all posts
+      final postsQuery = await FirebaseFirestore.instance
+          .collection('posts')
+          .where('userId', isEqualTo: userModel.id)
+          .get();
+
+      for (var doc in postsQuery.docs) {
+        await doc.reference.update({'userAvatar': userModel.profileImageUrl});
+      }
+
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update profile');
+      return false;
+    }
   }
 
   // Universal error handling method

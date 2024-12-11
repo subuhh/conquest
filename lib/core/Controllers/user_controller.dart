@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:conquest/core/services/auth_service.dart';
 import 'package:conquest/core/services/firestore_service.dart';
 import 'package:get/get.dart';
@@ -37,6 +36,31 @@ class UserController extends GetxController {
       log("Failed to fetch user data: $e");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<UserModel?> getUserDetail(String uid) async {
+    try {
+      final user = await firestoreService.getUserDetails(uid);
+
+      if (user != null) {
+        return user;
+      }
+
+      return null;
+    } catch (e) {
+      log('Error to get user details: $e');
+      return null;
+    }
+  }
+
+  // Fetch User Details Stream in Controller/Repository
+  Stream<UserModel?> getUserDetailStream(String uid) {
+    try {
+      return firestoreService.getUserDetailsStream(uid);
+    } catch (e) {
+      log('Error to get user details stream: $e');
+      return Stream.value(null);
     }
   }
 }

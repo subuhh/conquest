@@ -1,19 +1,18 @@
+import 'package:conquest/core/Controllers/community_controller/followers_controller.dart';
+import 'package:conquest/features/Community/Post/Post_Card/post_card_widget.dart';
 import 'package:conquest/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:readmore/readmore.dart';
 import '../../core/Controllers/community_controller/community_controller.dart';
 import '../../core/model/community/post_model.dart';
 import 'Category_Filter/category_filter_bottom_sheet.dart';
-import 'Post/media_selection_screen.dart';
-import 'Post/post_footer.dart';
-import 'Post/post_media_creation.dart';
 
 class CommunityFeedPage extends StatelessWidget {
-  final CommunityController _controller = Get.put(CommunityController());
+  final _controller = Get.put(CommunityController());
+  final followersController = Get.put(FollowController());
 
-  CommunityFeedPage({Key? key}) : super(key: key);
+  CommunityFeedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +30,8 @@ class CommunityFeedPage extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            bottom: 95,
-            right: 15,
-            child: _buildCreatePostButton(),
-          )
         ],
       ),
-      // floatingActionButton: _buildCreatePostButton(),
     );
   }
 
@@ -46,6 +39,12 @@ class CommunityFeedPage extends StatelessWidget {
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.white,
+      centerTitle: true,
+      leading: IconButton(
+        onPressed: () => Get.back(),
+        icon: Icon(Icons.arrow_back, color: Colors.black),
+      ),
+      automaticallyImplyLeading: false,
       title: Text(
         'Community',
         style: TextStyle(
@@ -72,9 +71,9 @@ class CommunityFeedPage extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
         child: Obx(() => Wrap(
-              spacing: 12,
+              spacing: 10,
               children: Category.values
                   .map(
                     (category) => ChoiceChip(
@@ -98,7 +97,7 @@ class CommunityFeedPage extends StatelessWidget {
                       selected: _controller.selectedCategory.value == category,
                       onSelected: (_) => _controller.filterByCategory(category),
                       selectedColor: TColors.black,
-                      backgroundColor: TColors.secondaryBackground,
+                      backgroundColor: Colors.grey[100],
                       padding:
                           EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
@@ -137,98 +136,10 @@ class CommunityFeedPage extends StatelessWidget {
           }
 
           final post = _controller.posts[index];
-          return _buildPostCard(post, context);
+          return PostCardWidget(post: post);
         },
       );
     });
-  }
-
-  Widget _buildPostCard(PostModel post, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildPostHeader(post, context),
-          _buildPostContent(post),
-          _buildPostFooter(post),
-        ],
-      ),
-    );
-  }
-
-  // Update the _buildPostContent method in CommunityFeedPage
-  Widget _buildPostContent(PostModel post) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Support for multiple media types
-        if (post.mediaUrls != null && post.mediaUrls!.isNotEmpty)
-          MediaCarouselWidget(
-            mediaUrls: post.mediaUrls!,
-            postModel: post,
-          ),
-
-        if (post.content != null)
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '${post.userName} ',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Expanded(
-                  child: ReadMoreText(
-                    post.content!,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                    trimLines: 1,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: ' more',
-                    trimExpandedText: 'show less',
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildPostHeader(PostModel post, BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(post.userAvatar),
-      ),
-      title: Text(
-        post.userName,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(
-        _formatDateTime(post.createdAt),
-        style: const TextStyle(fontSize: 12),
-      ),
-      // trailing: IconButton(
-      //   icon: const Icon(Icons.more_vert),
-      //   onPressed: () {},
-      // ),
-    );
-  }
-
-  Widget _buildPostFooter(PostModel post) {
-    return PostFooter(
-      post: post,
-      controller: _controller,
-    );
   }
 
   void _showCategoryFilter() {
@@ -238,30 +149,5 @@ class CommunityFeedPage extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
-  }
-
-  Widget _buildCreatePostButton() {
-    return FloatingActionButton(
-      onPressed: () => Get.to(() => MediaPickerScreen()),
-      backgroundColor: TColors.primary,
-      child: const Icon(Icons.add, color: Colors.white),
-    );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inMinutes < 1) {
-      return 'Just now';
-    } else if (difference.inHours < 1) {
-      return '${difference.inMinutes} minutes ago';
-    } else if (difference.inDays < 1) {
-      return '${difference.inHours} hours ago';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-    }
   }
 }

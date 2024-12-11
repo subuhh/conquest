@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:camera/camera.dart';
+import 'package:conquest/core/Controllers/community_controller/post_creation_controller.dart';
+import 'package:conquest/features/Community/Post/Post_Creation/add_post_details.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import '../../../features/Community/Post/Post_Creation/media_editing.dart';
 
 class MediaPickerController extends GetxController {
   // Observable variables
@@ -21,6 +21,8 @@ class MediaPickerController extends GetxController {
 
   // Error and state management
   final Rx<String?> errorMessage = Rx<String?>(null);
+
+
 
   @override
   void onInit() {
@@ -121,7 +123,7 @@ class MediaPickerController extends GetxController {
       // Fetch media from the selected album
       final albumMedia = await album.getAssetListPaged(
         page: 0,
-        size: 25, // Increased to allow more media
+        size: 50, // Adjust as needed
       );
 
       // Update media
@@ -194,15 +196,34 @@ class MediaPickerController extends GetxController {
     }
   }
 
+  Future<List<MediaFile>> convertAssetsToMediaFiles(List<AssetEntity> assets) async {
+    List<MediaFile> mediaFiles = [];
+    for (var asset in assets) {
+      MediaType mediaType = asset.type == AssetType.image ? MediaType.image : MediaType.video;
+
+      dynamic file;
+      if (mediaType == MediaType.image) {
+        // Load the image file as Uint8List
+        var fileData = await asset.file;
+        if (fileData != null) {
+          file = await fileData.readAsBytes(); // Get image bytes (Uint8List)
+        }
+      } else if (mediaType == MediaType.video) {
+        file = asset; // For video, you can pass the AssetEntity or video file path
+      }
+
+      mediaFiles.add(MediaFile(file: file, type: mediaType));
+    }
+    return mediaFiles;
+  }
+
   // Proceed to next screen (editing/filtering)
-  void proceedToNextScreen() {
+  void proceedToNextScreen() async {
     if (selectedMedia.isNotEmpty) {
-      // Navigate to the next screen for editing/filtering
-      // You'll need to implement the next screen navigation
-      Get.to(() => ImageEditorWorkflow(
-            selectedImages: selectedMedia,
-          ));
-      // Get.toNamed('/media-edit', arguments: selectedMedia);
+      final mediaFiles = await convertAssetsToMediaFiles(selectedMedia);
+      Get.to(() => AddPostDetails(
+        editedImages: mediaFiles,
+      ));
     }
   }
 

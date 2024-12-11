@@ -379,7 +379,7 @@ class PostCreationController extends GetxController {
     }
   }
 
-// Update media upload method to handle the new MediaFile type
+  // Update media upload method to handle the new MediaFile type
   Future<List<String>> _uploadMediaFiles(
     List<MediaFile> mediaFiles,
   ) async {
@@ -403,9 +403,8 @@ class PostCreationController extends GetxController {
         UploadTask uploadTask;
         if (mediaFile.type == MediaType.image && mediaFile.file is Uint8List) {
           uploadTask = storageRef.putData(mediaFile.file as Uint8List);
-        } else if (mediaFile.type == MediaType.video &&
-            mediaFile.file is File) {
-          uploadTask = storageRef.putFile(mediaFile.file as File);
+        } else if (mediaFile.type == MediaType.video) {
+          uploadTask = storageRef.putFile(mediaFile.file);
         } else {
           continue; // Skip if media type does not match
         }

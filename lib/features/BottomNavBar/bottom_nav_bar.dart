@@ -3,11 +3,11 @@ import 'package:conquest/features/Workout/WorkoutHomepage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import '../../utils/constants/colors.dart';
 import 'package:conquest/features/HomePage/homepage.dart';
 import 'package:conquest/features/MarketPlace/market_place_screen.dart';
-
-import '../Community/comm_feed_screen.dart';
+import '../Community/Community_Bottom_Nav_Bar/community_btm_nav_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -19,6 +19,8 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   final PageController _pageController = PageController();
   int _currentIndex = 0; // Keep track of the selected tab
+  int?
+      _previousIndex; // Track the previous index when navigating to CommunityFeedPage
 
   final inActiveIconList = <String>[
     'assets/icons/bottomNavbaricons/InactiveIcons/home.svg',
@@ -34,8 +36,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
     'assets/icons/appicons/nutrition-outline.svg',
     'assets/icons/drawerIcons/community.svg',
     'assets/icons/bottomNavbaricons/activeIcons/shop.svg',
-
-    // 'assets/icons/bottomNavbaricons/activeIcons/settings.svg',
   ];
 
   final itemLabel = <String>[
@@ -44,8 +44,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
     'Nutrition',
     'Community',
     'Shop',
-
-    //'Settings',
   ];
 
   @override
@@ -64,7 +62,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
               const HomePage(),
               const WorkoutHomePage(),
               const NutritionHomePage(),
-              CommunityFeedPage(),
+              // Removing the Community Feed page from the PageView
+              // Remove the CommunityFeedPage here
+              Container(),
               const MarketplaceScreen(),
             ],
           ),
@@ -78,8 +78,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   Colors.transparent, // Transparent behind the curve
               color: Colors.black,
               buttonBackgroundColor: TColors.primary, // The primary color
-              items:
-              List.generate(inActiveIconList.length, (index) {
+              items: List.generate(inActiveIconList.length, (index) {
                 return _currentIndex == index
                     ? Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -113,14 +112,33 @@ class _BottomNavBarState extends State<BottomNavBar> {
                       );
               }),
               onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-                _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
+                if (index == 3) {
+                  // Store the current index before navigating
+                  _previousIndex = _currentIndex;
+
+                  // Set current index to the community tab (for visual consistency)
+                  setState(() {
+                    _currentIndex = index;
+                  });
+
+                  // Navigate to the CommunityFeedPage using GetX
+                  Get.to(() => CommunityBtmNavBar(),
+                          // Callback to update the index when coming back
+                          preventDuplicates: true)!
+                      .then((_) {
+                    // After coming back from the CommunityFeedPage,
+                    // restore the previous index
+                    setState(() {
+                      _currentIndex = _previousIndex ??
+                          _currentIndex; // Fallback to current if null
+                    });
+                  });
+                } else {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                  _pageController.jumpToPage(index);
+                }
               },
               animationCurve: Curves.easeInOut,
               animationDuration: const Duration(milliseconds: 300),
