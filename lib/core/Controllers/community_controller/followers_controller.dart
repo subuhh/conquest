@@ -199,7 +199,7 @@ class FollowController extends GetxController {
       // Get following IDs
       final followingIds = await _followService.getFollowing(userId);
 
-      log('Followers: $followingIds');
+      log('Following: $followingIds');
 
       // Update follow status map
       followStatus.clear();

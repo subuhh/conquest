@@ -6,6 +6,7 @@ import 'package:conquest/core/model/user.dart';
 import 'package:conquest/core/services/auth_service.dart';
 import 'package:conquest/features/Community/Profile/see_all_follower_following.dart';
 import 'package:conquest/features/Community/Profile/see_all_posts.dart';
+import 'package:conquest/features/Community/Story/stories_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -148,6 +149,18 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                                 const SizedBox(height: 20),
                                 _buildActionButtons(width, user),
                                 const SizedBox(height: 20),
+                                rowWithTitle(),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child:
+                                          StoriesWidget(forCurrentUser: true),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
                                 _buildPostsSection(height, width),
                                 const SizedBox(height: 120),
                               ],
@@ -214,6 +227,34 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget rowWithTitle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Stories',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // TextButton(
+          //   onPressed: () {},
+          //   child: Text(
+          //     'See all',
+          //     style: GoogleFonts.poppins(
+          //       color: Colors.grey,
+          //       fontWeight: FontWeight.w600,
+          //     ),
+          //   ),
+          // ),
+        ],
       ),
     );
   }
@@ -325,11 +366,9 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                 side: const BorderSide(color: Colors.black, width: 2),
               ),
               child: SvgPicture.asset(
-                currentUser
-                    ? 'assets/icons/appicons/share.svg'
-                    : 'assets/icons/community/chat.svg',
-                height: currentUser ? 35 : 30,
-                width: currentUser ? 35 : 30,
+                'assets/icons/appicons/share_fill.svg',
+                height: 35,
+                width: 35,
                 colorFilter:
                     const ColorFilter.mode(Colors.black, BlendMode.srcIn),
               ),
@@ -385,30 +424,33 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                 itemCount: posts!.length,
                 itemBuilder: (context, index) {
                   final post = posts![index];
-                  return Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    height: w * 0.45,
-                    width: w * 0.45,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(16),
-                      image: post.mediaUrls != null
-                          ? _isVideoUrl(post.mediaUrls![0])
-                              ? null
-                              : DecorationImage(
-                                  image: NetworkImage(post.mediaUrls![0]),
-                                  fit: BoxFit.cover,
-                                )
+                  return Card(
+                    elevation: 2,
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      height: w * 0.45,
+                      width: w * 0.45,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(18),
+                        image: post.mediaUrls != null
+                            ? _isVideoUrl(post.mediaUrls![0])
+                                ? null
+                                : DecorationImage(
+                                    image: NetworkImage(post.mediaUrls![0]),
+                                    fit: BoxFit.cover,
+                                  )
+                            : null,
+                      ),
+                      child: post.mediaUrls == null
+                          ? Center(
+                              child: Text(
+                                'No Image',
+                                style: GoogleFonts.poppins(color: Colors.white),
+                              ),
+                            )
                           : null,
                     ),
-                    child: post.mediaUrls == null
-                        ? Center(
-                            child: Text(
-                              'No Image',
-                              style: GoogleFonts.poppins(color: Colors.white),
-                            ),
-                          )
-                        : null,
                   );
                 },
               ),

@@ -29,6 +29,8 @@ class UserModel {
   final String? assignedWorkout;
   final List<String>? previouslyGeneratedRecipes;
   final List<String>? favoriteRecipes;
+  final List<String>? following;
+  final List<String>? followers;
   final int? totalPost;
   final int? totalFollowers;
   final int? totalFollowing;
@@ -62,6 +64,8 @@ class UserModel {
     this.assignedWorkout,
     this.previouslyGeneratedRecipes,
     this.favoriteRecipes,
+    this.following,
+    this.followers,
     this.totalPost,
     this.totalFollowers,
     this.totalFollowing,
@@ -103,6 +107,8 @@ class UserModel {
       previouslyGeneratedRecipes:
           List<String>.from(data['previouslyGeneratedRecipes'] ?? []),
       favoriteRecipes: List<String>.from(data['favoriteRecipes'] ?? []),
+      following: List<String>.from(data['following'] ?? []),
+      followers: List<String>.from(data['followers'] ?? []),
       totalPost: data['totalPost'] ?? 0,
       totalFollowing: data['totalFollowing'] ?? 0,
       totalFollowers: data['totalFollowers'] ?? 0,
@@ -141,6 +147,8 @@ class UserModel {
       'assignedWorkout': assignedWorkout,
       'previouslyGeneratedRecipes': previouslyGeneratedRecipes ?? [],
       'favoriteRecipes': favoriteRecipes ?? [],
+      'following': following ?? [],
+      'followers': followers ?? [],
       'totalPost': totalPost,
       'totalFollowing': totalFollowing,
       'totalFollowers': totalFollowers,
@@ -177,6 +185,8 @@ class UserModel {
     String? assignedWorkout,
     List<String>? previouslyGeneratedRecipes,
     List<String>? favoriteRecipes,
+    List<String>? followers,
+    List<String>? following,
     int? totalPost,
     int? totalFollowers,
     int? totalFollowing,
@@ -211,6 +221,8 @@ class UserModel {
       previouslyGeneratedRecipes:
           previouslyGeneratedRecipes ?? this.previouslyGeneratedRecipes,
       favoriteRecipes: favoriteRecipes ?? this.favoriteRecipes,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
       totalPost: totalPost ?? this.totalPost,
       totalFollowers: totalFollowers ?? this.totalFollowers,
       totalFollowing: totalFollowing ?? this.totalFollowing,

@@ -43,6 +43,7 @@ class _CarouselSectionState extends State<CarouselSection> {
                     onTap: () {},
                     child: Container(
                       width: MediaQuery.of(context).size.width,
+                      // height: 100,
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -52,7 +53,7 @@ class _CarouselSectionState extends State<CarouselSection> {
                         child: CachedNetworkImage(
                           imageUrl: banner.imageUrl,
                           fit: BoxFit.cover,
-                          placeholder: (context, value){
+                          placeholder: (context, value) {
                             return Container(
                               width: MediaQuery.of(context).size.width,
                               height: 200.0,

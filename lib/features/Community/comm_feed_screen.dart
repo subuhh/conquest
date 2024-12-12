@@ -1,5 +1,7 @@
 import 'package:conquest/core/Controllers/community_controller/followers_controller.dart';
+import 'package:conquest/core/Controllers/community_controller/stories_controller.dart';
 import 'package:conquest/features/Community/Post/Post_Card/post_card_widget.dart';
+import 'package:conquest/features/Community/Story/stories_widget.dart';
 import 'package:conquest/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +13,7 @@ import 'Category_Filter/category_filter_bottom_sheet.dart';
 class CommunityFeedPage extends StatelessWidget {
   final _controller = Get.put(CommunityController());
   final followersController = Get.put(FollowController());
+  final storiesController = Get.put(StoriesController());
 
   CommunityFeedPage({super.key});
 
@@ -19,18 +22,18 @@ class CommunityFeedPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TColors.white,
       appBar: _buildCustomAppBar(),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildCategoryChips(),
-                _buildPostList(),
-                const SizedBox(height: 100)
-              ],
-            ),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            StoriesWidget(),
+            const SizedBox(height: 20),
+            _buildCategoryChips(),
+            _buildPostList(),
+            const SizedBox(height: 100)
+          ],
+        ),
       ),
     );
   }
@@ -46,7 +49,7 @@ class CommunityFeedPage extends StatelessWidget {
       ),
       automaticallyImplyLeading: false,
       title: Text(
-        'Community',
+        'Nakama',
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,

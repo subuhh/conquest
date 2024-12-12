@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:conquest/core/Controllers/community_controller/post_creation_controller.dart';
 import 'package:conquest/features/Community/Post/Post_Creation/add_post_details.dart';
@@ -22,12 +23,23 @@ class MediaPickerController extends GetxController {
   // Error and state management
   final Rx<String?> errorMessage = Rx<String?>(null);
 
+  // Toggle multi-select mode
+  final RxBool isMultiSelectEnabled = false.obs;
 
+  // Camera capture modes
+  final RxBool isCameraMode = false.obs;
+  final Rx<File?> capturedMedia = Rx<File?>(null);
+  final RxBool isVideoMode = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     initializeMedia();
+  }
+
+  // Toggle between photo and video capture modes
+  void toggleCaptureMode() {
+    isVideoMode.toggle();
   }
 
   Future<void> initializeMedia() async {
@@ -51,9 +63,12 @@ class MediaPickerController extends GetxController {
 
       // Request both gallery and camera permissions
       final galleryStatus = await Permission.photos.request();
+      final videoStatus = await Permission.videos.request();
       final cameraStatus = await Permission.camera.request();
 
-      if (galleryStatus.isGranted && cameraStatus.isGranted) {
+      if (galleryStatus.isGranted &&
+          cameraStatus.isGranted &&
+          videoStatus.isGranted) {
         permissionGranted.value = true;
         await loadAlbums();
       } else {
@@ -81,7 +96,7 @@ class MediaPickerController extends GetxController {
 
       // Fetch albums with advanced filtering
       final fetchedAlbums = await PhotoManager.getAssetPathList(
-        type: RequestType.all, // Allow both image and video
+        type: RequestType.common, // Allow both image and video
         filterOption: FilterOptionGroup(
           imageOption: FilterOption(
             sizeConstraint: SizeConstraint(),
@@ -166,16 +181,105 @@ class MediaPickerController extends GetxController {
   Future<void> initializeCameraController() async {
     if (cameras.isNotEmpty) {
       cameraController.value = CameraController(
-        cameras[0], // Use the first available camera
-        ResolutionPreset.medium,
+        cameras[0],
+        ResolutionPreset.high,
+        enableAudio: true, // Enable audio for video recording
       );
 
       try {
         await cameraController.value?.initialize();
+        isCameraMode.value = true;
       } catch (e) {
         _handleError(e, 'Initializing camera');
+        isCameraMode.value = false;
       }
     }
+  }
+
+  Future<void> capturePhoto() async {
+    if (cameraController.value != null &&
+        cameraController.value!.value.isInitialized) {
+      try {
+        final image = await cameraController.value!.takePicture();
+        capturedMedia.value = File(image.path);
+
+        // Add the captured photo to selected media
+        final asset = await PhotoManager.editor.saveImageWithPath(image.path);
+        if (!isMultiSelectEnabled.value) {
+          selectedMedia.clear();
+        }
+
+        // Add the new asset to selected media
+        if (selectedMedia.length < 10) {
+          selectedMedia.add(asset);
+
+          // Update all media list to include the new asset at the beginning
+          allMedia.insert(0, asset);
+        } else {
+          Get.snackbar(
+            'Maximum Limit Reached',
+            'You can select up to 10 media files',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+
+        isCameraMode.value = false;
+      } catch (e) {
+        _handleError(e, 'Capturing photo');
+      }
+    }
+  }
+
+  Future<void> recordVideo() async {
+    if (cameraController.value != null &&
+        cameraController.value!.value.isInitialized) {
+      try {
+        // Start video recording
+        await cameraController.value!.startVideoRecording();
+      } catch (e) {
+        _handleError(e, 'Starting video recording');
+      }
+    }
+  }
+
+  Future<void> stopVideoRecording() async {
+    if (cameraController.value != null &&
+        cameraController.value!.value.isRecordingVideo) {
+      try {
+        final video = await cameraController.value!.stopVideoRecording();
+        capturedMedia.value = File(video.path);
+
+        // Add the captured video to selected media
+        final asset = await PhotoManager.editor.saveVideo(capturedMedia.value!);
+        if (!isMultiSelectEnabled.value) {
+          selectedMedia.clear();
+        }
+
+        // Add the new asset to selected media
+        if (selectedMedia.length < 10) {
+          selectedMedia.add(asset);
+
+          // Update all media list to include the new asset at the beginning
+          allMedia.insert(0, asset);
+        } else {
+          Get.snackbar(
+            'Maximum Limit Reached',
+            'You can select up to 10 media files',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+
+        isCameraMode.value = false;
+      } catch (e) {
+        _handleError(e, 'Stopping video recording');
+      }
+    }
+  }
+
+  void removeCapturedMedia() {
+    capturedMedia.value = null;
+    selectedMedia.clear();
+    isCameraMode.value = false;
   }
 
   void _handleError(dynamic error, String context) {
@@ -186,8 +290,6 @@ class MediaPickerController extends GetxController {
     errorMessage.value = 'Failed to $context. Please try again.';
   }
 
-  // Toggle multi-select mode
-  final RxBool isMultiSelectEnabled = false.obs;
   void toggleMultiSelect() {
     isMultiSelectEnabled.toggle();
     if (!isMultiSelectEnabled.value) {
@@ -196,10 +298,12 @@ class MediaPickerController extends GetxController {
     }
   }
 
-  Future<List<MediaFile>> convertAssetsToMediaFiles(List<AssetEntity> assets) async {
+  Future<List<MediaFile>> convertAssetsToMediaFiles(
+      List<AssetEntity> assets) async {
     List<MediaFile> mediaFiles = [];
     for (var asset in assets) {
-      MediaType mediaType = asset.type == AssetType.image ? MediaType.image : MediaType.video;
+      MediaType mediaType =
+          asset.type == AssetType.image ? MediaType.image : MediaType.video;
 
       dynamic file;
       if (mediaType == MediaType.image) {
@@ -209,7 +313,8 @@ class MediaPickerController extends GetxController {
           file = await fileData.readAsBytes(); // Get image bytes (Uint8List)
         }
       } else if (mediaType == MediaType.video) {
-        file = asset; // For video, you can pass the AssetEntity or video file path
+        file =
+            asset; // For video, you can pass the AssetEntity or video file path
       }
 
       mediaFiles.add(MediaFile(file: file, type: mediaType));
@@ -222,8 +327,8 @@ class MediaPickerController extends GetxController {
     if (selectedMedia.isNotEmpty) {
       final mediaFiles = await convertAssetsToMediaFiles(selectedMedia);
       Get.to(() => AddPostDetails(
-        editedImages: mediaFiles,
-      ));
+            editedImages: mediaFiles,
+          ));
     }
   }
 
